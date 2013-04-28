@@ -41,10 +41,10 @@
     </condition>
   </target>
 
-  <!-- Delete all files not inside /build/backup -->
+  <!-- Delete all files inside /build -->
   <target name="cleanBuild" depends="checkBuild" if="cleandir">
     <delete>
-      <fileset dir="${build.dir}" includes="**/*.js" excludes="backup/**/*.js">
+      <fileset dir="${build.dir}" includes="**/*.js">
       </fileset>
     </delete>
   </target>
@@ -54,7 +54,7 @@
     <delete dir="${jsdoc.output}"/>
   </target>
 
-  <!-- Create folders for build, backup, and doc files. -->
+  <!-- Create folders for build and doc files. -->
   <target name="init">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${jsdoc.output}"/>

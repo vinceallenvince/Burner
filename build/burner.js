@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 1.0.0 */
-/* Build time: April 28, 2013 11:03:59 *//** @namespace */
+/* Build time: April 28, 2013 01:53:57 *//** @namespace */
 function Burner(exports, opt_parent) {
 
   'use strict';

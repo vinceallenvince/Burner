@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 1.0.0 */
-/* Build time: April 28, 2013 11:03:59 */.element {
+/* Build time: April 28, 2013 01:53:57 */.element {
   position: absolute;
   top: 0; left: 0;
   -webkit-box-sizing: border-box;
@@ -47,6 +47,7 @@ THE SOFTWARE.
 /* STATS */
 .statsDisplay {
   position: fixed;
+  top: 0; left: 0;
   display: inline-block;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.75);
