@@ -23,19 +23,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 1.0.0 */
-/* Build time: April 28, 2013 09:39:46 */
-/** @namespace */
+/* Build time: April 28, 2013 11:03:59 *//** @namespace */
 function Burner(exports, opt_parent) {
 
-'use strict';
+  'use strict';
 
-/**
-* If using Burner as a renderer in a
-* parent object, pass a reference to the parent
-* via the opt_parent param.
-*/
-var parent = opt_parent || null;
-/*global window */
+  /**
+   * If using Burner as a renderer in a
+   * parent object, pass a reference to the parent
+   * via the opt_parent param.
+   */
+  var parent = opt_parent || null;/*global window */
 /**
  * RequestAnimationFrame shim layer with setTimeout fallback
  * @param {function} callback The function to call.
@@ -1898,4 +1896,4 @@ World.prototype._getBounds = function() {
 };
 
 exports.World = World;
-}
+} // Burner end.
