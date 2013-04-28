@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 1.0.0 */
-/* Build time: April 28, 2013 01:53:57 *//** @namespace */
+/* Build time: April 28, 2013 03:47:14 *//** @namespace */
 function Burner(exports, opt_parent) {
 
   'use strict';
@@ -1200,21 +1200,17 @@ System.add = function(klass, opt_options) {
   // recycle object if one is available
   var pool = this.getAllElementsByName(klass, options.world._pool);
   if (pool.length) {
-
-    //var pool = this.getAllElementsByName(klass, options.world._pool);
-    //if (pool.length) {
-      for (var i = 0, max = options.world._pool.length; i < max; i++) {
-        if (options.world._pool[i].name === klass) {
-          // pop off _pool array
-          records[records.length] = options.world._pool.splice(i, 1)[0];
-          // pass new options
-          records[records.length - 1].options = options;
-          // update Cache lookup
-          System._updateCacheLookup(records[records.length - 1], true);
-          break;
-        }
+    for (var i = 0, max = options.world._pool.length; i < max; i++) {
+      if (options.world._pool[i].name === klass) {
+        // pop off _pool array
+        records[records.length] = options.world._pool.splice(i, 1)[0];
+        // pass new options
+        records[records.length - 1].options = options;
+        // update Cache lookup
+        System._updateCacheLookup(records[records.length - 1], true);
+        break;
       }
-    //}
+    }
   } else {
     /**
      * No pool objects available, create a new one.
