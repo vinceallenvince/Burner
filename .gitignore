@@ -1,0 +1,11 @@
+# FOLDERS #
+###########
+build/backup/
+css/build/backup/
+docs/
+lib/
+
+# FILES #
+#########
+build/burner.raw.min.js
+.DS_Store

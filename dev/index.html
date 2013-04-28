@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' content='text/html; charset=UTF-8' />
+  <meta name='keywords' content='Template' />
+  <meta name='description' content='Template is a web app template.' />
+  <meta name='viewport' content='user-scalable=no, width=device-width, initial-scale=1.0; maximum-scale=1.0;' />
+  <title>DOM Renderer</title>
+  <link rel='stylesheet' href='css/burner.css' type='text/css' charset='utf-8' />
+  <script src='scripts/burner.js' type='text/javascript' charset='utf-8'></script>
+</head>
+<body style='padding: 0; margin: 0;'>
+  <div id='worldA' class='world'></div>
+  <div id='worldB' class='world'></div>
+  <div id='worldC' class='world'></div>
+  <script src='scripts/anim.js' type='text/javascript' charset='utf-8'></script>
+  <script type='text/javascript' charset='utf-8'>
+
+    var config = {
+      keyMap: {
+        pause: 80,
+        resetSystem: 82,
+        destroySystem: 68,
+        stats: 83,
+        thrustLeft: 37,
+        thrustUp: 38,
+        thrustRight: 39,
+        thrustDown: 40
+      },
+      touchMap: {
+        stats: 2,
+        pause: 3,
+        reset: 4
+      }
+    };
+
+    var totalElements = 20,
+        getRandomNumber = Anim.Burner.Utils.getRandomNumber;
+
+    Anim.Burner.System.create(function() {
+
+      Anim.Burner.World.update({
+        gravity: new Anim.Vector(0, 1),
+        c: 0.1,
+        width: 500,
+        height: 200,
+        borderWidth: 3,
+        borderStyle: 'solid',
+        borderColor: 'red',
+        location: new Anim.Burner.Vector(0, 0)
+      },
+      [
+        document.getElementById('worldA')
+      ]);
+
+      Anim.Burner.World.update({
+        gravity: new Anim.Vector(0, 1),
+        c: 0.1,
+        width: 500,
+        height: 200,
+        borderWidth: 3,
+        borderStyle: 'solid',
+        borderColor: 'green',
+        location: new Anim.Burner.Vector(0, 206)
+      },
+      [
+        document.getElementById('worldB')
+      ]);
+
+      Anim.Burner.World.update({
+        gravity: new Anim.Vector(0, 1),
+        c: 0.1,
+        width: 500,
+        height: 200,
+        borderWidth: 3,
+        borderStyle: 'solid',
+        borderColor: 'blue',
+        location: new Anim.Burner.Vector(0, 412)
+      },
+      [
+        document.getElementById('worldC')
+      ]);
+
+      var myLocation = function() {
+
+        var center = new Anim.Vector(this.world.bounds[1]/2, this.world.bounds[2]/2),
+            v = new Anim.Vector(1, 1);
+
+        v.normalize();
+        v.mult(getRandomNumber(0, this.world.bounds[2]/2));
+        v.rotate(getRandomNumber(0, Math.PI * 2, true));
+        v.add(center);
+        return v;
+      };
+
+      for (var i = 0; i < totalElements; i++) {
+        this.add('Mover', {
+          world: document.getElementById('worldA'),
+          color: [0, 0, 0],
+          location: myLocation,
+          mass: getRandomNumber(5, 20, true)
+        });
+      }
+
+      for (var i = 0; i < totalElements; i++) {
+        this.add('Mover', {
+          world: document.getElementById('worldB'),
+          color: [0, 0, 0],
+          location: myLocation,
+          mass: getRandomNumber(5, 20, true)
+        });
+      }
+
+      for (var i = 0; i < totalElements; i++) {
+        this.add('Mover', {
+          world: document.getElementById('worldC'),
+          color: [0, 0, 0],
+          location: myLocation,
+          mass: getRandomNumber(5, 20, true)
+        });
+      }
+
+    },
+    [
+      document.getElementById('worldA'),
+      document.getElementById('worldB'),
+      document.getElementById('worldC')
+    ]);
+
+    /*global config */
+    Anim.Burner.Utils.addEvent(document, 'keyup', function(e) {
+
+      if (e.keyCode === config.keyMap.pause) {
+        Anim.Burner.PubSub.publish('pause');
+      }
+      if (e.keyCode === config.keyMap.resetSystem) {
+        Anim.Burner.PubSub.publish('resetSystem');
+      }
+      if (e.keyCode === config.keyMap.destroySystem) {
+        Anim.Burner.PubSub.publish('destroySystem');
+      }
+      if (e.keyCode === config.keyMap.stats) {
+        Anim.Burner.PubSub.publish('stats');
+      }
+    });
+
+  </script>
+</body>
+</html>
