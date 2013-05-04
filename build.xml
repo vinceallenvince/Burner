@@ -27,6 +27,9 @@
   <loadproperties srcfile="build.properties" />
 
   <loadfile property="license" srcfile="license.txt" />
+  <loadfile property="license.min" srcfile="license.min.txt" />
+
+  <property name="empty" value="" />
 
   <tstamp>
     <format property="build.time"
@@ -235,7 +238,10 @@
     </replaceregexp>
     <!-- Searches for %LICENSE% in the build directory and replaces with the license -->
     <replaceregexp match="%LICENSE%" replace="${license}" flags="g" byline="true">
-      <fileset dir="${build.dir}" includes="**/*"/>
+      <fileset dir="${build.dir}" includes="**/*" excludes="*min*"/>
+    </replaceregexp>
+    <replaceregexp match="%LICENSE%" replace="${license.min}" flags="g" byline="true">
+      <fileset dir="${build.dir}" includes="*min*"/>
     </replaceregexp>
     <!-- Searches for %BUILDTIME% in the build directory and replaces with the timestamp -->
     <replaceregexp match="%BUILDTIME%" replace="${build.time}" flags="g" byline="true">
