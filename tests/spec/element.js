@@ -40,7 +40,7 @@ describe("A new Element", function() {
         myDiv.id = this.id;
         myDiv.className = this.name;
         myDiv.style.visibility = 'hidden';
-        this._el = this.options.world.el.appendChild(myDiv);
+        this.el = this.options.world.el.appendChild(myDiv);
 
       }
       exports.Burner.Utils.extend(Mover, exports.Burner.Element);
@@ -55,7 +55,7 @@ describe("A new Element", function() {
       world: document.getElementById('worldA'),
       mass: 100,
       tagline: 'Hello Sparky!',
-      _el: document.getElementById('element'),
+      el: document.getElementById('element'),
       location: {x: 100, y: 100},
       width: 100,
       height: 100,

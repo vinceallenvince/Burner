@@ -42,7 +42,7 @@ describe("PubSub", function() {
         myDiv.id = this.id;
         myDiv.className = this.name;
         myDiv.style.visibility = 'hidden';
-        this._el = this.options.world.el.appendChild(myDiv);
+        this.el = this.options.world.el.appendChild(myDiv);
 
       }
       exports.Burner.Utils.extend(Mover, exports.Burner.Element);

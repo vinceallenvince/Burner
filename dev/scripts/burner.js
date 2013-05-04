@@ -22,8 +22,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-/* Version: 1.0.0 */
-/* Build time: April 28, 2013 03:47:14 *//** @namespace */
+/* Version: 1.0.1 */
+/* Build time: May 4, 2013 01:08:09 *//** @namespace */
 function Burner(exports, opt_parent) {
 
   'use strict';
@@ -245,8 +245,8 @@ Element.prototype._init = function() {
     }
   }
 
-  this._el.style.top = 0;
-  this._el.style.left = 0;
+  this.el.style.top = 0;
+  this.el.style.left = 0;
 };
 
 /**
@@ -254,7 +254,7 @@ Element.prototype._init = function() {
  */
 Element.prototype.draw = function() {
 
-  var cssText, el = this._el;
+  var cssText, el = this.el;
 
   if (el) {
     cssText = this._getCSSText({
@@ -743,10 +743,10 @@ function StatsDisplay() {
    * A reference to the DOM element containing the display.
    * @private
    */
-  this._el = document.createElement('div');
-  this._el.id = 'statsDisplay';
-  this._el.className = 'statsDisplay';
-  this._el.style.color = 'white';
+  this.el = document.createElement('div');
+  this.el.id = 'statsDisplay';
+  this.el.className = 'statsDisplay';
+  this.el.style.color = 'white';
 
   /**
    * A reference to the textNode displaying the total number of elements.
@@ -765,35 +765,35 @@ function StatsDisplay() {
   labelContainer.className = 'statsDisplayLabel';
   label = document.createTextNode('trans3d: ');
   labelContainer.appendChild(label);
-  this._el.appendChild(labelContainer);
+  this.el.appendChild(labelContainer);
 
   // create textNode for totalElements
   this._3dTransformsValue = document.createTextNode(exports.System.supportedFeatures.csstransforms3d);
-  this._el.appendChild(this._3dTransformsValue);
+  this.el.appendChild(this._3dTransformsValue);
 
   // create totol elements label
   labelContainer = document.createElement('span');
   labelContainer.className = 'statsDisplayLabel';
   label = document.createTextNode('total elements: ');
   labelContainer.appendChild(label);
-  this._el.appendChild(labelContainer);
+  this.el.appendChild(labelContainer);
 
   // create textNode for totalElements
   this._totalElementsValue = document.createTextNode('0');
-  this._el.appendChild(this._totalElementsValue);
+  this.el.appendChild(this._totalElementsValue);
 
   // create fps label
   labelContainer = document.createElement('span');
   labelContainer.className = 'statsDisplayLabel';
   label = document.createTextNode('fps: ');
   labelContainer.appendChild(label);
-  this._el.appendChild(labelContainer);
+  this.el.appendChild(labelContainer);
 
   // create textNode for fps
   this._fpsValue = document.createTextNode('0');
-  this._el.appendChild(this._fpsValue);
+  this.el.appendChild(this._fpsValue);
 
-  document.body.appendChild(this._el);
+  document.body.appendChild(this.el);
 
   /**
    * Initiates the requestAnimFrame() loop.
@@ -858,8 +858,8 @@ StatsDisplay.prototype._update = function(me) {
  */
 StatsDisplay.prototype.destroy = function() {
   this._active = false;
-  if (document.getElementById(this._el.id)) {
-    document.body.removeChild(this._el);
+  if (document.getElementById(this.el.id)) {
+    document.body.removeChild(this.el);
   }
 };
 
@@ -1233,8 +1233,8 @@ System.add = function(klass, opt_options) {
     records[records.length - 1]._init();
   }
   // add the new object to records lookup table; value = parentNode of its DOM element
-  if (records[records.length - 1]._el) {
-    parentNode = records[records.length - 1]._el.parentNode;
+  if (records[records.length - 1].el) {
+    parentNode = records[records.length - 1].el.parentNode;
   }
   recordsLookup[records[records.length - 1].id] = parentNode;
 
@@ -1409,9 +1409,9 @@ System.destroyElement = function (obj) {
 
   for (i = 0, max = records.length; i < max; i += 1) {
     if (records[i].id === obj.id) {
-      records[i]._el.style.visibility = 'hidden'; // hide element
-      records[i]._el.style.top = '-5000px';
-      records[i]._el.style.left = '-5000px';
+      records[i].el.style.visibility = 'hidden'; // hide element
+      records[i].el.style.top = '-5000px';
+      records[i].el.style.left = '-5000px';
       records[i].world._pool[records[i].world._pool.length] = records.splice(i, 1)[0]; // move record to pool array
       System._updateCacheLookup(obj, false);
       break;

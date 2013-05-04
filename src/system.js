@@ -365,8 +365,8 @@ System.add = function(klass, opt_options) {
     records[records.length - 1]._init();
   }
   // add the new object to records lookup table; value = parentNode of its DOM element
-  if (records[records.length - 1]._el) {
-    parentNode = records[records.length - 1]._el.parentNode;
+  if (records[records.length - 1].el) {
+    parentNode = records[records.length - 1].el.parentNode;
   }
   recordsLookup[records[records.length - 1].id] = parentNode;
 
@@ -541,9 +541,9 @@ System.destroyElement = function (obj) {
 
   for (i = 0, max = records.length; i < max; i += 1) {
     if (records[i].id === obj.id) {
-      records[i]._el.style.visibility = 'hidden'; // hide element
-      records[i]._el.style.top = '-5000px';
-      records[i]._el.style.left = '-5000px';
+      records[i].el.style.visibility = 'hidden'; // hide element
+      records[i].el.style.top = '-5000px';
+      records[i].el.style.left = '-5000px';
       records[i].world._pool[records[i].world._pool.length] = records.splice(i, 1)[0]; // move record to pool array
       System._updateCacheLookup(obj, false);
       break;

@@ -62,10 +62,10 @@ function StatsDisplay() {
    * A reference to the DOM element containing the display.
    * @private
    */
-  this._el = document.createElement('div');
-  this._el.id = 'statsDisplay';
-  this._el.className = 'statsDisplay';
-  this._el.style.color = 'white';
+  this.el = document.createElement('div');
+  this.el.id = 'statsDisplay';
+  this.el.className = 'statsDisplay';
+  this.el.style.color = 'white';
 
   /**
    * A reference to the textNode displaying the total number of elements.
@@ -84,35 +84,35 @@ function StatsDisplay() {
   labelContainer.className = 'statsDisplayLabel';
   label = document.createTextNode('trans3d: ');
   labelContainer.appendChild(label);
-  this._el.appendChild(labelContainer);
+  this.el.appendChild(labelContainer);
 
   // create textNode for totalElements
   this._3dTransformsValue = document.createTextNode(exports.System.supportedFeatures.csstransforms3d);
-  this._el.appendChild(this._3dTransformsValue);
+  this.el.appendChild(this._3dTransformsValue);
 
   // create totol elements label
   labelContainer = document.createElement('span');
   labelContainer.className = 'statsDisplayLabel';
   label = document.createTextNode('total elements: ');
   labelContainer.appendChild(label);
-  this._el.appendChild(labelContainer);
+  this.el.appendChild(labelContainer);
 
   // create textNode for totalElements
   this._totalElementsValue = document.createTextNode('0');
-  this._el.appendChild(this._totalElementsValue);
+  this.el.appendChild(this._totalElementsValue);
 
   // create fps label
   labelContainer = document.createElement('span');
   labelContainer.className = 'statsDisplayLabel';
   label = document.createTextNode('fps: ');
   labelContainer.appendChild(label);
-  this._el.appendChild(labelContainer);
+  this.el.appendChild(labelContainer);
 
   // create textNode for fps
   this._fpsValue = document.createTextNode('0');
-  this._el.appendChild(this._fpsValue);
+  this.el.appendChild(this._fpsValue);
 
-  document.body.appendChild(this._el);
+  document.body.appendChild(this.el);
 
   /**
    * Initiates the requestAnimFrame() loop.
@@ -177,8 +177,8 @@ StatsDisplay.prototype._update = function(me) {
  */
 StatsDisplay.prototype.destroy = function() {
   this._active = false;
-  if (document.getElementById(this._el.id)) {
-    document.body.removeChild(this._el);
+  if (document.getElementById(this.el.id)) {
+    document.body.removeChild(this.el);
   }
 };
 

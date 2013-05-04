@@ -35,8 +35,8 @@ Element.prototype._init = function() {
     }
   }
 
-  this._el.style.top = 0;
-  this._el.style.left = 0;
+  this.el.style.top = 0;
+  this.el.style.left = 0;
 };
 
 /**
@@ -44,7 +44,7 @@ Element.prototype._init = function() {
  */
 Element.prototype.draw = function() {
 
-  var cssText, el = this._el;
+  var cssText, el = this.el;
 
   if (el) {
     cssText = this._getCSSText({
