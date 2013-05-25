@@ -1,5 +1,5 @@
 /** @namespace */
-var SimpleSim = {}, exports = SimpleSim;
+var Burner = {}, exports = Burner;
 
 (function(exports) {
 

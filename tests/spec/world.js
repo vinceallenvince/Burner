@@ -1,87 +1,48 @@
-/*global Burner */
-/*jshint supernew:true */
-var exports = {};
+describe("A World", function() {
 
-describe("World", function() {
-
-  var obj, getDataType, system, records, Anim = {};
+  var obj;
 
   beforeEach(function() {
-
-    (function(exports) {
-
-      // create world element
-      var world = document.createElement('div');
-      world.id = 'worldA';
-      world.className = 'world';
-      document.body.appendChild(world);
-
-      // create Burner namespace
-      exports.Burner = {};
-
-      // pass in the namespace and parent object
-      new Burner(exports.Burner, exports);
-
-      function Mover(opt_options) {
-
-        var options = opt_options || {};
-
-        options.name = 'Mover';
-
-        exports.Burner.Element.call(this, options);
-
-        this.options = options;
-        this.world = options.world;
-        this.mass = options.mass || 10;
-
-        return this;
-      }
-      exports.Burner.Utils.extend(Mover, exports.Burner.Element);
-
-      exports.Mover = Mover;
-
-    }(Anim));
-    getDataType = Anim.Burner.Utils.getDataType;
-    system = Anim.Burner.System;
-    utils =  Anim.Burner.Utils;
-    records = system.create(null, document.getElementById('worldA'));
-    obj = records[0];
+    el = document.createElement('div');
+    el.id = 'world';
+    document.body.appendChild(el);
+    obj = new SimpleSim.World(el);
   });
 
   afterEach(function() {
-    system._destroySystem();
-    obj = null;
+    document.body.removeChild(document.getElementById('world'));
   });
 
-  it("should create worlds.", function() {
+  it("should have its required properties.", function() {
+    expect(typeof obj.el).toEqual('object');
+    expect(obj.name).toEqual('World');
+    expect(typeof obj.width).toEqual('number');
+    expect(typeof obj.height).toEqual('number');
+    expect(obj.pauseStep).toEqual(false);
+    expect(obj.pauseDraw).toEqual(false);
+    expect(obj.gravity instanceof exports.Vector).toEqual(true);
+    expect(typeof obj.el).toEqual('object');
+    expect(typeof obj.world).toEqual('object');
+  });
+
+  it("should have a method step() that is a noop.", function() {
+    expect(typeof obj.step).toEqual('function');
+    expect(obj.step()).toEqual(undefined);
+  });
+
+  it("should have a method draw() that is a noop.", function() {
+    expect(typeof obj.draw).toEqual('function');
+    expect(obj.draw()).toEqual(undefined);
+  });
+
+  it("should have a private method _setBounds() that determines the width and height of the world.", function() {
     expect(obj.bounds[0]).toEqual(0);
+    expect(typeof obj.bounds[1]).toEqual('number');
+    expect(typeof obj.bounds[2]).toEqual('number');
     expect(obj.bounds[3]).toEqual(0);
-    expect(utils.getDataType(obj._pool)).toEqual('array');
+    expect(typeof obj.bounds).toEqual('object');
+    expect(typeof obj.width).toEqual('number');
+    expect(typeof obj.height).toEqual('number');
   });
 
-  it("should have a method _getBounds() to set world boundaries.", function() {
-    var width = obj.el.offsetWidth, height = obj.el.offsetHeight;
-    expect(obj._getBounds()).toEqual([0, width, height, 0]);
-  });
-
-  it("should have a method update() to update properties.", function() {
-    Anim.Burner.World.update({
-        gravity: {x: 0, y: 1},
-        c: 0.1
-      });
-    expect(obj.gravity.y).toEqual(1);
-    expect(obj.c).toEqual(0.1);
-  });
-
-  it("should have a method _applyStyles() to loop thru the world's style property and set styles on its associated DOM element.", function() {
-    Anim.Burner.World.update({
-        gravity: {x: 0, y: 1},
-        c: 0.1,
-        style: {
-          backgroundColor: 'rgb(255, 0, 0)'
-        }
-      });
-    expect(Anim.Burner.System.allWorlds()[0].el.style.backgroundColor).toEqual('rgb(255, 0, 0)');
-
-  });
 });

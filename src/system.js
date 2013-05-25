@@ -1,45 +1,9 @@
-/*global exports, window, document, setTimeout, SimpleSim */
+/*global exports, window, document, setTimeout, Burner */
 /*jshint supernew:true */
 /** @namespace */
 var System = {
   name: 'System'
 };
-
-/**
- * All style properties to process on objects.
- * @private
- */
-System._STYLE_PROPS = {
-  x: '',
-  y: '',
-  width: '',
-  height: '',
-  color0: '',
-  color1: '',
-  color2: '',
-  colorMode: 'g',
-  visibility: '',
-  opacity: '',
-  borderWidth: '',
-  borderStyle: '',
-  borderColor0: '',
-  borderColor1: '',
-  borderColor2: '',
-  borderRadius: '',
-  boxShadowOffsetX: '',
-  boxShadowOffsetY: '',
-  boxShadowBlur: '',
-  boxShadowSpread: '',
-  boxShadowColor0: '',
-  boxShadowColor1: '',
-  boxShadowColor2: ''
-};
-
-/**
- * Holds regular expressions used to generate cssText.
- * @private
- */
-System._styleRegExp = [];
 
 /**
  * Holds a transform property based on supportedFeatures.
@@ -65,6 +29,15 @@ System.supportedFeatures = {
  * @private
  */
 System._records = {
+  lookup: {},
+  list: []
+};
+
+/**
+ * Stores references to all elements in the system.
+ * @private
+ */
+System._caches = {
   lookup: {},
   list: []
 };
@@ -99,20 +72,22 @@ System._resizeTime = 0;
  * Initializes the system and starts the update loop.
  *
  * @param {Function} opt_setup= Creates the initial system conditions.
+ * @param {Function} opt_classes= Additional object classes that extend Item.
  * @param {Function} opt_supportedFeatures= A map of supported browser features.
  * @param {Object} opt_world= A reference to a DOM element representing the System world.
  * @param {Object} opt_worldOptions= Optional properties for the world.
  * @param {boolean} opt_startLoop= If true, _update is not called. Use to setup a System
  *    and start the _update loop at a later time.
  */
-System.init = function(opt_setup, opt_supportedFeatures, opt_world, opt_worldOptions, opt_startLoop) {
+System.init = function(opt_setup, opt_classes, opt_supportedFeatures, opt_world, opt_worldOptions, opt_startLoop) {
 
   var i, setup = opt_setup || function () {},
       world = opt_world || document.body,
       worldOptions = opt_worldOptions || {},
       supportedFeatures = opt_supportedFeatures || {},
-      startLoop = opt_startLoop || true,
-      props = this._STYLE_PROPS;
+      startLoop = opt_startLoop || true;
+
+  Burner.Classes = opt_classes || null;
 
   if (typeof supportedFeatures === 'object' &&
       typeof supportedFeatures.csstransforms !== 'undefined' &&
@@ -126,20 +101,11 @@ System.init = function(opt_setup, opt_supportedFeatures, opt_world, opt_worldOpt
   }
 
   if (this.supportedFeatures.csstransforms3d) {
-    this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0); -moz-transform: translate3d(<x>px, <y>px, 0); -o-transform: translate3d(<x>px, <y>px, 0); -ms-transform: translate3d(<x>px, <y>px, 0);';
+    this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg); -moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg); -o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg); -ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg);';
   } else if (this.supportedFeatures.csstransforms) {
-    this._stylePosition = '-webkit-transform: translateX(<x>px) translateY(<y>px); -moz-transform: translateX(<x>px) translateY(<y>px); -o-transform: translateX(<x>px) translateY(<y>px); -ms-transform: translateX(<x>px) translateY(<y>px);';
+    this._stylePosition = '-webkit-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg); -moz-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg); -o-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg); -ms-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg);';
   } else {
     this._stylePosition = 'position: absolute; left: <x>px; top: <y>px;';
-  }
-
-  for (i in props) {
-    if (props.hasOwnProperty(i)) {
-      this._styleRegExp.push({
-        name: i,
-        regExp: new RegExp('<' + i + '>', props[i])
-      });
-    }
   }
 
   document.body.onorientationchange = System.updateOrientation;
@@ -225,10 +191,10 @@ System.add = function(klass, opt_options) {
       }
     }
   } else {
-    if (SimpleSim[klass]) {
-      records[records.length] = new SimpleSim[klass](options);
+    if (Burner[klass]) {
+      records[records.length] = new Burner[klass](options);
     } else {
-      records[records.length] = new exports.Box(options);
+      records[records.length] = new Burner.Classes[klass](options);
     }
   }
   last = records.length - 1;
@@ -236,6 +202,7 @@ System.add = function(klass, opt_options) {
   recordsLookup[records[last].id] = parentNode;
   records[last].reset(options);
   records[last].init(options);
+  return records[last];
 };
 
 /**
@@ -402,7 +369,7 @@ System._resize = function() {
 
   for (i = 0, max = records.length; i < max; i++) {
     record = records[i];
-    if (record.name !== 'World') {
+    if (record.name !== 'World' && record.location) {
       record.location.x = screenDimensions.width * (record.location.x / world.width);
       record.location.y = screenDimensions.height * (record.location.y / world.height);
     }
@@ -569,32 +536,50 @@ System._toggleStats = function() {
 };
 
 /**
+ * Updates the corresponding DOM element's style property.
+ */
+System._draw = function(obj) {
+
+  var cssText = exports.System.getCSSText({
+    x: obj.location.x - (obj.width / 2),
+    y: obj.location.y - (obj.height / 2),
+    angle: obj.angle,
+    width: obj.width,
+    height: obj.height,
+    color0: obj.color[0],
+    color1: obj.color[1],
+    color2: obj.color[2],
+    colorMode: obj.colorMode,
+    visibility: obj.visibility,
+    opacity: obj.opacity,
+    borderWidth: obj.borderWidth,
+    borderStyle: obj.borderStyle,
+    borderColor0: obj.borderColor[0],
+    borderColor1: obj.borderColor[1],
+    borderColor2: obj.borderColor[2],
+    borderRadius: obj.borderRadius,
+    boxShadowOffsetX: obj.boxShadowOffset.x,
+    boxShadowOffsetY: obj.boxShadowOffset.y,
+    boxShadowBlur: obj.boxShadowBlur,
+    boxShadowSpread: obj.boxShadowSpread,
+    boxShadowColor0: obj.boxShadowColor[0],
+    boxShadowColor1: obj.boxShadowColor[1],
+    boxShadowColor2: obj.boxShadowColor[2]
+  });
+  obj.el.style.cssText = cssText;
+};
+
+/**
  * Concatenates a new cssText string.
  *
  * @param {Object} props A map of object properties.
  */
 System.getCSSText = function(props) {
-
-  var i, max, str, regs = this._styleRegExp, styleProps = System._STYLE_PROPS;
-
-  if (props.colorMode === 'hsl') {
-    str = this._stylePosition + 'width: <width>px; height: <height>px; background-color: <colorMode>(<color0>, <color1>%, <color2>%); border: <borderWidth>px <borderStyle> <colorMode>(<borderColor0>, <borderColor1>%, <borderColor2>%); border-radius: <borderRadius>%; box-shadow: <boxShadowOffsetX>px <boxShadowOffsetY>px <boxShadowBlur>px <boxShadowSpread>px <colorMode>(<boxShadowColor0>, <boxShadowColor1>%, <boxShadowColor2>%); visibility: <visibility>; opacity: <opacity>;';
-  } else {
-    str = this._stylePosition + 'width: <width>px; height: <height>px; background-color: <colorMode>(<color0>, <color1>, <color2>); border: <borderWidth>px <borderStyle> <colorMode>(<borderColor0>, <borderColor1>, <borderColor2>); border-radius: <borderRadius>%; box-shadow: <boxShadowOffsetX>px <boxShadowOffsetY>px <boxShadowBlur>px <boxShadowSpread>px <colorMode>(<boxShadowColor0>, <boxShadowColor1>, <boxShadowColor2>); visibility: <visibility>; opacity: <opacity>;';
-  }
-
-  /*var a = str.replace(/<width>|<height>/g, function(m, key) {
-    var match = m.replace('<', '').replace('>', '');
-    return props.hasOwnProperty(match) ? props[match] : '';
-  });
-  console.log(a);*/
-
-  for (i = 0, max = regs.length; i < max; i++) {
-    str = str.replace(regs[i].regExp, props[regs[i].name]);
-  }
-
-  // a.replace(r, function() {console.log(arguments);});
-
-  return str;
+  return this._stylePosition.replace('<x>', props.x).replace('<y>', props.y).replace('<angle>', props.angle) + 'width: ' +
+      props.width + 'px; height: ' + props.height + 'px; background-color: ' +
+      props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') +'); border: ' +
+      props.borderWidth + 'px ' + props.borderStyle + ' ' + props.colorMode + '(' + props.borderColor0 + ', ' + props.borderColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.borderColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); border-radius: ' +
+      props.borderRadius + '%; box-shadow: ' + props.boxShadowOffsetX + 'px ' + props.boxShadowOffsetY + 'px ' + props.boxShadowBlur + 'px ' + props.boxShadowSpread + 'px ' + props.colorMode + '(' + props.boxShadowColor0 + ', ' + props.boxShadowColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.boxShadowColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); visibility: ' +
+      props.visibility + '; opacity: ' + props.opacity + ';';
 };
 exports.System = System;

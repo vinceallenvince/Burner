@@ -19,7 +19,7 @@ function World(el, opt_options) {
   this.name = 'World';
   this.width = 0;
   this.height = 0;
-  this.color = options.color || [255, 255, 255];
+  this.color = options.color || 'transparent';
   this.colorMode = options.color || 'rgb';
   this.visibility = options.visibility || 'visible';
   this.opacity = options.opacity || 1;
@@ -30,12 +30,13 @@ function World(el, opt_options) {
   this.boxShadowBlur = options.boxShadowBlur || 0;
   this.boxShadowSpread = options.boxShadowSpread || 0;
   this.boxShadowColor = options.boxShadowColor || 'transparent';
+  this.gravity = options.gravity || new exports.Vector(0, 1);
 
   this.pauseStep = false;
   this.pauseDraw = false;
-  this.gravity = new exports.Vector(0, 1);
-  this.location = new exports.Vector();
+
   this._setBounds();
+  this.location = new exports.Vector(this.width / 2, this.height / 2);
 
   this.el.className = 'world';
 
@@ -59,33 +60,7 @@ World.prototype.step = function() {};
  * Updates the corresponding DOM element's style property.
  */
 World.prototype.draw = function() {
-
-  var cssText = exports.System.getCSSText({
-    x: this.location.x,
-    y: this.location.y,
-    width: this.width,
-    height: this.height,
-    color0: this.color[0],
-    color1: this.color[1],
-    color2: this.color[2],
-    colorMode: this.colorMode,
-    visibility: this.visibility,
-    opacity: this.opacity,
-    borderWidth: this.borderWidth,
-    borderStyle: this.borderStyle,
-    borderColor0: this.borderColor[0],
-    borderColor1: this.borderColor[1],
-    borderColor2: this.borderColor[2],
-    borderRadius: this.borderRadius,
-    boxShadowOffsetX: this.boxShadowOffset.x,
-    boxShadowOffsetY: this.boxShadowOffset.y,
-    boxShadowBlur: this.boxShadowBlur,
-    boxShadowSpread: this.boxShadowSpread,
-    boxShadowColor0: this.boxShadowColor[0],
-    boxShadowColor1: this.boxShadowColor[1],
-    boxShadowColor2: this.boxShadowColor[2]
-  });
-  this.el.style.cssText = cssText;
+  exports.System._draw(this);
 };
 
 /**

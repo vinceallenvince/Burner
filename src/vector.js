@@ -167,13 +167,20 @@ Vector.prototype.mag = function() {
 /**
  * Limits the vector's magnitude.
  *
- * @param {number} high The upper bound of the vector's magnitude.
+ * @param {number} opt_high The upper bound of the vector's magnitude
+ * @param {number} opt_low The lower bound of the vector's magnitude.
  * @returns {Object} This vector.
  */
-Vector.prototype.limit = function(high) {
-  if (this.mag() > high) {
+Vector.prototype.limit = function(opt_high, opt_low) {
+  var high = opt_high || null,
+      low = opt_low || null;
+  if (high && this.mag() > high) {
     this.normalize();
     this.mult(high);
+  }
+  if (low && this.mag() < low) {
+    this.normalize();
+    this.mult(low);
   }
   return this;
 };

@@ -57,10 +57,16 @@ Item.prototype.reset = function(opt_options) {
   this.location = options.location ||
       new exports.Vector(this.world.width / 2, this.world.height / 2);
 
+  this.maxSpeed = options.maxSpeed === 0 ? 0 : options.maxSpeed || 10;
+  this.minSpeed = options.minSpeed || 0;
+  this.angle = options.angle || 0;
+
   this.lifespan = options.lifespan || -1;
   this.life = options.life || 0;
   this.isStatic = !!options.isStatic;
   this.controlCamera = !!options.controlCamera;
+  this.checkWorldEdges = options.checkWorldEdges === false ? false : true;
+  this.wrapWorldEdges = !!options.wrapWorldEdges;
 };
 
 /**
@@ -70,11 +76,14 @@ Item.prototype.step = function() {
   if (!this.isStatic) {
     this._applyForce(this.world.gravity);
     this.velocity.add(this.acceleration);
+    this.velocity.limit(this.maxSpeed, this.minSpeed);
     this.location.add(this.velocity);
     if (this.controlCamera) {
-    this._checkCameraEdges();
+      this._checkCameraEdges();
     }
-    this._checkWorldEdges();
+    if (this.checkWorldEdges) {
+      this._checkWorldEdges();
+    }
     this.acceleration.mult(0);
     if (this.life < this.lifespan) {
       this.life++;
@@ -90,7 +99,7 @@ Item.prototype.step = function() {
  * @param {Object} force A Vector representing a force to apply.
  * @returns {Object} A Vector representing a new acceleration.
  */
-Item.prototype._applyForce = function(force) {
+Item.prototype.applyForce = function(force) {
   // calculated via F = m * a
   if (force) {
     this._force.x = force.x;
@@ -118,20 +127,36 @@ Item.prototype._checkWorldEdges = function() {
       bounciness = this.bounciness;
 
   // transform origin is at the center of the object
-  if (location.x + width / 2 > worldRight) {
-    location.x = worldRight - width / 2;
-    velocity.x *= -1 * bounciness;
-  } else if (location.x < width / 2) {
-    location.x = width / 2;
-    velocity.x *= -1 * bounciness;
-  }
+  if (this.wrapWorldEdges) {
 
-  if (location.y + height / 2 > worldBottom) {
-    location.y = worldBottom - height / 2;
-    velocity.y *= -1 * bounciness;
-  } else if (location.y < height / 2) {
-    location.y = height / 2;
-    velocity.y *= -1 * bounciness;
+    if (location.x - (width / 2) > worldRight) {
+      location.x = -width / 2;
+    } else if (location.x < -width / 2) {
+      location.x = worldRight + (width / 2);
+    }
+
+    if (location.y - (height / 2) > worldBottom) {
+      location.y = -height / 2;
+    } else if (location.y < -height / 2) {
+      location.y = worldBottom + (height / 2);
+    }
+  } else {
+
+    if (location.x + width / 2 > worldRight) {
+      location.x = worldRight - width / 2;
+      velocity.x *= -1 * bounciness;
+    } else if (location.x < width / 2) {
+      location.x = width / 2;
+      velocity.x *= -1 * bounciness;
+    }
+
+    if (location.y + height / 2 > worldBottom) {
+      location.y = worldBottom - height / 2;
+      velocity.y *= -1 * bounciness;
+    } else if (location.y < height / 2) {
+      location.y = height / 2;
+      velocity.y *= -1 * bounciness;
+    }
   }
 };
 
@@ -148,33 +173,7 @@ Item.prototype._checkCameraEdges = function() {
  * Updates the corresponding DOM element's style property.
  */
 Item.prototype.draw = function() {
-
-  var cssText = exports.System.getCSSText({
-    x: this.location.x - this.width / 2,
-    y: this.location.y - this.height / 2,
-    width: this.width,
-    height: this.height,
-    color0: this.color[0],
-    color1: this.color[1],
-    color2: this.color[2],
-    colorMode: this.colorMode,
-    visibility: this.visibility,
-    opacity: this.opacity,
-    borderWidth: this.borderWidth,
-    borderStyle: this.borderStyle,
-    borderColor0: this.borderColor[0],
-    borderColor1: this.borderColor[1],
-    borderColor2: this.borderColor[2],
-    borderRadius: this.borderRadius,
-    boxShadowOffsetX: this.boxShadowOffset.x,
-    boxShadowOffsetY: this.boxShadowOffset.y,
-    boxShadowBlur: this.boxShadowBlur,
-    boxShadowSpread: this.boxShadowSpread,
-    boxShadowColor0: this.boxShadowColor[0],
-    boxShadowColor1: this.boxShadowColor[1],
-    boxShadowColor2: this.boxShadowColor[2]
-  });
-  this.el.style.cssText = cssText;
+  exports.System._draw(this);
 };
 
 exports.Item = Item;
