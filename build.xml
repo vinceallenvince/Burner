@@ -85,7 +85,7 @@
   <!-- Validate via csslint -->
   <target name="validateCSS">
     <apply executable="java" failonerror="true" parallel="true">
-      <fileset dir="${cssSrc.dir}" includes="**/*.css" />
+      <fileset dir="${css.dir}" includes="**/*.css" />
       <arg line="-jar" />
       <arg path="${rhino}" />
       <arg path="${csslint}" />
@@ -158,7 +158,7 @@
   <target name="concatenateCSS">
     <concat destfile="${build.dir}/${buildNameLower}.css" fixlastline="yes" eol="lf">
       <!-- using filelist here; order will probably matter -->
-      <filelist dir="${cssSrc.dir}">
+      <filelist dir="${css.dir}">
         <file name="main.css" />
       </filelist>
     </concat>
