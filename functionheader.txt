@@ -1,11 +1,7 @@
 /** @namespace */
-function Burner(exports, opt_parent) {
+var SimpleSim = {}, exports = SimpleSim;
+
+(function(exports) {
 
   'use strict';
 
-  /**
-   * If using Burner as a renderer in a
-   * parent object, pass a reference to the parent
-   * via the opt_parent param.
-   */
-  var parent = opt_parent || null;

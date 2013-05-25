@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' content='text/html; charset=UTF-8' />
+  <meta name='keywords' content='SimpleSim' />
+  <meta name='description' content='SimpleSim is a natural systems simulator.' />
+  <meta name='viewport' content='user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta property='og:title' content='SimpleSim' />
+  <meta property='og:url' content='https://github.com/foldi/SimpleSim' />
+  <meta property='og:site_name' content='SimpleSim' />
+  <title>SimpleSim</title>
+  <link rel='stylesheet' href='css/simplesim.min.css' type='text/css' charset='utf-8' />
+  <script src='scripts/modernizr.js' type='text/javascript' charset='utf-8'></script>
+  <script src='scripts/simplesim.min.js' type='text/javascript' charset='utf-8'></script>
+</head>
+<body>
+  <script type='text/javascript' charset='utf-8'>
+
+    var system = SimpleSim.System,
+        windowSize = system.getWindowSize(),
+        randomNumber = system.getRandomNumber;
+
+    system.init(function() {
+      var mass = 20;
+      system.add('Box', {
+        location: new exports.Vector(windowSize.width / 2, windowSize.height / 2),
+        mass: mass,
+        width: mass,
+        height: mass,
+        controlCamera: true
+      });
+    }, {
+      csstransforms3d: Modernizr.csstransforms3d,
+      csstransforms: Modernizr.csstransforms
+    },
+    null,
+    {
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: 'black'
+    });
+  </script>
+</body>
+</html>

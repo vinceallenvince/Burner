@@ -1,1 +1,1 @@
-} // Burner end.
+}(exports)); // %BUILDNAME% end.
