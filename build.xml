@@ -110,14 +110,14 @@
       </filelist>
       <footer trimleading="yes">//%END%</footer>
     </concat>
-    <loadfile property="functionheader" srcFile="lib/functionheader.txt"/>
+    <loadfile property="functionheader" srcFile="functionheader.txt"/>
     <replaceregexp match="(/\*.*\*/.*)??" flags="sm"
         replace="${functionheader}">
         <fileset dir="${build.dir}">
             <include name="**/*.js"/>
         </fileset>
     </replaceregexp>
-    <loadfile property="functionfooter" srcFile="lib/functionfooter.txt"/>
+    <loadfile property="functionfooter" srcFile="functionfooter.txt"/>
     <replaceregexp match="//%END%" flags="sm"
         replace="${functionfooter}">
         <fileset dir="${build.dir}">
@@ -222,7 +222,7 @@
   </target>
 
   <target name="bake">
-    <loadfile property="buildheader" srcFile="lib/header.txt"/>
+    <loadfile property="buildheader" srcFile="header.txt"/>
     <replaceregexp match="(/\*.*\*/.*)??" flags="sm"
         replace="${buildheader}">
         <fileset dir="${build.dir}">
