@@ -3,6 +3,7 @@
 build/
 docs/
 lib/
+tests/lib/
 dev/
 
 # FILES #
