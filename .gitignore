@@ -1,7 +1,6 @@
 # FOLDERS #
 ###########
-build/backup/
-css/build/backup/
+build/
 docs/
 lib/
 
