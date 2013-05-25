@@ -3,8 +3,8 @@
 build/
 docs/
 lib/
+dev/
 
 # FILES #
 #########
-build/burner.raw.min.js
 .DS_Store
