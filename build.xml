@@ -20,15 +20,14 @@
       bake,
       deploy,
       test,
-      document">
+      document,
+      deployRelease">
   </target>
 
   <loadproperties srcfile="build.properties" />
 
   <loadfile property="license" srcfile="license.txt" />
   <loadfile property="license.min" srcfile="license.min.txt" />
-
-  <property name="empty" value="" />
 
   <tstamp>
     <format property="build.time"
@@ -46,7 +45,7 @@
     </condition>
   </target>
 
-  <!-- Delete all files inside /build -->
+  <!-- Delete all files not inside /build/backup -->
   <target name="cleanBuild" depends="checkBuild" if="cleandir">
     <delete>
       <fileset dir="${build.dir}" includes="**/*">
@@ -59,7 +58,7 @@
     <delete dir="${jsdoc.output}"/>
   </target>
 
-  <!-- Create folders for build and doc files. -->
+  <!-- Create folders for build, backup, and doc files. -->
   <target name="init">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${jsdoc.output}"/>
@@ -67,7 +66,7 @@
       var buildName = project.getProperty("buildName")
       project.setProperty("buildNameLower", buildName.toLowerCase());
     </script>
-    <echo message="${buildNameLower}"/>
+    <echo message="build name: ${buildNameLower}"/>
   </target>
 
   <!-- Validate via jshint -->
@@ -89,7 +88,7 @@
       <arg line="-jar" />
       <arg path="${rhino}" />
       <arg path="${csslint}" />
-      <arg line="${csslint.options}" />
+      <arg line="--${csslint.ignore}" />
       <srcfile/>
     </apply>
   </target>
@@ -99,14 +98,13 @@
     <concat destfile="${build.dir}/${buildNameLower}.js" fixlastline="yes" eol="lf">
       <filelist dir="${src.dir}">
         <file name="raf.js" />
-        <file name="pubsub.js" />
-        <file name="utils.js" />
-        <file name="element.js" />
         <file name="vector.js" />
-        <file name="featuredetector.js" />
         <file name="statsdisplay.js" />
+        <file name="item.js" />
         <file name="system.js" />
         <file name="world.js" />
+        <file name="box.js" />
+        <file name="ball.js" />
       </filelist>
       <footer trimleading="yes">//%END%</footer>
     </concat>
@@ -271,4 +269,13 @@
 
   </target>
 
+  <!-- Copy: copy min build and css files to /public -->
+  <target name="deployRelease">
+
+    <!-- copy min js file to /public/scripts -->
+    <copy file="${build.dir}/${buildNameLower}.min.js" todir="${public.dir}/scripts" overwrite="true"/>
+    <!-- copy min css file to /public/css -->
+    <copy file="${build.dir}/${buildNameLower}.min.css" todir="${public.dir}/css" overwrite="true"/>
+
+  </target>
 </project>

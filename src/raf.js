@@ -1,4 +1,5 @@
 /*global window */
+/*jshint unused:false */
 /**
  * RequestAnimationFrame shim layer with setTimeout fallback
  * @param {function} callback The function to call.

@@ -17,6 +17,8 @@ function StatsDisplay() {
 
   var labelContainer, label;
 
+  this.name = 'StatsDisplay';
+
   /**
    * Set to false to stop requesting animation frames.
    * @private
@@ -65,7 +67,11 @@ function StatsDisplay() {
   this.el = document.createElement('div');
   this.el.id = 'statsDisplay';
   this.el.className = 'statsDisplay';
+  this.el.style.backgroundColor = 'black';
   this.el.style.color = 'white';
+  this.el.style.fontFamily = 'Helvetica';
+  this.el.style.padding = '0.5em';
+  this.el.style.opacity = '0.5';
 
   /**
    * A reference to the textNode displaying the total number of elements.
@@ -79,20 +85,10 @@ function StatsDisplay() {
    */
   this._fpsValue = null;
 
-  // create 3dTransforms label
-  labelContainer = document.createElement('span');
-  labelContainer.className = 'statsDisplayLabel';
-  label = document.createTextNode('trans3d: ');
-  labelContainer.appendChild(label);
-  this.el.appendChild(labelContainer);
-
-  // create textNode for totalElements
-  this._3dTransformsValue = document.createTextNode(exports.System.supportedFeatures.csstransforms3d);
-  this.el.appendChild(this._3dTransformsValue);
-
   // create totol elements label
   labelContainer = document.createElement('span');
   labelContainer.className = 'statsDisplayLabel';
+  labelContainer.style.marginLeft = '0.5em';
   label = document.createTextNode('total elements: ');
   labelContainer.appendChild(label);
   this.el.appendChild(labelContainer);
@@ -104,6 +100,7 @@ function StatsDisplay() {
   // create fps label
   labelContainer = document.createElement('span');
   labelContainer.className = 'statsDisplayLabel';
+  labelContainer.style.marginLeft = '0.5em';
   label = document.createTextNode('fps: ');
   labelContainer.appendChild(label);
   this.el.appendChild(labelContainer);
@@ -158,7 +155,6 @@ StatsDisplay.prototype._update = function(me) {
 
     me._fpsValue.nodeValue = me._fps;
     me._totalElementsValue.nodeValue = elementCount;
-    me._3dTransformsValue.nodeValue = exports.System.supportedFeatures.csstransforms3d;
   }
 
   var reqAnimFrame = (function (me) {
@@ -181,7 +177,5 @@ StatsDisplay.prototype.destroy = function() {
     document.body.removeChild(this.el);
   }
 };
-
-StatsDisplay.prototype.name = 'StatsDisplay';
 
 exports.StatsDisplay = StatsDisplay;
