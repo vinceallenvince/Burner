@@ -41,7 +41,7 @@ function World(el) {
   this.world = {};
 
   /**
-   * Worlds have their own object pool bc object's
+   * Worlds have their own object pool bc objects
    * reference child elements of the world.
    */
   this._pool = [];
@@ -54,13 +54,9 @@ function World(el) {
 }
 
 /**
- * Calculates location.
- *
- * @returns {number} The total number of times step has been executed.
+ * A noop.
  */
-World.prototype.step = function() {
-
-};
+World.prototype.step = function() {};
 
 /**
  * Updates the corresponding DOM element's style property.
@@ -210,7 +206,7 @@ World.prototype._applyStyles = function() {
 };
 
 /**
- * Sets the bounds of the page's visible area.
+ * Sets the bounds of the world's visible area.
  *
  * returns {Array} An array representing the bounds
  *    of the page's visible area in box-model format.
