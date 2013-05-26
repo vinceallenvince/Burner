@@ -10,7 +10,7 @@
 function World(el, opt_options) {
 
   if (!el || typeof el !== 'object') {
-    throw new Error('World: A valid DOM object is required for the new World\'s \"el\" property.');
+    throw new Error('World: A valid DOM object is required for the new World "el" property.');
   }
 
   var screenDimensions = exports.System.getWindowSize();

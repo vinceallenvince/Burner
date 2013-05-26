@@ -274,9 +274,13 @@
 
     <!-- copy fat js file to examples/scripts -->
     <copy file="${build.dir}/${buildNameLower}.js" todir="${examples.dir}/scripts" overwrite="true"/>
-
     <!-- copy fat css file to /examples/css -->
     <copy file="${build.dir}/${buildNameLower}.css" todir="${examples.dir}/css" overwrite="true"/>
+
+    <!-- copy fat js file to examples/scripts -->
+    <copy file="${build.dir}/${buildNameLower}.js" todir="${flocking.dir}/scripts" overwrite="true"/>
+    <!-- copy fat css file to /examples/css -->
+    <copy file="${build.dir}/${buildNameLower}.css" todir="${flocking.dir}/css" overwrite="true"/>
 
   </target>
 

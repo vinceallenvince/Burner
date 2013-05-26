@@ -9,7 +9,7 @@
 function Item(options) {
 
   if (!options || !options.world || typeof options.world !== 'object') {
-    throw new Error('Item: A valid DOM object is required for the new Items\'s \"world\" property.');
+    throw new Error('Item: A valid DOM object is required for the new Item "world" property.');
   }
 
   this.world = options.world;
@@ -33,7 +33,13 @@ function Item(options) {
  */
 Item.prototype.reset = function(opt_options) {
 
-  var options = opt_options;
+  var i, options = opt_options;
+
+  for (i in options) {
+    if (options.hasOwnProperty(i)) {
+      this[i] = options[i];
+    }
+  }
 
   this.width = options.width || 10;
   this.height = options.height || 10;

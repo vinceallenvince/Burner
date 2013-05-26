@@ -80,18 +80,18 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
   var i, setup = opt_setup || function () {},
       world = opt_world || document.body,
       worldOptions = opt_worldOptions || {},
-      supportedFeatures = opt_supportedFeatures || {},
+      supportedFeatures = opt_supportedFeatures || null,
       startLoop = opt_startLoop || true;
 
-  if (typeof supportedFeatures === 'object' &&
+  // check if supportedFeatures were passed
+  if (!supportedFeatures) {
+    this.supportedFeatures = System._getSupportedFeatures();
+  } else if (typeof supportedFeatures === 'object' &&
       typeof supportedFeatures.csstransforms !== 'undefined' &&
       typeof supportedFeatures.csstransforms3d !== 'undefined') {
     this.supportedFeatures = supportedFeatures;
   } else {
-    this.supportedFeatures = {
-      csstransforms: true,
-      csstransforms3d: true
-    };
+    throw new Error('System: supportedFeatures should be passed as an object.');
   }
 
   if (this.supportedFeatures.csstransforms3d) {
@@ -617,6 +617,32 @@ System._toggleStats = function() {
   } else if (System._statsDisplay && !System._statsDisplay._active) {
     System._statsDisplay = new exports.StatsDisplay();
   }
+};
+
+/**
+ * Checks if the Modernizr object exists. If so, returns
+ * supported transforms. If not, returns false for transforms support.
+ *
+ * returns {Object} A map of supported features.
+ * @static
+ * @private
+ */
+System._getSupportedFeatures = function() {
+
+  var features;
+
+  if (window.Modernizr) {
+    features = {
+      csstransforms3d: Modernizr.csstransforms3d,
+      csstransforms: Modernizr.csstransforms
+    };
+  } else {
+    features = {
+      csstransforms3d: exports.FeatureDetector.detect('csstransforms3d'),
+      csstransforms: exports.FeatureDetector.detect('csstransforms')
+    };
+  }
+  return features;
 };
 
 /**
