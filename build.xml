@@ -269,6 +269,8 @@
     <copy file="${build.dir}/${buildNameLower}.js" todir="${tests.dir}/lib" overwrite="true"/>
 
 
+    <!-- copy fat js file to FloraJS/tests/lib -->
+    <copy file="${build.dir}/${buildNameLower}.js" todir="${florajs.dir}/tests/lib" overwrite="true"/>
 
     <!-- copy fat js file to examples/scripts -->
     <copy file="${build.dir}/${buildNameLower}.js" todir="${examples.dir}/scripts" overwrite="true"/>

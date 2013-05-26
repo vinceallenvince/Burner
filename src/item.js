@@ -3,7 +3,7 @@
 /**
  * Creates a new Item.
  *
- * @param {Object} options Initial properties.
+ * @param {Object} options A map of initial properties.
  * @constructor
  */
 function Item(options) {
@@ -41,6 +41,7 @@ Item.prototype.reset = function(opt_options) {
   this.colorMode = options.colorMode || 'rgb';
   this.visibility = options.visibility || 'visible';
   this.opacity = options.opacity || 1;
+  this.zIndex = options.zIndex || 1;
   this.borderWidth = options.borderWidth || 0;
   this.borderStyle = options.borderStyle || 'none';
   this.borderColor = options.borderColor || 'transparent';
@@ -52,10 +53,12 @@ Item.prototype.reset = function(opt_options) {
 
   this.bounciness = options.bounciness || 0.8;
   this.mass = options.mass || 10;
-  this.acceleration = new exports.Vector();
-  this.velocity = new exports.Vector();
-  this.location = options.location ||
-      new exports.Vector(this.world.width / 2, this.world.height / 2);
+  this.acceleration = typeof options.acceleration === 'function' ? options.acceleration.call(this) :
+      options.acceleration || new exports.Vector();
+  this.velocity = typeof options.velocity === 'function' ? options.velocity.call(this) :
+      options.velocity || new exports.Vector();
+  this.location = typeof options.location === 'function' ? options.location.call(this) :
+      options.location || new exports.Vector(this.world.width / 2, this.world.height / 2);
 
   this.maxSpeed = options.maxSpeed === 0 ? 0 : options.maxSpeed || 10;
   this.minSpeed = options.minSpeed || 0;
@@ -74,7 +77,7 @@ Item.prototype.reset = function(opt_options) {
  */
 Item.prototype.step = function() {
   if (!this.isStatic) {
-    this._applyForce(this.world.gravity);
+    this.applyForce(this.world.gravity);
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.maxSpeed, this.minSpeed);
     this.location.add(this.velocity);
@@ -113,7 +116,6 @@ Item.prototype.applyForce = function(force) {
 /**
  * Determines if this object is outside the world bounds.
  *
- * @returns {boolean} Returns true if the object is outside the world.
  * @private
  */
 Item.prototype._checkWorldEdges = function() {
@@ -124,21 +126,36 @@ Item.prototype._checkWorldEdges = function() {
       velocity = this.velocity,
       width = this.width,
       height = this.height,
-      bounciness = this.bounciness;
+      bounciness = this.bounciness, diff;
 
   // transform origin is at the center of the object
   if (this.wrapWorldEdges) {
 
-    if (location.x - (width / 2) > worldRight) {
-      location.x = -width / 2;
-    } else if (location.x < -width / 2) {
-      location.x = worldRight + (width / 2);
+    var x = location.x,
+        y = location.y;
+
+    if (location.x > worldRight) {
+      location.x = 0;
+      if (this.controlCamera) {
+        this.world.location.x = this.world.location.x + x - location.x;
+      }
+    } else if (location.x < 0) {
+      location.x = worldRight;
+      if (this.controlCamera) {
+        this.world.location.x = this.world.location.x + x - location.x;
+      }
     }
 
-    if (location.y - (height / 2) > worldBottom) {
-      location.y = -height / 2;
+    if (location.y > worldBottom) {
+      location.y = 0;
+      if (this.controlCamera) {
+        this.world.location.y = this.world.location.y + y - location.y;
+      }
     } else if (location.y < -height / 2) {
-      location.y = worldBottom + (height / 2);
+      location.y = worldBottom;
+      if (this.controlCamera) {
+        this.world.location.y = this.world.location.y + y - location.y;
+      }
     }
   } else {
 

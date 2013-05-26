@@ -3,7 +3,7 @@
 /**
  * Creates a new Box.
  *
- * @param {Object} opt_options= Initial properties.
+ * @param {Object} [opt_options=] A map of initial properties.
  * @constructor
  */
 function Box(opt_options) {

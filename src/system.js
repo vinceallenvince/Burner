@@ -37,10 +37,7 @@ System._records = {
  * Stores references to all elements in the system.
  * @private
  */
-System._caches = {
-  lookup: {},
-  list: []
-};
+System._caches = {};
 
 /**
  * Used to create unique ids.
@@ -72,22 +69,19 @@ System._resizeTime = 0;
  * Initializes the system and starts the update loop.
  *
  * @param {Function} opt_setup= Creates the initial system conditions.
- * @param {Function} opt_classes= Additional object classes that extend Item.
- * @param {Function} opt_supportedFeatures= A map of supported browser features.
- * @param {Object} opt_world= A reference to a DOM element representing the System world.
  * @param {Object} opt_worldOptions= Optional properties for the world.
+ * @param {Object} opt_world= A reference to a DOM element representing the System world.
+ * @param {Function} opt_supportedFeatures= A map of supported browser features.
  * @param {boolean} opt_startLoop= If true, _update is not called. Use to setup a System
  *    and start the _update loop at a later time.
  */
-System.init = function(opt_setup, opt_classes, opt_supportedFeatures, opt_world, opt_worldOptions, opt_startLoop) {
+System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeatures, opt_startLoop) {
 
   var i, setup = opt_setup || function () {},
       world = opt_world || document.body,
       worldOptions = opt_worldOptions || {},
       supportedFeatures = opt_supportedFeatures || {},
       startLoop = opt_startLoop || true;
-
-  Burner.Classes = opt_classes || null;
 
   if (typeof supportedFeatures === 'object' &&
       typeof supportedFeatures.csstransforms !== 'undefined' &&
@@ -111,6 +105,7 @@ System.init = function(opt_setup, opt_classes, opt_supportedFeatures, opt_world,
   document.body.onorientationchange = System.updateOrientation;
 
   System._records.list.push(new exports.World(world, worldOptions));
+  System.updateCache(System._records.list[0]);
 
   // save the current and last mouse position
   this._addEvent(document, 'mousemove', function(e) {
@@ -187,6 +182,7 @@ System.add = function(klass, opt_options) {
       if (options.world._pool[i].name === klass) {
         records[records.length] = options.world._pool.splice(i, 1)[0];
         records[records.length - 1].options = options;
+        System._updateCacheLookup(records[records.length - 1], true);
         break;
       }
     }
@@ -206,12 +202,83 @@ System.add = function(klass, opt_options) {
 };
 
 /**
+ * Adds an object to a cache based on its constructor name.
+ *
+ * @param {Object} obj An object.
+ * returns {Object} The cache that received the passed object.
+ */
+System.updateCache = function(obj) {
+
+  // Create cache object, unless it already exists
+  var cache = System._caches[obj.name] ||
+      (System._caches[obj.name] = {
+        lookup: {},
+        list: []
+      });
+
+  cache.list[cache.list.length] = obj;
+  cache.lookup[obj.id] = true;
+  return cache;
+};
+
+/**
+ * Assigns the given 'val' to the given object's record in System._caches.
+ *
+ * @param {Object} obj An object.
+ * @param {Boolean} val True if object is active, false if object is destroyed.
+ */
+System._updateCacheLookup = function(obj, val) {
+
+  var cache = System._caches[obj.name];
+
+  if (cache) {
+    cache.lookup[obj.id] = val;
+  }
+};
+
+/**
  * Returns the total number of items in the system.
  *
  * @returns {number} Total number of elements.
  */
 System.count = function() {
   return this._records.list.length;
+};
+
+/**
+ * Returns the first world in the system.
+ *
+ * @returns {null|Object} A world.
+ */
+System.firstWorld = function() {
+  return this._caches.World ? this._caches.World.list[0] : null;
+};
+
+/**
+ * Returns the last world in the system.
+ *
+ * @returns {null|Object} A world.
+ */
+System.lastWorld = function() {
+  return this._caches.World ? this._caches.World.list[this._caches.World.list.length - 1] : null;
+};
+
+/**
+ * Returns the first item in the system.
+ *
+ * @returns {Object} An item.
+ */
+System.firstItem = function() {
+  return this._records.list[0];
+};
+
+/**
+ * Returns the last item in the system.
+ *
+ * @returns {Object} An item.
+ */
+System.lastItem = function() {
+  return this._records.list[this._records.list.length - 1];
 };
 
 /**
@@ -226,7 +293,7 @@ System._update = function() {
   // check for resize stop
   if (System._resizeTime && new Date().getTime() - System._resizeTime > 100) {
     System._resizeTime = 0;
-    records[0].pauseStep = false;
+    System.firstWorld().pauseStep = false;
   }
 
   // step
@@ -261,19 +328,25 @@ System._stepForward = function() {
   world.pauseStep = true;
 
   for (i = records.length - 1; i >= 0; i -= 1) {
-    records[i].step();
+    if (records[i].step) {
+      records[i].step();
+    }
   }
   for (i = records.length - 1; i >= 0; i -= 1) {
-    records[i].draw();
+    if (records[i].draw) {
+      records[i].draw();
+    }
   }
   System.clock++;
 };
 
 /**
  * Resets the system.
+ *
+ * @param {boolean} opt_noRestart= Pass true to not restart the system.
  * @private
  */
-System._resetSystem = function() {
+System._resetSystem = function(opt_noRestart) {
 
   var world = this._records.list[0];
 
@@ -296,7 +369,17 @@ System._resetSystem = function() {
 
   System._resizeTime = 0;
 
-  System._setup.call(System);
+  if (!opt_noRestart) {
+    System._setup.call(System);
+  }
+};
+
+/**
+ * Destroys the system.
+ * @private
+ */
+System._destroySystem = function() {
+  this._resetSystem(true);
 };
 
 /**
@@ -330,6 +413,7 @@ System.destroyItem = function (obj) {
       records[i].el.style.top = '-5000px';
       records[i].el.style.left = '-5000px';
       records[i].world._pool[records[i].world._pool.length] = records.splice(i, 1)[0]; // move record to pool array
+      System._updateCacheLookup(obj, false);
       break;
     }
   }
@@ -358,18 +442,18 @@ System.getAllElementsByName = function(name, opt_list) {
 /**
  * Repositions all elements relative to the window size and resets the world bounds.
  */
-System._resize = function() {
+System._resize = function(e) {
 
   var i, max, records = this._records.list, record,
       screenDimensions = this.getWindowSize(),
-      world = records[0];
+      world = this.firstWorld();
 
   this._resizeTime = new Date().getTime();
   world.pauseStep = true;
 
   for (i = 0, max = records.length; i < max; i++) {
     record = records[i];
-    if (record.name !== 'World' && record.location) {
+    if (record.name !== 'World' && record.world.boundToWindow && record.location) {
       record.location.x = screenDimensions.width * (record.location.x / world.width);
       record.location.y = screenDimensions.height * (record.location.y / world.height);
     }
@@ -552,6 +636,7 @@ System._draw = function(obj) {
     colorMode: obj.colorMode,
     visibility: obj.visibility,
     opacity: obj.opacity,
+    zIndex: obj.zIndex,
     borderWidth: obj.borderWidth,
     borderStyle: obj.borderStyle,
     borderColor0: obj.borderColor[0],
@@ -580,6 +665,6 @@ System.getCSSText = function(props) {
       props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') +'); border: ' +
       props.borderWidth + 'px ' + props.borderStyle + ' ' + props.colorMode + '(' + props.borderColor0 + ', ' + props.borderColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.borderColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); border-radius: ' +
       props.borderRadius + '%; box-shadow: ' + props.boxShadowOffsetX + 'px ' + props.boxShadowOffsetY + 'px ' + props.boxShadowBlur + 'px ' + props.boxShadowSpread + 'px ' + props.colorMode + '(' + props.boxShadowColor0 + ', ' + props.boxShadowColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.boxShadowColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); visibility: ' +
-      props.visibility + '; opacity: ' + props.opacity + ';';
+      props.visibility + '; opacity: ' + props.opacity + '; z-index: ' + props.zIndex + ';';
 };
 exports.System = System;

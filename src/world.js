@@ -4,7 +4,7 @@
  * Creates a new World.
  *
  * @param {Object} el The DOM element representing the world.
- * @param {Object} opt_options= Optional properties.
+ * @param {Object} [opt_options=] A map of initial properties.
  * @constructor
  */
 function World(el, opt_options) {
@@ -13,14 +13,18 @@ function World(el, opt_options) {
     throw new Error('World: A valid DOM object is required for the new World\'s \"el\" property.');
   }
 
+  var screenDimensions = exports.System.getWindowSize();
+
   var options = opt_options || {};
 
   this.el = el;
   this.name = 'World';
-  this.width = 0;
-  this.height = 0;
+  this.id = this.name + exports.System.getNewId();
+  this.width = options.width || 0;
+  this.height = options.height || 0;
+  this.angle = 0;
   this.color = options.color || 'transparent';
-  this.colorMode = options.color || 'rgb';
+  this.colorMode = options.colorMode || 'rgb';
   this.visibility = options.visibility || 'visible';
   this.opacity = options.opacity || 1;
   this.borderWidth = options.borderWidth || 0;
@@ -31,17 +35,15 @@ function World(el, opt_options) {
   this.boxShadowSpread = options.boxShadowSpread || 0;
   this.boxShadowColor = options.boxShadowColor || 'transparent';
   this.gravity = options.gravity || new exports.Vector(0, 1);
+  this.c = options.c || 0.1;
+  this.boundToWindow = options.boundToWindow === false ? false : true;
 
   this.pauseStep = false;
   this.pauseDraw = false;
 
   this._setBounds();
-  this.location = new exports.Vector(this.width / 2, this.height / 2);
 
-  this.el.className = 'world';
-
-  // object pool
-  this._pool = [];
+  this._pool = []; // object pool
 
   /**
    * Worlds do not have worlds. However, assigning an
@@ -74,9 +76,16 @@ World.prototype._setBounds = function() {
 
   var screenDimensions = exports.System.getWindowSize();
 
-  this.bounds = [0, screenDimensions.width, screenDimensions.height, 0];
-  this.width = screenDimensions.width;
-  this.height = screenDimensions.height;
+  if (this.boundToWindow) {
+    this.bounds = [0, screenDimensions.width, screenDimensions.height, 0];
+    this.width = screenDimensions.width;
+    this.height = screenDimensions.height;
+  } else {
+    this.bounds = [0, this.width, this.height, 0];
+  }
+
+  this.location = new exports.Vector((screenDimensions.width / 2),
+      (screenDimensions.height / 2));
 };
 
 exports.World = World;

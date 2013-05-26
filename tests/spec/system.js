@@ -46,6 +46,22 @@ describe("A System", function() {
 
   });
 
+  it("should have a method firstWorld() that returns the first world in the system.", function() {
+
+  });
+
+  it("should have a method lastWorld() that returns the last world in the system.", function() {
+
+  });
+
+  it("should have a method firstItem() that returns the first item in the system.", function() {
+
+  });
+
+  it("should have a method lastItem() that returns the last item in the system.", function() {
+
+  });
+
   it("should have a private method _update() that iterates over objects in the system and calls step() and draw().", function() {
     system._update();
     expect(system.clock).toEqual(2);
