@@ -97,7 +97,7 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
   if (this.supportedFeatures.csstransforms3d) {
     this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else if (this.supportedFeatures.csstransforms) {
-    this._stylePosition = '-webkit-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
+    this._stylePosition = '-webkit-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else {
     this._stylePosition = 'position: absolute; left: <x>px; top: <y>px;';
   }
