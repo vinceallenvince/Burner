@@ -13,8 +13,6 @@ function World(el, opt_options) {
     throw new Error('World: A valid DOM object is required for the new World "el" property.');
   }
 
-  var screenDimensions = exports.System.getWindowSize();
-
   var options = opt_options || {};
 
   this.el = el;
@@ -51,6 +49,8 @@ function World(el, opt_options) {
    * update loop.
    */
   this.world = {};
+
+  this.draw();
 }
 
 /**

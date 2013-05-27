@@ -258,7 +258,7 @@
     </replaceregexp>
   </target>
 
-  <!-- Copy: copy fat build and css files to /dev -->
+  <!-- Copy: copy fat build and css files -->
   <target name="deploy">
 
     <!-- copy fat js file to /dev/scripts -->
@@ -274,17 +274,22 @@
 
     <!-- copy fat js file to examples/scripts -->
     <copy file="${build.dir}/${buildNameLower}.js" todir="${examples.dir}/scripts" overwrite="true"/>
-    <!-- copy fat css file to /examples/css -->
+    <!-- copy fat css file to examples/css -->
     <copy file="${build.dir}/${buildNameLower}.css" todir="${examples.dir}/css" overwrite="true"/>
 
-    <!-- copy fat js file to examples/scripts -->
+    <!-- copy fat js file to flocking/scripts -->
     <copy file="${build.dir}/${buildNameLower}.js" todir="${flocking.dir}/scripts" overwrite="true"/>
-    <!-- copy fat css file to /examples/css -->
+    <!-- copy fat css file to flocking/css -->
     <copy file="${build.dir}/${buildNameLower}.css" todir="${flocking.dir}/css" overwrite="true"/>
+
+    <!-- copy fat js file to braitenberg/scripts -->
+    <copy file="${build.dir}/${buildNameLower}.js" todir="${braitenberg.dir}/scripts" overwrite="true"/>
+    <!-- copy fat css file to braitenberg/css -->
+    <copy file="${build.dir}/${buildNameLower}.css" todir="${braitenberg.dir}/css" overwrite="true"/>
 
   </target>
 
-  <!-- Copy: copy min build and css files to /public -->
+  <!-- Copy: copy min build and css files -->
   <target name="deployRelease">
 
     <!-- copy min js file to /public/scripts -->
@@ -292,5 +297,19 @@
     <!-- copy min css file to /public/css -->
     <copy file="${build.dir}/${buildNameLower}.min.css" todir="${public.dir}/css" overwrite="true"/>
 
+    <!-- copy min js file to flocking/scripts -->
+    <copy file="${build.dir}/${buildNameLower}.min.js" todir="${flocking.dir}/scripts" overwrite="true"/>
+    <!-- copy min css file to flocking/css -->
+    <copy file="${build.dir}/${buildNameLower}.min.css" todir="${flocking.dir}/css" overwrite="true"/>
+
+    <!-- copy min js file to examples/scripts -->
+    <copy file="${build.dir}/${buildNameLower}.min.js" todir="${examples.dir}/scripts" overwrite="true"/>
+    <!-- copy min css file to examples/css -->
+    <copy file="${build.dir}/${buildNameLower}.min.css" todir="${examples.dir}/css" overwrite="true"/>
+
+    <!-- copy min js file to braitenberg/scripts -->
+    <copy file="${build.dir}/${buildNameLower}.min.js" todir="${braitenberg.dir}/scripts" overwrite="true"/>
+    <!-- copy min css file to braitenberg/css -->
+    <copy file="${build.dir}/${buildNameLower}.min.css" todir="${braitenberg.dir}/css" overwrite="true"/>
   </target>
 </project>

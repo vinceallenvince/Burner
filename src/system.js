@@ -1,4 +1,4 @@
-/*global exports, window, document, setTimeout, Burner */
+/*global exports, window, document, setTimeout, Burner, Modernizr */
 /*jshint supernew:true */
 /** @namespace */
 var System = {
@@ -72,16 +72,16 @@ System._resizeTime = 0;
  * @param {Object} opt_worldOptions= Optional properties for the world.
  * @param {Object} opt_world= A reference to a DOM element representing the System world.
  * @param {Function} opt_supportedFeatures= A map of supported browser features.
- * @param {boolean} opt_startLoop= If true, _update is not called. Use to setup a System
+ * @param {boolean} opt_noStartLoop= If true, _update is not called. Use to setup a System
  *    and start the _update loop at a later time.
  */
-System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeatures, opt_startLoop) {
+System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeatures, opt_noStartLoop) {
 
-  var i, setup = opt_setup || function () {},
+  var setup = opt_setup || function () {},
       world = opt_world || document.body,
       worldOptions = opt_worldOptions || {},
       supportedFeatures = opt_supportedFeatures || null,
-      startLoop = opt_startLoop || true;
+      noStartLoop = !opt_noStartLoop ? false : true;
 
   // check if supportedFeatures were passed
   if (!supportedFeatures) {
@@ -95,9 +95,9 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
   }
 
   if (this.supportedFeatures.csstransforms3d) {
-    this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg); -moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg); -o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg); -ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg);';
+    this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else if (this.supportedFeatures.csstransforms) {
-    this._stylePosition = '-webkit-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg); -moz-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg); -o-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg); -ms-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg);';
+    this._stylePosition = '-webkit-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else {
     this._stylePosition = 'position: absolute; left: <x>px; top: <y>px;';
   }
@@ -155,7 +155,7 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
   this._setup = setup;
   this._setup.call(this);
 
-  if (startLoop) {
+  if (!noStartLoop) {
     this._update();
   }
 };
@@ -175,7 +175,7 @@ System.add = function(klass, opt_options) {
   options.world = records[0];
 
   // recycle object if one is available
-  pool = this.getAllElementsByName(klass, options.world._pool);
+  pool = this.getAllItemsByName(klass, options.world._pool);
 
   if (pool.length) {
     for (i = 0, max = options.world._pool.length; i < max; i++) {
@@ -199,6 +199,13 @@ System.add = function(klass, opt_options) {
   records[last].reset(options);
   records[last].init(options);
   return records[last];
+};
+
+/**
+ * Starts the render loop.
+ */
+System.start = function() {
+  this._update();
 };
 
 /**
@@ -426,7 +433,7 @@ System.destroyItem = function (obj) {
  * @param {Array} [opt_list = this._records] An optional list of elements.
  * @returns {Array} An array of elements.
  */
-System.getAllElementsByName = function(name, opt_list) {
+System.getAllItemsByName = function(name, opt_list) {
 
   var i, max, arr = [],
       list = opt_list || this._records.list;
@@ -440,9 +447,99 @@ System.getAllElementsByName = function(name, opt_list) {
 };
 
 /**
+ * Returns an array of elements with an attribute that matches the
+ * passed 'attr'. If 'opt_val' is passed, 'attr' must equal 'val'.
+ *
+ * @param {string} attr The property to match.
+ * @param {*} [opt_val=] The 'attr' property must equal 'val'.
+ * @returns {Array} An array of elements.
+ */
+System.getAllItemsByAttribute = function(attr, opt_val) {
+
+  var i, max, arr = [], records = this._records.list,
+      val = opt_val !== undefined ? opt_val : null;
+
+  for (i = 0, max = records.length; i < max; i++) {
+    if (records[i][attr] !== undefined) {
+      if (val !== null && records[i][attr] !== val) {
+        continue;
+      }
+      arr[arr.length] = records[i];
+    }
+  }
+  return arr;
+};
+
+/**
+ * Updates the properties of items created from the same constructor.
+ *
+ * @param {string} name The constructor name.
+ * @param {Object} props A map of properties to update.
+ * @returns {Array} An array of items.
+ * @example
+ * System.updateElementPropsByName('point', {
+ *    color: [0, 0, 0],
+ *    scale: 2
+ * }); // all points will turn black and double in size
+ */
+System.updateItemPropsByName = function(name, props) {
+
+  var i, max, p, arr = this.getAllItemsByName(name);
+
+  for (i = 0, max = arr.length; i < max; i++) {
+    for (p in props) {
+      if (props.hasOwnProperty(p)) {
+        arr[i][p] = props[p];
+      }
+    }
+  }
+  return arr;
+};
+
+/**
+ * Finds an item by its 'id' and returns it.
+ *
+ * @param {string|number} id The item's id.
+ * @returns {Object} The item.
+ */
+System.getItem = function(id) {
+
+  var i, max, records = this._records.list;
+
+  for (i = 0, max = records.length; i < max; i += 1) {
+    if (records[i].id === id) {
+      return records[i];
+    }
+  }
+  return null;
+};
+
+/**
+ * Updates the properties of an item.
+ *
+ * @param {Object} item The item.
+ * @param {Object} props A map of properties to update.
+ * @returns {Object} The item.
+ * @example
+ * System.updateItem(myItem, {
+ *    color: [0, 0, 0],
+ *    scale: 2
+ * }); // item will turn black and double in size
+ */
+System.updateItem = function(item, props) {
+
+  for (var p in props) {
+    if (props.hasOwnProperty(p)) {
+      item[p] = props[p];
+    }
+  }
+  return item;
+};
+
+/**
  * Repositions all elements relative to the window size and resets the world bounds.
  */
-System._resize = function(e) {
+System._resize = function() {
 
   var i, max, records = this._records.list, record,
       screenDimensions = this.getWindowSize(),
@@ -654,6 +751,7 @@ System._draw = function(obj) {
     x: obj.location.x - (obj.width / 2),
     y: obj.location.y - (obj.height / 2),
     angle: obj.angle,
+    scale: obj.scale || 1,
     width: obj.width,
     height: obj.height,
     color0: obj.color[0],
@@ -686,7 +784,7 @@ System._draw = function(obj) {
  * @param {Object} props A map of object properties.
  */
 System.getCSSText = function(props) {
-  return this._stylePosition.replace('<x>', props.x).replace('<y>', props.y).replace('<angle>', props.angle) + 'width: ' +
+  return this._stylePosition.replace('<x>', props.x).replace('<y>', props.y).replace('<angle>', props.angle).replace(/<scale>/g, props.scale) + 'width: ' +
       props.width + 'px; height: ' + props.height + 'px; background-color: ' +
       props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') +'); border: ' +
       props.borderWidth + 'px ' + props.borderStyle + ' ' + props.colorMode + '(' + props.borderColor0 + ', ' + props.borderColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.borderColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); border-radius: ' +

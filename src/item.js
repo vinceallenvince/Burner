@@ -29,7 +29,42 @@ function Item(options) {
 /**
  * Resets all properties.
  *
- * @param {Object} opt_options= A map of options.
+ * @param {Object} [opt_options=] A map of initial properties.
+ * @param {number} [opt_options.width = 10] Width.
+ * @param {number} [opt_options.height = 10] Height.
+ * @param {Array} [opt_options.color = [0, 0, 0]] Color.
+ * @param {string} [opt_options.colorMode = 'rgb'] Color mode. Accepted values: 'rgb', 'hsl'.
+ * @param {string} [opt_options.visibility = 'visible'] Visibility. Accepted values: 'visible', 'hidden'.
+ * @param {number} [opt_options.opacity = 1] Opacity.
+ * @param {number} [opt_options.zIndex = 1] zIndex.
+ * @param {number} [opt_options.borderWidth = 0] borderWidth.
+ * @param {string} [opt_options.borderStyle = 'none'] borderStyle.
+ * @param {string|Array} [opt_options.borderColor = 'transparent'] borderColor.
+ * @param {number} [opt_options.borderRadius = 0] borderRadius.
+ * @param {Object} [opt_options.boxShadowOffset = new Vector()] boxShadowOffset.
+ * @param {number} [opt_options.boxShadowBlur = 0] boxShadowBlur.
+ * @param {number} [opt_options.boxShadowSpread = 0] boxShadowSpread.
+ * @param {string|Array} [opt_options.boxShadowColor = 'transparent'] boxShadowColor.
+ * @param {number} [opt_options.bounciness = 0.8] bounciness.
+ * @param {number} [opt_options.mass = 10] mass.
+ * @param {Function|Object} [opt_options.acceleration = new Vector()] acceleration.
+ * @param {Function|Object} [opt_options.velocity = new Vector()] velocity.
+ * @param {Function|Object} [opt_options.location = new Vector()] location.
+ * @param {number} [opt_options.maxSpeed = 10] maxSpeed.
+ * @param {number} [opt_options.minSpeed = 10] minSpeed.
+ * @param {number} [opt_options.angle = 10] Angle.
+ * @param {number} [opt_options.lifespan = -1] Lifespan.
+ * @param {number} [opt_options.life = 0] Life.
+ * @param {boolean} [opt_options.isStatic = false] If set to true, object will not move.
+ * @param {boolean} [opt_options.controlCamera = false] If set to true, object controls the camera.
+ * @param {boolean} [opt_options.checkWorldEdges = false] If set to true, system restricts object
+ *    movement to world boundaries.
+ * @param {boolean} [opt_options.wrapWorldEdges = false] If set to true, system checks if object
+ *    intersects world boundaries and resets location to the opposite boundary.
+ * @param {boolean} [opt_options.avoidWorldEdges = false] If set to true, object steers away from
+ *    world boundaries.
+ * @param {number} [opt_options.avoidWorldEdgesStrength = 0] The distance threshold for object
+ *    start steering away from world boundaries.
  */
 Item.prototype.reset = function(opt_options) {
 
@@ -70,12 +105,14 @@ Item.prototype.reset = function(opt_options) {
   this.minSpeed = options.minSpeed || 0;
   this.angle = options.angle || 0;
 
-  this.lifespan = options.lifespan || -1;
+  this.lifespan = options.lifespan === 0 ? 0 : options.lifespan || -1;
   this.life = options.life || 0;
   this.isStatic = !!options.isStatic;
   this.controlCamera = !!options.controlCamera;
   this.checkWorldEdges = options.checkWorldEdges === false ? false : true;
   this.wrapWorldEdges = !!options.wrapWorldEdges;
+  this.avoidWorldEdges = !!options.avoidWorldEdges;
+  this.avoidWorldEdgesStrength = options.avoidWorldEdgesStrength || 50;
 };
 
 /**
@@ -132,7 +169,7 @@ Item.prototype._checkWorldEdges = function() {
       velocity = this.velocity,
       width = this.width,
       height = this.height,
-      bounciness = this.bounciness, diff;
+      bounciness = this.bounciness;
 
   // transform origin is at the center of the object
   if (this.wrapWorldEdges) {
