@@ -5,6 +5,7 @@ docs/
 lib/
 tests/lib/
 dev/
+public/
 
 # FILES #
 #########
