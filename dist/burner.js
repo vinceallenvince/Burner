@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 2.0.0 */
-/* Build time: May 27, 2013 01:54:36 *//** @namespace */
+/* Build time: May 27, 2013 03:43:13 *//** @namespace */
 var Burner = {}, exports = Burner;
 
 (function(exports) {
@@ -938,7 +938,7 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
   if (this.supportedFeatures.csstransforms3d) {
     this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else if (this.supportedFeatures.csstransforms) {
-    this._stylePosition = '-webkit-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translateX(<x>px) translateY(<y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
+    this._stylePosition = '-webkit-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else {
     this._stylePosition = 'position: absolute; left: <x>px; top: <y>px;';
   }
@@ -1625,7 +1625,7 @@ System._draw = function(obj) {
  * @param {Object} props A map of object properties.
  */
 System.getCSSText = function(props) {
-  return this._stylePosition.replace('<x>', props.x).replace('<y>', props.y).replace('<angle>', props.angle).replace(/<scale>/g, props.scale) + 'width: ' +
+  return this._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' +
       props.width + 'px; height: ' + props.height + 'px; background-color: ' +
       props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') +'); border: ' +
       props.borderWidth + 'px ' + props.borderStyle + ' ' + props.colorMode + '(' + props.borderColor0 + ', ' + props.borderColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.borderColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); border-radius: ' +
