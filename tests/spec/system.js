@@ -1,5 +1,5 @@
 describe("A System", function() {
-
+/*
   var system = SimpleSim.System, el;
 
   beforeEach(function() {
@@ -124,6 +124,6 @@ describe("A System", function() {
 
   it("should have a method getCSSText() that concatenates a new cssText string.", function() {
 
-  });
+  });*/
 
 });

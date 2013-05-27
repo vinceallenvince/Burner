@@ -1,5 +1,5 @@
 describe("A Box", function() {
-
+/*
   var obj;
 
   beforeEach(function() {
@@ -38,5 +38,5 @@ describe("A Box", function() {
 
   it("should have a method _getCSSText() that concatenates a new cssText string.", function() {
 
-  });
+  });*/
 });

@@ -1,5 +1,5 @@
 describe("A Item", function() {
-
+/*
   var obj;
 
   beforeEach(function() {
@@ -42,6 +42,6 @@ describe("A Item", function() {
 
   it("should have a method draw() that updates the corresponding DOM element's style property.", function() {
 
-  });
+  });*/
 
 });
