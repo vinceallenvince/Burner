@@ -57,6 +57,8 @@ function Item(options) {
  * @param {number} [opt_options.life = 0] Life.
  * @param {boolean} [opt_options.isStatic = false] If set to true, object will not move.
  * @param {boolean} [opt_options.controlCamera = false] If set to true, object controls the camera.
+ * @param {Array} [opt_options.worldBounds = [true, true, true, true]] Defines the boundaries checked
+ *    checkWorldEdges is true.
  * @param {boolean} [opt_options.checkWorldEdges = false] If set to true, system restricts object
  *    movement to world boundaries.
  * @param {boolean} [opt_options.wrapWorldEdges = false] If set to true, system checks if object
@@ -109,6 +111,7 @@ Item.prototype.reset = function(opt_options) {
   this.life = options.life || 0;
   this.isStatic = !!options.isStatic;
   this.controlCamera = !!options.controlCamera;
+  this.worldBounds = options.worldBounds || [true, true, true, true];
   this.checkWorldEdges = options.checkWorldEdges === false ? false : true;
   this.wrapWorldEdges = !!options.wrapWorldEdges;
   this.avoidWorldEdges = !!options.avoidWorldEdges;
@@ -165,6 +168,7 @@ Item.prototype._checkWorldEdges = function() {
 
   var worldRight = this.world.bounds[1],
       worldBottom = this.world.bounds[2],
+      worldBounds = this.worldBounds,
       location = this.location,
       velocity = this.velocity,
       width = this.width,
@@ -202,18 +206,18 @@ Item.prototype._checkWorldEdges = function() {
     }
   } else {
 
-    if (location.x + width / 2 > worldRight) {
+    if (location.x + width / 2 > worldRight && worldBounds[1]) {
       location.x = worldRight - width / 2;
       velocity.x *= -1 * bounciness;
-    } else if (location.x < width / 2) {
+    } else if (location.x < width / 2 && worldBounds[3]) {
       location.x = width / 2;
       velocity.x *= -1 * bounciness;
     }
 
-    if (location.y + height / 2 > worldBottom) {
+    if (location.y + height / 2 > worldBottom && worldBounds[2]) {
       location.y = worldBottom - height / 2;
       velocity.y *= -1 * bounciness;
-    } else if (location.y < height / 2) {
+    } else if (location.y < height / 2 && worldBounds[0]) {
       location.y = height / 2;
       velocity.y *= -1 * bounciness;
     }
