@@ -16,7 +16,7 @@ Here's an example of how to use your own classes with Burner. Below I've added a
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="keywords" content="" />
   <meta name="description" content="" />
-  <meta name="viewport" content = "user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name='apple-mobile-web-app-capable' content='yes' />
   <title>Burner Custom Classes</title>
   <link rel="stylesheet" href="css/burner.css" type="text/css" charset="utf-8" />
@@ -77,3 +77,6 @@ Here's an example of how to use your own classes with Burner. Below I've added a
 </html>
 
 ```
+
+Running the code, you should see a grey box fall to the ground. Notice the box has a class called 'obj'. You can use this class to further manipulate this object via css.
+
