@@ -4,9 +4,15 @@ Use Burner to setup a rendering system in your web browser using only DOM elemen
 
 By itself, Burner doesn't do anything. You need to supply a set of classes like <a href='http://github.com/foldi/FloraJS'>FloraJS</a>. You start by creating a new Burner system. Next, save instances of these classes to the system and let Burner handle updating the DOM.
 
-## Example
+## Using your own classes
 
-Here's an example of how to use your own classes with Burner. Below I've added a new Obj class to a singleton called 'Hello'. The minimum requirement for a new class is to have an init() function. You can also override the default step() function to update your object properties. Finally, set Burner's 'Classes' property to the singleton.
+Here's an example of how to use your own classes with Burner. Below I've added a new Obj class to a singleton called 'Hello'. There are some minimum requirements:
+
+# Your new class is to have an init() function.
+# It must extend the Burner.Item class via Burner.System.extend. (ie. Burner.System.extend(Obj, Burner.Item))
+# It must call Burner.Item in its constructor. (ie. Burner.Item.call(this, options))
+
+You can also override the default step() function to update your object's properties. Finally, set Burner's 'Classes' property to the singleton.
 
 ```html
 
