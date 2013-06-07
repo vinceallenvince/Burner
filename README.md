@@ -8,9 +8,9 @@ By itself, Burner doesn't do anything. You need to supply a set of classes like 
 
 Here's an example of how to use your own classes with Burner. Below I've added a new Obj class to a singleton called 'Hello'. There are some minimum requirements:
 
-# Your new class is to have an init() function.
-# It must extend the Burner.Item class via Burner.System.extend. (ie. Burner.System.extend(Obj, Burner.Item))
-# It must call Burner.Item in its constructor. (ie. Burner.Item.call(this, options))
+* Your new class must have an init() function.
+* It must extend the Burner.Item class via Burner.System.extend. (ie. Burner.System.extend(Obj, Burner.Item))
+* It must call Burner.Item in its constructor. (ie. Burner.Item.call(this, options))
 
 You can also override the default step() function to update your object's properties. Finally, set Burner's 'Classes' property to the singleton.
 
