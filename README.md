@@ -78,5 +78,5 @@ Here's an example of how to use your own classes with Burner. Below I've added a
 
 ```
 
-Running the code, you should see a grey box fall to the ground. Notice the box has a class called 'obj'. You can use this class to further manipulate this object via css.
+Running the code, you should see a grey box fall to the ground. If you inspect the HTML, you'll notice the box has a class called 'obj'. You can use this class to further manipulate this object via css.
 
