@@ -731,12 +731,14 @@ System._getSupportedFeatures = function() {
   if (window.Modernizr) {
     features = {
       csstransforms3d: Modernizr.csstransforms3d,
-      csstransforms: Modernizr.csstransforms
+      csstransforms: Modernizr.csstransforms,
+      touch: Modernizr.touch
     };
   } else {
     features = {
       csstransforms3d: exports.FeatureDetector.detect('csstransforms3d'),
-      csstransforms: exports.FeatureDetector.detect('csstransforms')
+      csstransforms: exports.FeatureDetector.detect('csstransforms'),
+      touch: exports.FeatureDetector.detect('touch')
     };
   }
   return features;
