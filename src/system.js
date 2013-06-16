@@ -390,6 +390,8 @@ System._resetSystem = function(opt_noRestart) {
 System._destroySystem = function() {
   this._resetSystem(true);
   this._destroyAllWorlds();
+  System.clock = 0;
+  System._idCount = 0;
 };
 
 /**
