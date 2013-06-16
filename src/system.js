@@ -417,10 +417,12 @@ System._destroyAllItems = function() {
  */
 System._destroyAllWorlds = function() {
 
-  var i, items = this._records.list;
+  var i, item, items = this._records.list;
 
   for (i = items.length - 1; i >= 0; i--) {
-    if (items[i].name === 'World') {
+    item = items[i];
+    if (item.name === 'World') {
+      item.el.parentNode.removeChild(item.el);
       items.splice(i, 1);
     }
   }
