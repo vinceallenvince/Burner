@@ -390,8 +390,8 @@ System._resetSystem = function(opt_noRestart) {
 System._destroySystem = function() {
   this._resetSystem(true);
   this._destroyAllWorlds();
-  System.clock = 0;
-  System._idCount = 0;
+  this.clock = 0;
+  this._idCount = 0;
 };
 
 /**
@@ -638,7 +638,7 @@ System._addEvent = function(target, eventType, handler) {
  */
 System._recordMouseLoc = function(e) {
 
-  var touch, world = this.firstWorld()
+  var touch, world = this.firstWorld();
 
   this.mouse.lastLocation.x = this.mouse.location.x;
   this.mouse.lastLocation.y = this.mouse.location.y;

@@ -70,7 +70,7 @@ function Item(options) {
  */
 Item.prototype.reset = function(opt_options) {
 
-  var i, options = opt_options;
+  var i, options = opt_options || {};
 
   for (i in options) {
     if (options.hasOwnProperty(i)) {

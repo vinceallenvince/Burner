@@ -1,12 +1,12 @@
 describe("A World", function() {
-/*
+
   var obj;
 
   beforeEach(function() {
     el = document.createElement('div');
     el.id = 'world';
     document.body.appendChild(el);
-    obj = new SimpleSim.World(el);
+    obj = new Burner.World(el);
   });
 
   afterEach(function() {
@@ -16,12 +16,26 @@ describe("A World", function() {
   it("should have its required properties.", function() {
     expect(typeof obj.el).toEqual('object');
     expect(obj.name).toEqual('World');
+    expect(typeof obj.id).toEqual('string');
     expect(typeof obj.width).toEqual('number');
     expect(typeof obj.height).toEqual('number');
+    expect(typeof obj.angle).toEqual('number');
+    expect(typeof obj.color).toEqual('string');
+    expect(typeof obj.colorMode).toEqual('string');
+    expect(typeof obj.visibility).toEqual('string');
+    expect(typeof obj.opacity).toEqual('number');
+    expect(typeof obj.borderWidth).toEqual('number');
+    expect(typeof obj.borderStyle).toEqual('string');
+    expect(typeof obj.borderColor).toEqual('string');
+    expect(typeof obj.boxShadowOffset).toEqual('object');
+    expect(typeof obj.boxShadowBlur).toEqual('number');
+    expect(typeof obj.boxShadowSpread).toEqual('number');
+    expect(typeof obj.boxShadowColor).toEqual('string');
+    expect(obj.gravity instanceof exports.Vector).toEqual(true);
+    expect(typeof obj.c).toEqual('number');
     expect(obj.pauseStep).toEqual(false);
     expect(obj.pauseDraw).toEqual(false);
-    expect(obj.gravity instanceof exports.Vector).toEqual(true);
-    expect(typeof obj.el).toEqual('object');
+    expect(typeof obj._pool).toEqual('object');
     expect(typeof obj.world).toEqual('object');
   });
 
@@ -43,6 +57,6 @@ describe("A World", function() {
     expect(typeof obj.bounds).toEqual('object');
     expect(typeof obj.width).toEqual('number');
     expect(typeof obj.height).toEqual('number');
-  });*/
+  });
 
 });

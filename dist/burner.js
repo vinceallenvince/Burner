@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 2.0.3 */
-/* Build time: June 8, 2013 09:56:16 *//** @namespace */
+/* Build time: June 16, 2013 07:00:55 *//** @namespace */
 var Burner = {}, exports = Burner;
 
 (function(exports) {
@@ -672,7 +672,7 @@ function Item(options) {
  */
 Item.prototype.reset = function(opt_options) {
 
-  var i, options = opt_options;
+  var i, options = opt_options || {};
 
   for (i in options) {
     if (options.hasOwnProperty(i)) {
@@ -870,7 +870,7 @@ System.supportedFeatures = {
 };
 
 /**
- * Stores references to all elements in the system.
+ * Stores references to all items in the system.
  * @private
  */
 System._records = {
@@ -879,7 +879,7 @@ System._records = {
 };
 
 /**
- * Stores references to all elements in the system.
+ * Stores references to all items in the system.
  * @private
  */
 System._caches = {};
@@ -1091,7 +1091,7 @@ System._updateCacheLookup = function(obj, val) {
 /**
  * Returns the total number of items in the system.
  *
- * @returns {number} Total number of elements.
+ * @returns {number} Total number of items.
  */
 System.count = function() {
   return this._records.list.length;
@@ -1209,6 +1209,8 @@ System._resetSystem = function(opt_noRestart) {
     world.el.removeChild(world.el.firstChild);
   }
 
+  System._caches = {};
+
   System._destroyAllItems();
 
   System._idCount = 0;
@@ -1232,10 +1234,13 @@ System._resetSystem = function(opt_noRestart) {
  */
 System._destroySystem = function() {
   this._resetSystem(true);
+  this._destroyAllWorlds();
+  this.clock = 0;
+  this._idCount = 0;
 };
 
 /**
- * Removes all elements in all worlds.
+ * Removes all items in all worlds.
  *
  * @private
  */
@@ -1251,9 +1256,27 @@ System._destroyAllItems = function() {
 };
 
 /**
- * Removes an element from a world.
+ * Removes all worlds.
  *
- * @param {Object} obj The element to remove.
+ * @private
+ */
+System._destroyAllWorlds = function() {
+
+  var i, item, items = this._records.list;
+
+  for (i = items.length - 1; i >= 0; i--) {
+    item = items[i];
+    if (item.name === 'World') {
+      item.el.parentNode.removeChild(item.el);
+      items.splice(i, 1);
+    }
+  }
+};
+
+/**
+ * Removes an item from a world.
+ *
+ * @param {Object} obj The item to remove.
  */
 System.destroyItem = function (obj) {
 
@@ -1261,7 +1284,7 @@ System.destroyItem = function (obj) {
 
   for (i = 0, max = records.length; i < max; i++) {
     if (records[i].id === obj.id) {
-      records[i].el.style.visibility = 'hidden'; // hide element
+      records[i].el.style.visibility = 'hidden'; // hide item
       records[i].el.style.top = '-5000px';
       records[i].el.style.left = '-5000px';
       records[i].world._pool[records[i].world._pool.length] = records.splice(i, 1)[0]; // move record to pool array
@@ -1272,11 +1295,11 @@ System.destroyItem = function (obj) {
 };
 
 /**
- * Returns an array of elements created from the same constructor.
+ * Returns an array of items created from the same constructor.
  *
  * @param {string} name The 'name' property.
- * @param {Array} [opt_list = this._records] An optional list of elements.
- * @returns {Array} An array of elements.
+ * @param {Array} [opt_list = this._records] An optional list of items.
+ * @returns {Array} An array of items.
  */
 System.getAllItemsByName = function(name, opt_list) {
 
@@ -1292,12 +1315,12 @@ System.getAllItemsByName = function(name, opt_list) {
 };
 
 /**
- * Returns an array of elements with an attribute that matches the
+ * Returns an array of items with an attribute that matches the
  * passed 'attr'. If 'opt_val' is passed, 'attr' must equal 'val'.
  *
  * @param {string} attr The property to match.
  * @param {*} [opt_val=] The 'attr' property must equal 'val'.
- * @returns {Array} An array of elements.
+ * @returns {Array} An array of items.
  */
 System.getAllItemsByAttribute = function(attr, opt_val) {
 
@@ -1382,7 +1405,7 @@ System.updateItem = function(item, props) {
 };
 
 /**
- * Repositions all elements relative to the window size and resets the world bounds.
+ * Repositions all items relative to the window size and resets the world bounds.
  */
 System._resize = function() {
 
@@ -1460,7 +1483,7 @@ System._addEvent = function(target, eventType, handler) {
  */
 System._recordMouseLoc = function(e) {
 
-  var touch;
+  var touch, world = this.firstWorld();
 
   this.mouse.lastLocation.x = this.mouse.location.x;
   this.mouse.lastLocation.y = this.mouse.location.y;
@@ -1469,12 +1492,17 @@ System._recordMouseLoc = function(e) {
     touch = e.changedTouches[0];
   }
 
+  /**
+   * Mapping window size to world size allows us to
+   * lead an agent around a world that's not bound
+   * to the window.
+   */
   if (e.pageX && e.pageY) {
-    this.mouse.location.x = e.pageX;
-    this.mouse.location.y = e.pageY;
+    this.mouse.location.x = this.map(e.pageX, 0, window.innerWidth, 0, world.width);
+    this.mouse.location.y = this.map(e.pageY, 0, window.innerHeight, 0, world.height);
   } else if (e.clientX && e.clientY) {
-    this.mouse.location.x = e.clientX;
-    this.mouse.location.y = e.clientY;
+    this.mouse.location.x = this.map(e.clientX, 0, window.innerWidth, 0, world.width);
+    this.mouse.location.y = this.map(e.clientY, 0, window.innerHeight, 0, world.height);
   } else if (touch) {
     this.mouse.location.x = touch.pageX;
     this.mouse.location.y = touch.pageY;
@@ -1587,6 +1615,21 @@ System._getSupportedFeatures = function() {
     };
   }
   return features;
+};
+
+/**
+ * Re-maps a number from one range to another.
+ *
+ * @param {number} value The value to be converted.
+ * @param {number} min1 Lower bound of the value's current range.
+ * @param {number} max1 Upper bound of the value's current range.
+ * @param {number} min2 Lower bound of the value's target range.
+ * @param {number} max2 Upper bound of the value's target range.
+ * @returns {number} A number.
+ */
+System.map = function(value, min1, max1, min2, max2) { // returns a new value relative to a new range
+  var unitratio = (value - min1) / (max1 - min1);
+  return (unitratio * (max2 - min2)) + min2;
 };
 
 /**
