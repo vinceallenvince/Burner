@@ -22,8 +22,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-/* Version: 2.0.1 */
-/* Build time: May 28, 2013 01:21:12 *//** @namespace */
+/* Version: 2.0.3 */
+/* Build time: June 8, 2013 09:56:16 *//** @namespace */
 var Burner = {}, exports = Burner;
 
 (function(exports) {
@@ -654,7 +654,7 @@ function Item(options) {
  * @param {Function|Object} [opt_options.location = new Vector()] location.
  * @param {number} [opt_options.maxSpeed = 10] maxSpeed.
  * @param {number} [opt_options.minSpeed = 10] minSpeed.
- * @param {number} [opt_options.angle = 10] Angle.
+ * @param {number} [opt_options.angle = 0] Angle.
  * @param {number} [opt_options.lifespan = -1] Lifespan.
  * @param {number} [opt_options.life = 0] Life.
  * @param {boolean} [opt_options.isStatic = false] If set to true, object will not move.
@@ -680,24 +680,24 @@ Item.prototype.reset = function(opt_options) {
     }
   }
 
-  this.width = options.width || 10;
-  this.height = options.height || 10;
+  this.width = options.width === undefined ? 10 : options.width;
+  this.height = options.height === undefined ? 10 : options.height;
   this.color = options.color || [0, 0, 0];
   this.colorMode = options.colorMode || 'rgb';
   this.visibility = options.visibility || 'visible';
-  this.opacity = options.opacity || 1;
-  this.zIndex = options.zIndex || 1;
+  this.opacity = options.opacity === undefined ? 1 : options.opacity;
+  this.zIndex = options.zIndex === undefined ? 1 : options.zIndex;
   this.borderWidth = options.borderWidth || 0;
   this.borderStyle = options.borderStyle || 'none';
   this.borderColor = options.borderColor || 'transparent';
   this.borderRadius = options.borderRadius || 0;
-  this.boxShadowOffset = options.boxShadowOffset || new exports.Vector();
+  this.boxShadowOffset = options.boxShadowOffset === undefined ? new exports.Vector() : options.boxShadowOffset;
   this.boxShadowBlur = options.boxShadowBlur || 0;
   this.boxShadowSpread = options.boxShadowSpread || 0;
-  this.boxShadowColor = options.boxShadowColor || 'transparent';
+  this.boxShadowColor = options.boxShadowColor === undefined ? 'transparent' : options.boxShadowColor;
 
-  this.bounciness = options.bounciness || 0.8;
-  this.mass = options.mass || 10;
+  this.bounciness = options.bounciness === undefined ? 0.8 : options.bounciness;
+  this.mass = options.mass === undefined ? 10 : options.mass;
   this.acceleration = typeof options.acceleration === 'function' ? options.acceleration.call(this) :
       options.acceleration || new exports.Vector();
   this.velocity = typeof options.velocity === 'function' ? options.velocity.call(this) :
@@ -705,19 +705,19 @@ Item.prototype.reset = function(opt_options) {
   this.location = typeof options.location === 'function' ? options.location.call(this) :
       options.location || new exports.Vector(this.world.width / 2, this.world.height / 2);
 
-  this.maxSpeed = options.maxSpeed === 0 ? 0 : options.maxSpeed || 10;
+  this.maxSpeed = options.maxSpeed === undefined ? 10 : options.maxSpeed;
   this.minSpeed = options.minSpeed || 0;
   this.angle = options.angle || 0;
 
-  this.lifespan = options.lifespan === 0 ? 0 : options.lifespan || -1;
+  this.lifespan = options.lifespan === undefined ? -1 : options.lifespan;
   this.life = options.life || 0;
   this.isStatic = !!options.isStatic;
   this.controlCamera = !!options.controlCamera;
   this.worldBounds = options.worldBounds || [true, true, true, true];
-  this.checkWorldEdges = options.checkWorldEdges === false ? false : true;
+  this.checkWorldEdges = options.checkWorldEdges === undefined ? true : options.checkWorldEdges;
   this.wrapWorldEdges = !!options.wrapWorldEdges;
   this.avoidWorldEdges = !!options.avoidWorldEdges;
-  this.avoidWorldEdgesStrength = options.avoidWorldEdgesStrength || 50;
+  this.avoidWorldEdgesStrength = options.avoidWorldEdgesStrength === undefined ? 50 : options.avoidWorldEdgesStrength;
 };
 
 /**
@@ -1576,12 +1576,14 @@ System._getSupportedFeatures = function() {
   if (window.Modernizr) {
     features = {
       csstransforms3d: Modernizr.csstransforms3d,
-      csstransforms: Modernizr.csstransforms
+      csstransforms: Modernizr.csstransforms,
+      touch: Modernizr.touch
     };
   } else {
     features = {
       csstransforms3d: exports.FeatureDetector.detect('csstransforms3d'),
-      csstransforms: exports.FeatureDetector.detect('csstransforms')
+      csstransforms: exports.FeatureDetector.detect('csstransforms'),
+      touch: exports.FeatureDetector.detect('touch')
     };
   }
   return features;
