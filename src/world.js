@@ -67,9 +67,6 @@ World.prototype.draw = function() {
 
 /**
  * Sets the bounds of the world's visible area.
- *
- * returns {Array} An array representing the bounds
- *    of the page's visible area in box-model format.
  * @private
  */
 World.prototype._setBounds = function() {

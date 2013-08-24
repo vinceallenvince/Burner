@@ -161,7 +161,7 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
 };
 
 /**
- * Adds an object to the system.
+ * Adds an item to the system.
  *
  * @param {Object} opt_options= Object properties.
  */
