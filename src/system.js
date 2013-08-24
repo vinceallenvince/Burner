@@ -34,6 +34,15 @@ System._records = {
 };
 
 /**
+ * Stores references to all worlds in the system.
+ * @private
+ */
+System._worlds = {
+  lookup: {},
+  list: []
+};
+
+/**
  * Stores references to all items in the system.
  * @private
  */
@@ -68,18 +77,16 @@ System._resizeTime = 0;
 /**
  * Initializes the system and starts the update loop.
  *
- * @param {Function} opt_setup= Creates the initial system conditions.
- * @param {Object} opt_worldOptions= Optional properties for the world.
- * @param {Object} opt_world= A reference to a DOM element representing the System world.
- * @param {Function} opt_supportedFeatures= A map of supported browser features.
- * @param {boolean} opt_noStartLoop= If true, _update is not called. Use to setup a System
+ * @param {Function=} opt_setup Creates the initial system conditions.
+ * @param {Object=} opt_world A reference to a DOM element representing the System world.
+ * @param {Object=} opt_supportedFeatures A map of supported browser features.
+ * @param {boolean=} opt_noStartLoop If true, _update is not called. Use to setup a System
  *    and start the _update loop at a later time.
  */
-System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeatures, opt_noStartLoop) {
+System.init = function(opt_setup, opt_worlds, opt_supportedFeatures, opt_noStartLoop) {
 
   var setup = opt_setup || function () {},
-      world = opt_world || document.body,
-      worldOptions = opt_worldOptions || {},
+      worlds = opt_worlds || new exports.World(document.body),
       supportedFeatures = opt_supportedFeatures || null,
       noStartLoop = !opt_noStartLoop ? false : true;
 
@@ -94,18 +101,36 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
     throw new Error('System: supportedFeatures should be passed as an object.');
   }
 
-  if (this.supportedFeatures.csstransforms3d) {
-    this._stylePosition = '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
-  } else if (this.supportedFeatures.csstransforms) {
-    this._stylePosition = '-webkit-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -moz-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -o-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); -ms-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
+  if (System.supportedFeatures.csstransforms3d) {
+    this._stylePosition = 'transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
+  } else if (System.supportedFeatures.csstransforms) {
+    this._stylePosition = 'transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-webkit-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-moz-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-o-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
+        '-ms-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
   } else {
     this._stylePosition = 'position: absolute; left: <x>px; top: <y>px;';
   }
 
+  if (Object.prototype.toString.call(worlds) === '[object Array]') {
+    for (var i = 0, max = worlds.length; i < max; i++) {
+      System._addWorld(worlds[i]);
+    }
+  } else {
+    System._addWorld(worlds);
+  }
+
   document.body.onorientationchange = System.updateOrientation;
 
-  System._records.list.push(new exports.World(world, worldOptions));
-  System.updateCache(System._records.list[0]);
+  // listen for resize events
+  this._addEvent(window, 'resize', function(e) {
+    System._resize.call(System, e);
+  });
 
   // save the current and last mouse position
   this._addEvent(document, 'mousemove', function(e) {
@@ -123,31 +148,29 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
     System._recordMouseLoc.call(System, e);
   });
 
-  // listen for window resize
-  this._addEvent(window, 'resize', function(e) {
-    System._resize.call(System, e);
-  });
-
   // listen for device motion events (ie. accelerometer)
   this._addEvent(window, 'devicemotion', function(e) {
 
-    var world = System._records.list[0],
+    var world, worlds = System._caches.World.list,
         x = e.accelerationIncludingGravity.x,
         y = e.accelerationIncludingGravity.y;
 
-    if (window.orientation === 0) {
-      world.gravity.x = x;
-      world.gravity.y = y * -1;
-    } else if (window.orientation === -90) {
-      world.gravity.x = y;
-      world.gravity.y = x;
-    } else {
-      world.gravity.x = y * -1;
-      world.gravity.y = x * -1;
+    for (i = 0, max = worlds.length; i < max; i++) {
+      world = worlds[i];
+      if (window.orientation === 0) {
+        world.gravity.x = x;
+        world.gravity.y = y * -1;
+      } else if (window.orientation === -90) {
+        world.gravity.x = y;
+        world.gravity.y = x;
+      } else {
+        world.gravity.x = y * -1;
+        world.gravity.y = x * -1;
+      }
     }
   });
 
-  // listen for key up
+    // listen for key up
   this._addEvent(window, 'keyup', function(e) {
     System._keyup.call(System, e);
   });
@@ -161,18 +184,30 @@ System.init = function(opt_setup, opt_worldOptions, opt_world, opt_supportedFeat
 };
 
 /**
+ * Adds world to System records and worlds cache.
+ * @param {Object} world A world.
+ */
+System._addWorld = function(world) {
+  System._records.list.push(world);
+  System._worlds.list.push(System._records.list[System._records.list.length - 1]);
+  System._worlds.lookup[world.el.id] = System._records.list[System._records.list.length - 1];
+};
+
+/**
  * Adds an item to the system.
  *
- * @param {Object} opt_options= Object properties.
+ * @param {string} klass Function will try to create an instance of this class.
+ * @param {Object=} opt_options Object properties.
+ * @param {string=} opt_world The world to contain the item.
  */
-System.add = function(klass, opt_options) {
+System.add = function(klass, opt_options, opt_world) {
 
   var i, max, last, parentNode, pool,
       records = this._records.list,
       recordsLookup = this._records.lookup,
       options = opt_options || {};
 
-  options.world = records[0];
+  options.world = opt_world || records[0];
 
   // recycle object if one is available
   pool = this.getAllItemsByName(klass, options.world._pool);
@@ -258,7 +293,7 @@ System.count = function() {
  * @returns {null|Object} A world.
  */
 System.firstWorld = function() {
-  return this._caches.World ? this._caches.World.list[0] : null;
+  return this._worlds.list.length ? this._worlds.list[0] : null;
 };
 
 /**
@@ -267,7 +302,7 @@ System.firstWorld = function() {
  * @returns {null|Object} A world.
  */
 System.lastWorld = function() {
-  return this._caches.World ? this._caches.World.list[this._caches.World.list.length - 1] : null;
+  return this._worlds.list.length ? this._worlds.list[this._worlds.list.length - 1] : null;
 };
 
 /**
@@ -289,18 +324,32 @@ System.lastItem = function() {
 };
 
 /**
+ * Returns all worlds.
+ * @return {Array.<World>} An array of worlds.
+ */
+System.getAllWorlds = function() {
+  return System._worlds.list;
+};
+
+/**
  * Iterates over objects in the system and calls step() and draw().
  *
  * @private
  */
 System._update = function() {
 
-  var i, records = System._records.list, record;
+  var i, max, records = System._records.list, record, worlds, world = System.firstWorld();
 
   // check for resize stop
   if (System._resizeTime && new Date().getTime() - System._resizeTime > 100) {
     System._resizeTime = 0;
-    System.firstWorld().pauseStep = false;
+    worlds = System.getAllWorlds();
+    for (i = 0, max = worlds.length; i < max; i++) {
+      worlds[i].pauseStep = false;
+    }
+    if (world.afterResize) {
+      world.afterResize.call(this);
+    }
   }
 
   // step
@@ -329,21 +378,23 @@ System._update = function() {
  */
 System._stepForward = function() {
 
-  var i, records = System._records.list,
-      world = this._records.list[0];
+  var i, j, max, records = System._records.list,
+      world, worlds = System.getAllWorlds();
 
-  world.pauseStep = true;
-
-  for (i = records.length - 1; i >= 0; i -= 1) {
-    if (records[i].step) {
-      records[i].step();
+    for (i = 0, max = worlds.length; i < max; i++) {
+      world = worlds[i];
+      world.pauseStep = true;
+      for (j = records.length - 1; j >= 0; j -= 1) {
+        if (records[j].step) {
+          records[j].step();
+        }
+      }
+      for (j = records.length - 1; j >= 0; j -= 1) {
+        if (records[j].draw) {
+          records[j].draw();
+        }
+      }
     }
-  }
-  for (i = records.length - 1; i >= 0; i -= 1) {
-    if (records[i].draw) {
-      records[i].draw();
-    }
-  }
   System.clock++;
 };
 
@@ -355,13 +406,16 @@ System._stepForward = function() {
  */
 System._resetSystem = function(opt_noRestart) {
 
-  var world = this._records.list[0];
+  var i, max, world, worlds = System.getAllWorlds();
 
-  world.pauseStep = false;
-  world.pauseDraw = false;
+  for (i = 0, max = worlds.length; i < max; i++) {
+    world = worlds[i];
+    world.pauseStep = false;
+    world.pauseDraw = false;
 
-  while(world.el.firstChild) {
-    world.el.removeChild(world.el.firstChild);
+    while(world.el.firstChild) {
+      world.el.removeChild(world.el.firstChild);
+    }
   }
 
   System._caches = {};
@@ -426,6 +480,10 @@ System._destroyAllWorlds = function() {
       items.splice(i, 1);
     }
   }
+  this._worlds = {
+    lookup: {},
+    list: []
+  };
 };
 
 /**
@@ -560,26 +618,32 @@ System.updateItem = function(item, props) {
 };
 
 /**
- * Repositions all items relative to the window size and resets the world bounds.
+ * Repositions all items relative to the viewport size and resets the world bounds.
  */
 System._resize = function() {
 
   var i, max, records = this._records.list, record,
-      screenDimensions = this.getWindowSize(),
-      world = this.firstWorld();
-
-  this._resizeTime = new Date().getTime();
-  world.pauseStep = true;
+      viewportSize = this.getWindowSize(),
+      world, worlds = System.getAllWorlds();
 
   for (i = 0, max = records.length; i < max; i++) {
     record = records[i];
     if (record.name !== 'World' && record.world.boundToWindow && record.location) {
-      record.location.x = screenDimensions.width * (record.location.x / world.width);
-      record.location.y = screenDimensions.height * (record.location.y / world.height);
+      record.location.x = viewportSize.width * (record.location.x / record.world.width);
+      record.location.y = viewportSize.height * (record.location.y / record.world.height);
     }
   }
 
-  world._setBounds();
+  for (i = 0, max = worlds.length; i < max; i++) {
+    world = worlds[i];
+    if (world.boundToWindow) {
+      world.bounds = [0, viewportSize.width, viewportSize.height, 0];
+      world.width = viewportSize.width;
+      world.height = viewportSize.height;
+      world.location = new exports.Vector((viewportSize.width / 2),
+        (viewportSize.height / 2));
+    }
+  }
 };
 
 /**
@@ -589,14 +653,17 @@ System._resize = function() {
  */
 System._keyup = function(e) {
 
-  var world = this._records.list[0];
+  var i, max, world, worlds = this.getAllWorlds();
 
   switch(e.keyCode) {
     case 39:
       System._stepForward();
       break;
     case 80: // p; pause/play
-      world.pauseStep = !world.pauseStep;
+      for (i = 0, max = worlds.length; i < max; i++) {
+        world = worlds[i];
+        world.pauseStep = !world.pauseStep;
+      }
       break;
     case 82: // r; reset
       System._resetSystem();

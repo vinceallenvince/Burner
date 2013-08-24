@@ -17,6 +17,7 @@ function World(el, opt_options) {
 
   this.el = el;
   this.name = 'World';
+  this.el.className = this.name.toLowerCase();
   this.id = this.name + exports.System.getNewId();
   this.width = options.width || 0;
   this.height = options.height || 0;
@@ -35,6 +36,7 @@ function World(el, opt_options) {
   this.gravity = options.gravity || new exports.Vector(0, 1);
   this.c = options.c || 0.1;
   this.boundToWindow = options.boundToWindow === false ? false : true;
+  this.location = options.location;
 
   this.pauseStep = false;
   this.pauseDraw = false;
@@ -81,8 +83,10 @@ World.prototype._setBounds = function() {
     this.bounds = [0, this.width, this.height, 0];
   }
 
-  this.location = new exports.Vector((screenDimensions.width / 2),
-      (screenDimensions.height / 2));
+  if (!this.location) {
+    this.location = new exports.Vector((screenDimensions.width / 2),
+        (screenDimensions.height / 2));
+  }
 };
 
 exports.World = World;
