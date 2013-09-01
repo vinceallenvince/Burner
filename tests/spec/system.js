@@ -1,12 +1,13 @@
 describe("A System", function() {
 
-  var system = Burner.System, el;
+  var system = Burner.System, el, world;
 
   beforeEach(function() {
     el = document.createElement('div');
     el.id = 'world';
     document.body.appendChild(el);
-    Burner.System.init(function() {}, null, document.getElementById('world'));
+    world = new Burner.World(document.getElementById('world'));
+    Burner.System.init(function() {}, world);
   });
 
   afterEach(function() {
