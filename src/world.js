@@ -13,7 +13,8 @@ function World(el, opt_options) {
     throw new Error('World: A valid DOM object is required for the new World "el" property.');
   }
 
-  var options = opt_options || {};
+  var options = opt_options || {},
+      viewportSize = exports.System.getWindowSize();
 
   this.el = el;
   this.name = 'World';
@@ -21,6 +22,8 @@ function World(el, opt_options) {
   this.id = this.name + exports.System.getNewId();
   this.width = options.width || 0;
   this.height = options.height || 0;
+  this.autoWidth = !!options.autoWidth;
+  this.autoHeight = !!options.autoHeight;
   this.angle = 0;
   this.color = options.color || 'transparent';
   this.colorMode = options.colorMode || 'rgb';
@@ -36,7 +39,14 @@ function World(el, opt_options) {
   this.gravity = options.gravity || new exports.Vector(0, 1);
   this.c = options.c || 0.1;
   this.boundToWindow = options.boundToWindow === false ? false : true;
-  this.location = options.location;
+  this.location = options.location || new exports.Vector(viewportSize.width / 2, viewportSize.height / 2);
+  this.initLocation = new exports.Vector(this.location.x, this.location.y);
+  this.position = options.position || 'absolute';
+  this.paddingTop = options.paddingTop || 0;
+  this.paddingRight = options.paddingRight || 0;
+  this.paddingBottom = options.paddingBottom || 0;
+  this.paddingLeft = options.paddingLeft || 0;
+  this.marginTop = options.marginTop || 0;
 
   this.pauseStep = false;
   this.pauseDraw = false;

@@ -53,6 +53,11 @@ function Item(options) {
  * @param {number} [opt_options.maxSpeed = 10] maxSpeed.
  * @param {number} [opt_options.minSpeed = 10] minSpeed.
  * @param {number} [opt_options.angle = 0] Angle.
+ * @param {string} [opt_options.position = 'absolute'] A css position. Possible values: 'absoulte', 'fixed', 'static', 'relative'.
+ * @param {number} [opt_options.paddingTop = 0] Padding top.
+ * @param {number} [opt_options.paddingRight = 0] Padding right.
+ * @param {number} [opt_options.paddingBottom = 0] Padding bottom.
+ * @param {number} [opt_options.paddingLeft = 0] Padding left.
  * @param {number} [opt_options.lifespan = -1] Lifespan.
  * @param {number} [opt_options.life = 0] Life.
  * @param {boolean} [opt_options.isStatic = false] If set to true, object will not move.
@@ -102,10 +107,20 @@ Item.prototype.reset = function(opt_options) {
       options.velocity || new exports.Vector();
   this.location = typeof options.location === 'function' ? options.location.call(this) :
       options.location || new exports.Vector(this.world.width / 2, this.world.height / 2);
+  this.initLocation = new exports.Vector();
+  this.initLocation.x = this.location.x;
+  this.initLocation.y = this.location.y;
 
   this.maxSpeed = options.maxSpeed === undefined ? 10 : options.maxSpeed;
   this.minSpeed = options.minSpeed || 0;
   this.angle = options.angle || 0;
+
+  this.position = options.position || 'absolute';
+  this.paddingTop = options.paddingTop || 0;
+  this.paddingRight = options.paddingRight || 0;
+  this.paddingBottom = options.paddingBottom || 0;
+  this.paddingLeft = options.paddingLeft || 0;
+  this.marginTop = options.marginTop || 0;
 
   this.lifespan = options.lifespan === undefined ? -1 : options.lifespan;
   this.life = options.life || 0;
