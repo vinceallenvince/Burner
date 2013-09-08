@@ -1,5 +1,3 @@
-/*global exports */
-
 /**
  * Creates a new Box.
  *
@@ -12,13 +10,15 @@ function Box(opt_options) {
   options.name = 'Box';
   exports.Item.call(this, options);
 }
-exports.System.extend(Box, exports.Item);
+System.extend(Box, Item);
 
+/**
+ * Initializes the ball.
+ * @param {Object} options Initial options.
+ */
 Box.prototype.init = function(options) {
   this.width = options.width || 20;
   this.height = options.height || 20;
   this.color = options.color || [100, 100, 100];
   this.borderRadius = options.borderRadius || 0;
 };
-
-exports.Box = Box;

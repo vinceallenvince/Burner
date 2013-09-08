@@ -1,4 +1,3 @@
-/*global exports */
 /*jshint supernew:true */
 /**
  * Creates a new Vector.
@@ -248,5 +247,3 @@ Vector.prototype.dot = function(vector) {
   }
   return this.x * vector.x + this.y * vector.y;
 };
-
-exports.Vector = Vector;

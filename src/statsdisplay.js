@@ -1,4 +1,4 @@
-/*global exports, document, window */
+/*global document, window */
 /**
  * Creates a new StatsDisplay object.
  *
@@ -177,5 +177,3 @@ StatsDisplay.prototype.destroy = function() {
     document.body.removeChild(this.el);
   }
 };
-
-exports.StatsDisplay = StatsDisplay;

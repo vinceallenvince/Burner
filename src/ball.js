@@ -1,5 +1,3 @@
-/*global exports */
-
 /**
  * Creates a new Ball.
  *
@@ -12,8 +10,12 @@ function Ball(opt_options) {
   options.name = 'Ball';
   exports.Item.call(this, options);
 }
-exports.System.extend(Ball, exports.Item);
+System.extend(Ball, Item);
 
+/**
+ * Initializes the ball.
+ * @param {Object} options Initial options.
+ */
 Ball.prototype.init = function(options) {
   this.width = options.width || 20;
   this.height = options.height || 20;
@@ -26,5 +28,3 @@ Ball.prototype.init = function(options) {
   this.boxShadowSpread = options.boxShadowSpread || 0;
   this.boxShadowColor = options.boxShadowColor || [0, 0, 0];
 };
-
-exports.Ball = Ball;

@@ -1,4 +1,4 @@
-/*global exports, document */
+/*global document */
 
 /**
  * Creates a new Item.
@@ -32,7 +32,7 @@ function Item(options) {
  * @param {Object} [opt_options=] A map of initial properties.
  * @param {number} [opt_options.width = 10] Width.
  * @param {number} [opt_options.height = 10] Height.
- * @param {Array} [opt_options.color = [0, 0, 0]] Color.
+ * @param {Array} [opt_options.color = 0, 0, 0] Color.
  * @param {string} [opt_options.colorMode = 'rgb'] Color mode. Accepted values: 'rgb', 'hsl'.
  * @param {string} [opt_options.visibility = 'visible'] Visibility. Accepted values: 'visible', 'hidden'.
  * @param {number} [opt_options.opacity = 1] Opacity.
@@ -62,7 +62,7 @@ function Item(options) {
  * @param {number} [opt_options.life = 0] Life.
  * @param {boolean} [opt_options.isStatic = false] If set to true, object will not move.
  * @param {boolean} [opt_options.controlCamera = false] If set to true, object controls the camera.
- * @param {Array} [opt_options.worldBounds = [true, true, true, true]] Defines the boundaries checked
+ * @param {Array} [opt_options.worldBounds = true, true, true, true] Defines the boundaries checked
  *    checkWorldEdges is true.
  * @param {boolean} [opt_options.checkWorldEdges = false] If set to true, system restricts object
  *    movement to world boundaries.
@@ -129,6 +129,7 @@ Item.prototype.reset = function(opt_options) {
   this.worldBounds = options.worldBounds || [true, true, true, true];
   this.checkWorldEdges = options.checkWorldEdges === undefined ? true : options.checkWorldEdges;
   this.wrapWorldEdges = !!options.wrapWorldEdges;
+  this.wrapWorldEdgesSoft = !!options.wrapWorldEdgesSoft;
   this.avoidWorldEdges = !!options.avoidWorldEdges;
   this.avoidWorldEdgesStrength = options.avoidWorldEdgesStrength === undefined ? 50 : options.avoidWorldEdgesStrength;
 };
@@ -181,7 +182,7 @@ Item.prototype.applyForce = function(force) {
  */
 Item.prototype._checkWorldEdges = function() {
 
-  var worldRight = this.world.bounds[1],
+  var x, y, worldRight = this.world.bounds[1],
       worldBottom = this.world.bounds[2],
       worldBounds = this.worldBounds,
       location = this.location,
@@ -191,10 +192,38 @@ Item.prototype._checkWorldEdges = function() {
       bounciness = this.bounciness;
 
   // transform origin is at the center of the object
-  if (this.wrapWorldEdges) {
+  if (this.wrapWorldEdgesSoft) {
 
-    var x = location.x,
-        y = location.y;
+    x = location.x;
+    y = location.y;
+
+    if (location.x > worldRight) {
+      location.x = -(worldRight - location.x);
+      if (this.controlCamera) {
+        this.world.location.x = this.world.location.x + x - location.x;
+      }
+    } else if (location.x < 0) {
+      location.x = worldRight + location.x;
+      if (this.controlCamera) {
+        this.world.location.x = this.world.location.x + x - location.x;
+      }
+    }
+
+    if (location.y > worldBottom) {
+      location.y = -(worldBottom - location.y);
+      if (this.controlCamera) {
+        this.world.location.y = this.world.location.y + y - location.y;
+      }
+    } else if (location.y < 0) {
+      location.y = worldBottom + location.y;
+      if (this.controlCamera) {
+        this.world.location.y = this.world.location.y + y - location.y;
+      }
+    }
+  } else if (this.wrapWorldEdges) {
+
+    x = location.x;
+    y = location.y;
 
     if (location.x > worldRight) {
       location.x = 0;
@@ -213,7 +242,7 @@ Item.prototype._checkWorldEdges = function() {
       if (this.controlCamera) {
         this.world.location.y = this.world.location.y + y - location.y;
       }
-    } else if (location.y < -height / 2) {
+    } else if (location.y < 0) {
       location.y = worldBottom;
       if (this.controlCamera) {
         this.world.location.y = this.world.location.y + y - location.y;
@@ -254,5 +283,3 @@ Item.prototype._checkCameraEdges = function() {
 Item.prototype.draw = function() {
   exports.System._draw(this);
 };
-
-exports.Item = Item;

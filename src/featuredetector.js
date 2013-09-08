@@ -1,4 +1,4 @@
-/*global exports, document */
+/*global document */
 /**
  * Creates a new FeatureDetector.
  *
@@ -115,5 +115,3 @@ FeatureDetector.touch = function() {
   }
   return false;
 };
-
-exports.FeatureDetector = FeatureDetector;

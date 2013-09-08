@@ -1,5 +1,3 @@
-/*global exports */
-
 /**
  * Creates a new World.
  *
@@ -98,5 +96,3 @@ World.prototype._setBounds = function() {
         (screenDimensions.height / 2));
   }
 };
-
-exports.World = World;

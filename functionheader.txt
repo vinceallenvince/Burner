@@ -1,7 +1,0 @@
-/** @namespace */
-var Burner = {}, exports = Burner;
-
-(function(exports) {
-
-  'use strict';
-
