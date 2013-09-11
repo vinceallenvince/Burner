@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* Version: 2.1.0 */
-/* Build time: September 1, 2013 06:23:35 *//** @namespace */
+/* Build time: September 1, 2013 11:07:30 *//** @namespace */
 var Burner = {}, exports = Burner;
 
 (function(exports) {
@@ -731,7 +731,6 @@ Item.prototype.reset = function(opt_options) {
   this.worldBounds = options.worldBounds || [true, true, true, true];
   this.checkWorldEdges = options.checkWorldEdges === undefined ? true : options.checkWorldEdges;
   this.wrapWorldEdges = !!options.wrapWorldEdges;
-  this.wrapWorldEdgesSoft = !!options.wrapWorldEdgesSoft;
   this.avoidWorldEdges = !!options.avoidWorldEdges;
   this.avoidWorldEdgesStrength = options.avoidWorldEdgesStrength === undefined ? 50 : options.avoidWorldEdgesStrength;
 };
@@ -784,7 +783,7 @@ Item.prototype.applyForce = function(force) {
  */
 Item.prototype._checkWorldEdges = function() {
 
-  var x, y, worldRight = this.world.bounds[1],
+  var worldRight = this.world.bounds[1],
       worldBottom = this.world.bounds[2],
       worldBounds = this.worldBounds,
       location = this.location,
@@ -794,38 +793,10 @@ Item.prototype._checkWorldEdges = function() {
       bounciness = this.bounciness;
 
   // transform origin is at the center of the object
-  if (this.wrapWorldEdgesSoft) {
+  if (this.wrapWorldEdges) {
 
-    x = location.x;
-    y = location.y;
-
-    if (location.x > worldRight) {
-      location.x = -(worldRight - location.x);
-      if (this.controlCamera) {
-        this.world.location.x = this.world.location.x + x - location.x;
-      }
-    } else if (location.x < 0) {
-      location.x = worldRight + location.x;
-      if (this.controlCamera) {
-        this.world.location.x = this.world.location.x + x - location.x;
-      }
-    }
-
-    if (location.y > worldBottom) {
-      location.y = -(worldBottom - location.y);
-      if (this.controlCamera) {
-        this.world.location.y = this.world.location.y + y - location.y;
-      }
-    } else if (location.y < 0) {
-      location.y = worldBottom + location.y;
-      if (this.controlCamera) {
-        this.world.location.y = this.world.location.y + y - location.y;
-      }
-    }
-  } else if (this.wrapWorldEdges) {
-
-    x = location.x;
-    y = location.y;
+    var x = location.x,
+        y = location.y;
 
     if (location.x > worldRight) {
       location.x = 0;
@@ -844,7 +815,7 @@ Item.prototype._checkWorldEdges = function() {
       if (this.controlCamera) {
         this.world.location.y = this.world.location.y + y - location.y;
       }
-    } else if (location.y < 0) {
+    } else if (location.y < -height / 2) {
       location.y = worldBottom;
       if (this.controlCamera) {
         this.world.location.y = this.world.location.y + y - location.y;

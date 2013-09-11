@@ -1,36 +1,16 @@
-/*
-Burner
-Copyright (c) 2013 Vince Allen
-vince@vinceallen.com
-http://www.vinceallen.com
+/*! Burner v2.1.1 - 2013-09-08 05:09:54 
+ *  Vince Allen 
+ *  Brooklyn, NY 
+ *  vince@vinceallen.com 
+ *  @vinceallenvince 
+ *  License: MIT */
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-/* Version: 2.1.0 */
-/* Build time: September 1, 2013 06:23:35 *//** @namespace */
 var Burner = {}, exports = Burner;
 
 (function(exports) {
 
-  'use strict';
+"use strict";
 
-/*global window */
 /*jshint unused:false */
 /**
  * RequestAnimationFrame shim layer with setTimeout fallback
@@ -48,8 +28,7 @@ window.requestAnimFrame = (function(callback){
             window.setTimeout(callback, 1000 / 60);
           };
 })();
-/*global exports */
-/*jshint supernew:true */
+
 /**
  * Creates a new Vector.
  *
@@ -300,7 +279,7 @@ Vector.prototype.dot = function(vector) {
 };
 
 exports.Vector = Vector;
-/*global exports, document, window */
+
 /**
  * Creates a new StatsDisplay object.
  *
@@ -481,7 +460,7 @@ StatsDisplay.prototype.destroy = function() {
 };
 
 exports.StatsDisplay = StatsDisplay;
-/*global exports, document */
+
 /**
  * Creates a new FeatureDetector.
  *
@@ -600,7 +579,6 @@ FeatureDetector.touch = function() {
 };
 
 exports.FeatureDetector = FeatureDetector;
-/*global exports, document */
 
 /**
  * Creates a new Item.
@@ -634,7 +612,7 @@ function Item(options) {
  * @param {Object} [opt_options=] A map of initial properties.
  * @param {number} [opt_options.width = 10] Width.
  * @param {number} [opt_options.height = 10] Height.
- * @param {Array} [opt_options.color = [0, 0, 0]] Color.
+ * @param {Array} [opt_options.color = 0, 0, 0] Color.
  * @param {string} [opt_options.colorMode = 'rgb'] Color mode. Accepted values: 'rgb', 'hsl'.
  * @param {string} [opt_options.visibility = 'visible'] Visibility. Accepted values: 'visible', 'hidden'.
  * @param {number} [opt_options.opacity = 1] Opacity.
@@ -664,7 +642,7 @@ function Item(options) {
  * @param {number} [opt_options.life = 0] Life.
  * @param {boolean} [opt_options.isStatic = false] If set to true, object will not move.
  * @param {boolean} [opt_options.controlCamera = false] If set to true, object controls the camera.
- * @param {Array} [opt_options.worldBounds = [true, true, true, true]] Defines the boundaries checked
+ * @param {Array} [opt_options.worldBounds = true, true, true, true] Defines the boundaries checked
  *    checkWorldEdges is true.
  * @param {boolean} [opt_options.checkWorldEdges = false] If set to true, system restricts object
  *    movement to world boundaries.
@@ -887,7 +865,7 @@ Item.prototype.draw = function() {
 };
 
 exports.Item = Item;
-/*global exports, window, document, setTimeout, Burner, Modernizr */
+
 /*jshint supernew:true */
 /** @namespace */
 var System = {
@@ -949,9 +927,9 @@ System._idCount = 0;
  * @public
  */
 System.mouse = {
-  location: new exports.Vector(),
-  lastLocation: new exports.Vector(),
-  velocity: new exports.Vector()
+  location: new Vector(),
+  lastLocation: new Vector(),
+  velocity: new Vector()
 };
 
 /**
@@ -966,6 +944,8 @@ System._resizeTime = 0;
 /**
  * Initializes the system and starts the update loop.
  *
+ * @function init
+ * @memberof System
  * @param {Function=} opt_setup Creates the initial system conditions.
  * @param {Object=} opt_world A reference to a DOM element representing the System world.
  * @param {Object=} opt_supportedFeatures A map of supported browser features.
@@ -1074,6 +1054,10 @@ System.init = function(opt_setup, opt_worlds, opt_supportedFeatures, opt_noStart
 
 /**
  * Adds world to System records and worlds cache.
+ *
+ * @function _addWorld
+ * @memberof System
+ * @private
  * @param {Object} world A world.
  */
 System._addWorld = function(world) {
@@ -1085,6 +1069,8 @@ System._addWorld = function(world) {
 /**
  * Adds an item to the system.
  *
+ * @function add
+ * @memberof System
  * @param {string} klass Function will try to create an instance of this class.
  * @param {Object=} opt_options Object properties.
  * @param {string=} opt_world The world to contain the item.
@@ -1127,6 +1113,8 @@ System.add = function(klass, opt_options, opt_world) {
 
 /**
  * Starts the render loop.
+ * @function start
+ * @memberof System
  */
 System.start = function() {
   this._update();
@@ -1135,6 +1123,8 @@ System.start = function() {
 /**
  * Adds an object to a cache based on its constructor name.
  *
+ * @function updateCache
+ * @memberof System
  * @param {Object} obj An object.
  * returns {Object} The cache that received the passed object.
  */
@@ -1155,6 +1145,9 @@ System.updateCache = function(obj) {
 /**
  * Assigns the given 'val' to the given object's record in System._caches.
  *
+ * @function _updateCacheLookup
+ * @memberof System
+ * @private
  * @param {Object} obj An object.
  * @param {Boolean} val True if object is active, false if object is destroyed.
  */
@@ -1170,6 +1163,8 @@ System._updateCacheLookup = function(obj, val) {
 /**
  * Returns the total number of items in the system.
  *
+ * @function count
+ * @memberof System
  * @returns {number} Total number of items.
  */
 System.count = function() {
@@ -1179,6 +1174,8 @@ System.count = function() {
 /**
  * Returns the first world in the system.
  *
+ * @function firstWorld
+ * @memberof System
  * @returns {null|Object} A world.
  */
 System.firstWorld = function() {
@@ -1188,6 +1185,8 @@ System.firstWorld = function() {
 /**
  * Returns the last world in the system.
  *
+ * @function lastWorld
+ * @memberof System
  * @returns {null|Object} A world.
  */
 System.lastWorld = function() {
@@ -1197,6 +1196,8 @@ System.lastWorld = function() {
 /**
  * Returns the first item in the system.
  *
+ * @function firstItem
+ * @memberof System
  * @returns {Object} An item.
  */
 System.firstItem = function() {
@@ -1206,6 +1207,8 @@ System.firstItem = function() {
 /**
  * Returns the last item in the system.
  *
+ * @function lastItem
+ * @memberof System
  * @returns {Object} An item.
  */
 System.lastItem = function() {
@@ -1214,6 +1217,9 @@ System.lastItem = function() {
 
 /**
  * Returns all worlds.
+ *
+ * @function getAllWorlds
+ * @memberof System
  * @return {Array.<World>} An array of worlds.
  */
 System.getAllWorlds = function() {
@@ -1223,6 +1229,8 @@ System.getAllWorlds = function() {
 /**
  * Iterates over objects in the system and calls step() and draw().
  *
+ * @function _update
+ * @memberof System
  * @private
  */
 System._update = function() {
@@ -1263,6 +1271,9 @@ System._update = function() {
 
 /**
  * Pauses the system and processes one step in records.
+ *
+ * @function _stepForward
+ * @memberof System
  * @private
  */
 System._stepForward = function() {
@@ -1290,8 +1301,10 @@ System._stepForward = function() {
 /**
  * Resets the system.
  *
- * @param {boolean} opt_noRestart= Pass true to not restart the system.
+ * @function _resetSystem
+ * @memberof System
  * @private
+ * @param {boolean} opt_noRestart= Pass true to not restart the system.
  */
 System._resetSystem = function(opt_noRestart) {
 
@@ -1328,6 +1341,9 @@ System._resetSystem = function(opt_noRestart) {
 
 /**
  * Destroys the system.
+ *
+ * @function _destroySystem
+ * @memberof System
  * @private
  */
 System._destroySystem = function() {
@@ -1340,6 +1356,8 @@ System._destroySystem = function() {
 /**
  * Removes all items in all worlds.
  *
+ * @function _destroyAllItems
+ * @memberof System
  * @private
  */
 System._destroyAllItems = function() {
@@ -1356,6 +1374,8 @@ System._destroyAllItems = function() {
 /**
  * Removes all worlds.
  *
+ * @function _destroyAllWorlds
+ * @memberof System
  * @private
  */
 System._destroyAllWorlds = function() {
@@ -1378,6 +1398,8 @@ System._destroyAllWorlds = function() {
 /**
  * Removes an item from a world.
  *
+ * @function destroyItem
+ * @memberof System
  * @param {Object} obj The item to remove.
  */
 System.destroyItem = function (obj) {
@@ -1399,6 +1421,8 @@ System.destroyItem = function (obj) {
 /**
  * Returns an array of items created from the same constructor.
  *
+ * @function getAllItemsByName
+ * @memberof System
  * @param {string} name The 'name' property.
  * @param {Array} [opt_list = this._records] An optional list of items.
  * @returns {Array} An array of items.
@@ -1420,6 +1444,8 @@ System.getAllItemsByName = function(name, opt_list) {
  * Returns an array of items with an attribute that matches the
  * passed 'attr'. If 'opt_val' is passed, 'attr' must equal 'val'.
  *
+ * @function getAllItemsByAttribute
+ * @memberof System
  * @param {string} attr The property to match.
  * @param {*} [opt_val=] The 'attr' property must equal 'val'.
  * @returns {Array} An array of items.
@@ -1443,6 +1469,8 @@ System.getAllItemsByAttribute = function(attr, opt_val) {
 /**
  * Updates the properties of items created from the same constructor.
  *
+ * @function updateItemPropsByName
+ * @memberof System
  * @param {string} name The constructor name.
  * @param {Object} props A map of properties to update.
  * @returns {Array} An array of items.
@@ -1469,6 +1497,8 @@ System.updateItemPropsByName = function(name, props) {
 /**
  * Finds an item by its 'id' and returns it.
  *
+ * @function getItem
+ * @memberof System
  * @param {string|number} id The item's id.
  * @returns {Object} The item.
  */
@@ -1487,6 +1517,8 @@ System.getItem = function(id) {
 /**
  * Updates the properties of an item.
  *
+ * @function updateItem
+ * @memberof System
  * @param {Object} item The item.
  * @param {Object} props A map of properties to update.
  * @returns {Object} The item.
@@ -1508,6 +1540,10 @@ System.updateItem = function(item, props) {
 
 /**
  * Repositions all items relative to the viewport size and resets the world bounds.
+ *
+ * @function _resize
+ * @memberof System
+ * @private
  */
 System._resize = function() {
 
@@ -1538,6 +1574,9 @@ System._resize = function() {
 /**
  * Handles keyup events.
  *
+ * @function _keyup
+ * @memberof System
+ * @private
  * @param {Object} e An event.
  */
 System._keyup = function(e) {
@@ -1565,6 +1604,9 @@ System._keyup = function(e) {
 
 /**
  * Increments idCount and returns the value.
+ *
+ * @function getNewId
+ * @memberof System
  */
 System.getNewId = function() {
   this._idCount++;
@@ -1574,10 +1616,12 @@ System.getNewId = function() {
 /**
  * Adds an event listener to a DOM element.
  *
+ * @function _addEvent
+ * @memberof System
+ * @private
  * @param {Object} target The element to receive the event listener.
  * @param {string} eventType The event type.
  * @param {function} The function to run when the event is triggered.
- * @private
  */
 System._addEvent = function(target, eventType, handler) {
   if (target.addEventListener) { // W3C
@@ -1590,6 +1634,8 @@ System._addEvent = function(target, eventType, handler) {
 /**
  * Saves the mouse/touch location relative to the browser window.
  *
+ * @function _recordMouseLoc
+ * @memberof System
  * @private
  */
 System._recordMouseLoc = function(e) {
@@ -1626,6 +1672,8 @@ System._recordMouseLoc = function(e) {
 /**
  * Extends the properties and methods of a superClass onto a subClass.
  *
+ * @function extend
+ * @memberof System
  * @param {Object} subClass The subClass.
  * @param {Object} superClass The superClass.
  */
@@ -1639,8 +1687,9 @@ System.extend = function(subClass, superClass) {
 /**
  * Determines the size of the browser window.
  *
+ * @function extend
+ * @memberof System
  * @returns {Object} The current browser window width and height.
- * @private
  */
 System.getWindowSize = function() {
 
@@ -1665,6 +1714,9 @@ System.getWindowSize = function() {
 
 /**
  * Handles orientation evenst and forces the world to update its bounds.
+ *
+ * @function updateOrientation
+ * @memberof System
  */
 System.updateOrientation = function() {
   setTimeout(function() {
@@ -1675,6 +1727,8 @@ System.updateOrientation = function() {
 /**
  * Generates a psuedo-random number within a range.
  *
+ * @function getRandomNumber
+ * @memberof System
  * @param {number} low The low end of the range.
  * @param {number} high The high end of the range.
  * @param {boolean} [flt] Set to true to return a float.
@@ -1689,6 +1743,10 @@ System.getRandomNumber = function(low, high, flt) {
 
 /**
  * Toggles stats display.
+ *
+ * @function _toggleStats
+ * @memberof System
+ * @private
  */
 System._toggleStats = function() {
   if (!System._statsDisplay) {
@@ -1704,9 +1762,10 @@ System._toggleStats = function() {
  * Checks if the Modernizr object exists. If so, returns
  * supported transforms. If not, returns false for transforms support.
  *
- * returns {Object} A map of supported features.
- * @static
+ * @function _getSupportedFeatures
+ * @memberof System
  * @private
+ * @returns {Object} A map of supported features.
  */
 System._getSupportedFeatures = function() {
 
@@ -1731,6 +1790,8 @@ System._getSupportedFeatures = function() {
 /**
  * Re-maps a number from one range to another.
  *
+ * @function map
+ * @memberof System
  * @param {number} value The value to be converted.
  * @param {number} min1 Lower bound of the value's current range.
  * @param {number} max1 Upper bound of the value's current range.
@@ -1745,6 +1806,10 @@ System.map = function(value, min1, max1, min2, max2) { // returns a new value re
 
 /**
  * Updates the corresponding DOM element's style property.
+ *
+ * @function map
+ * @memberof System
+ * @param {Object} obj An item.
  */
 System._draw = function(obj) {
 
@@ -1788,7 +1853,10 @@ System._draw = function(obj) {
 /**
  * Concatenates a new cssText string.
  *
+ * @function getCSSText
+ * @memberof System
  * @param {Object} props A map of object properties.
+ * @returns {string} A string representing cssText.
  */
 System.getCSSText = function(props) {
   return this._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' +
@@ -1799,16 +1867,9 @@ System.getCSSText = function(props) {
       props.visibility + '; opacity: ' + props.opacity + '; z-index: ' + props.zIndex + '; position: ' +
       props.position + '; padding-top: ' + props.paddingTop + 'px; padding-right: ' + props.paddingRight + 'px; padding-bottom: ' + props.paddingBottom + 'px; padding-left: ' + props.paddingLeft + 'px; margin-top: ' + props.marginTop + 'px;';
 };
-exports.System = System;
-/*global exports */
 
-/**
- * Creates a new World.
- *
- * @param {Object} el The DOM element representing the world.
- * @param {Object} [opt_options=] A map of initial properties.
- * @constructor
- */
+exports.System = System;
+
 function World(el, opt_options) {
 
   if (!el || typeof el !== 'object') {
@@ -1902,22 +1963,19 @@ World.prototype._setBounds = function() {
 };
 
 exports.World = World;
-/*global exports */
 
-/**
- * Creates a new Box.
- *
- * @param {Object} [opt_options=] A map of initial properties.
- * @constructor
- */
 function Box(opt_options) {
 
   var options = opt_options || {};
   options.name = 'Box';
   exports.Item.call(this, options);
 }
-exports.System.extend(Box, exports.Item);
+System.extend(Box, Item);
 
+/**
+ * Initializes the ball.
+ * @param {Object} options Initial options.
+ */
 Box.prototype.init = function(options) {
   this.width = options.width || 20;
   this.height = options.height || 20;
@@ -1926,22 +1984,19 @@ Box.prototype.init = function(options) {
 };
 
 exports.Box = Box;
-/*global exports */
 
-/**
- * Creates a new Ball.
- *
- * @param {Object} [opt_options=] A map of initial properties.
- * @constructor
- */
 function Ball(opt_options) {
 
   var options = opt_options || {};
   options.name = 'Ball';
   exports.Item.call(this, options);
 }
-exports.System.extend(Ball, exports.Item);
+System.extend(Ball, Item);
 
+/**
+ * Initializes the ball.
+ * @param {Object} options Initial options.
+ */
 Ball.prototype.init = function(options) {
   this.width = options.width || 20;
   this.height = options.height || 20;
@@ -1956,4 +2011,5 @@ Ball.prototype.init = function(options) {
 };
 
 exports.Ball = Ball;
-}(exports)); // Burner end.
+
+}(exports));

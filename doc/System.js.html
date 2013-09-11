@@ -1,4 +1,31 @@
-/*global window, document, setTimeout, Burner, Modernizr */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: System.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: System.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global window, document, setTimeout, Burner, Modernizr */
 /*jshint supernew:true */
 /** @namespace */
 var System = {
@@ -104,23 +131,23 @@ System.init = function(opt_setup, opt_worlds, opt_supportedFeatures, opt_noStart
   }
 
   if (System.supportedFeatures.csstransforms3d) {
-    this._stylePosition = 'transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-webkit-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-moz-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-o-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
+    this._stylePosition = 'transform: translate3d(&lt;x>px, &lt;y>px, 0) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-webkit-transform: translate3d(&lt;x>px, &lt;y>px, 0) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-moz-transform: translate3d(&lt;x>px, &lt;y>px, 0) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-o-transform: translate3d(&lt;x>px, &lt;y>px, 0) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-ms-transform: translate3d(&lt;x>px, &lt;y>px, 0) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>);';
   } else if (System.supportedFeatures.csstransforms) {
-    this._stylePosition = 'transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-webkit-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-moz-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-o-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>); ' +
-        '-ms-transform: translate(<x>px, <y>px) rotate(<angle>deg) scale(<scale>, <scale>);';
+    this._stylePosition = 'transform: translate(&lt;x>px, &lt;y>px) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-webkit-transform: translate(&lt;x>px, &lt;y>px) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-moz-transform: translate(&lt;x>px, &lt;y>px) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-o-transform: translate(&lt;x>px, &lt;y>px) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>); ' +
+        '-ms-transform: translate(&lt;x>px, &lt;y>px) rotate(&lt;angle>deg) scale(&lt;scale>, &lt;scale>);';
   } else {
-    this._stylePosition = 'position: absolute; left: <x>px; top: <y>px;';
+    this._stylePosition = 'position: absolute; left: &lt;x>px; top: &lt;y>px;';
   }
 
   if (Object.prototype.toString.call(worlds) === '[object Array]') {
-    for (var i = 0, max = worlds.length; i < max; i++) {
+    for (var i = 0, max = worlds.length; i &lt; max; i++) {
       System._addWorld(worlds[i]);
     }
   } else {
@@ -157,7 +184,7 @@ System.init = function(opt_setup, opt_worlds, opt_supportedFeatures, opt_noStart
         x = e.accelerationIncludingGravity.x,
         y = e.accelerationIncludingGravity.y;
 
-    for (i = 0, max = worlds.length; i < max; i++) {
+    for (i = 0, max = worlds.length; i &lt; max; i++) {
       world = worlds[i];
       if (window.orientation === 0) {
         world.gravity.x = x;
@@ -221,7 +248,7 @@ System.add = function(klass, opt_options, opt_world) {
   pool = this.getAllItemsByName(klass, options.world._pool);
 
   if (pool.length) {
-    for (i = 0, max = options.world._pool.length; i < max; i++) {
+    for (i = 0, max = options.world._pool.length; i &lt; max; i++) {
       if (options.world._pool[i].name === klass) {
         records[records.length] = options.world._pool.splice(i, 1)[0];
         records[records.length - 1].options = options;
@@ -353,7 +380,7 @@ System.lastItem = function() {
  *
  * @function getAllWorlds
  * @memberof System
- * @return {Array.<World>} An array of worlds.
+ * @return {Array.&lt;World>} An array of worlds.
  */
 System.getAllWorlds = function() {
   return System._worlds.list;
@@ -374,7 +401,7 @@ System._update = function() {
   if (System._resizeTime && new Date().getTime() - System._resizeTime > 100) {
     System._resizeTime = 0;
     worlds = System.getAllWorlds();
-    for (i = 0, max = worlds.length; i < max; i++) {
+    for (i = 0, max = worlds.length; i &lt; max; i++) {
       worlds[i].pauseStep = false;
     }
     if (world.afterResize) {
@@ -414,7 +441,7 @@ System._stepForward = function() {
   var i, j, max, records = System._records.list,
       world, worlds = System.getAllWorlds();
 
-    for (i = 0, max = worlds.length; i < max; i++) {
+    for (i = 0, max = worlds.length; i &lt; max; i++) {
       world = worlds[i];
       world.pauseStep = true;
       for (j = records.length - 1; j >= 0; j -= 1) {
@@ -443,7 +470,7 @@ System._resetSystem = function(opt_noRestart) {
 
   var i, max, world, worlds = System.getAllWorlds();
 
-  for (i = 0, max = worlds.length; i < max; i++) {
+  for (i = 0, max = worlds.length; i &lt; max; i++) {
     world = worlds[i];
     world.pauseStep = false;
     world.pauseDraw = false;
@@ -539,7 +566,7 @@ System.destroyItem = function (obj) {
 
   var i, max, records = this._records.list;
 
-  for (i = 0, max = records.length; i < max; i++) {
+  for (i = 0, max = records.length; i &lt; max; i++) {
     if (records[i].id === obj.id) {
       records[i].el.style.visibility = 'hidden'; // hide item
       records[i].el.style.display = 'none';
@@ -565,7 +592,7 @@ System.getAllItemsByName = function(name, opt_list) {
   var i, max, arr = [],
       list = opt_list || this._records.list;
 
-  for (i = 0, max = list.length; i < max; i++) {
+  for (i = 0, max = list.length; i &lt; max; i++) {
     if (list[i].name === name) {
       arr[arr.length] = list[i];
     }
@@ -588,7 +615,7 @@ System.getAllItemsByAttribute = function(attr, opt_val) {
   var i, max, arr = [], records = this._records.list,
       val = opt_val !== undefined ? opt_val : null;
 
-  for (i = 0, max = records.length; i < max; i++) {
+  for (i = 0, max = records.length; i &lt; max; i++) {
     if (records[i][attr] !== undefined) {
       if (val !== null && records[i][attr] !== val) {
         continue;
@@ -617,7 +644,7 @@ System.updateItemPropsByName = function(name, props) {
 
   var i, max, p, arr = this.getAllItemsByName(name);
 
-  for (i = 0, max = arr.length; i < max; i++) {
+  for (i = 0, max = arr.length; i &lt; max; i++) {
     for (p in props) {
       if (props.hasOwnProperty(p)) {
         arr[i][p] = props[p];
@@ -639,7 +666,7 @@ System.getItem = function(id) {
 
   var i, max, records = this._records.list;
 
-  for (i = 0, max = records.length; i < max; i += 1) {
+  for (i = 0, max = records.length; i &lt; max; i += 1) {
     if (records[i].id === id) {
       return records[i];
     }
@@ -684,7 +711,7 @@ System._resize = function() {
       viewportSize = this.getWindowSize(),
       world, worlds = System.getAllWorlds();
 
-  for (i = 0, max = records.length; i < max; i++) {
+  for (i = 0, max = records.length; i &lt; max; i++) {
     record = records[i];
     if (record.name !== 'World' && record.world.boundToWindow && record.location) {
       record.location.x = viewportSize.width * (record.location.x / record.world.width);
@@ -692,7 +719,7 @@ System._resize = function() {
     }
   }
 
-  for (i = 0, max = worlds.length; i < max; i++) {
+  for (i = 0, max = worlds.length; i &lt; max; i++) {
     world = worlds[i];
     if (world.boundToWindow) {
       world.bounds = [0, viewportSize.width, viewportSize.height, 0];
@@ -721,7 +748,7 @@ System._keyup = function(e) {
       System._stepForward();
       break;
     case 80: // p; pause/play
-      for (i = 0, max = worlds.length; i < max; i++) {
+      for (i = 0, max = worlds.length; i &lt; max; i++) {
         world = worlds[i];
         world.pauseStep = !world.pauseStep;
       }
@@ -992,7 +1019,7 @@ System._draw = function(obj) {
  * @returns {string} A string representing cssText.
  */
 System.getCSSText = function(props) {
-  return this._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' +
+  return this._stylePosition.replace(/&lt;x>/g, props.x).replace(/&lt;y>/g, props.y).replace(/&lt;angle>/g, props.angle).replace(/&lt;scale>/g, props.scale) + 'width: ' +
       props.width + 'px; height: ' + props.height + 'px; background-color: ' +
       props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') +'); border: ' +
       props.borderWidth + 'px ' + props.borderStyle + ' ' + props.colorMode + '(' + props.borderColor0 + ', ' + props.borderColor1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.borderColor2 + (props.colorMode === 'hsl' ? '%' : '') + '); border-radius: ' +
@@ -1000,3 +1027,26 @@ System.getCSSText = function(props) {
       props.visibility + '; opacity: ' + props.opacity + '; z-index: ' + props.zIndex + '; position: ' +
       props.position + '; padding-top: ' + props.paddingTop + 'px; padding-right: ' + props.paddingRight + 'px; padding-bottom: ' + props.paddingBottom + 'px; padding-left: ' + props.paddingLeft + 'px; margin-top: ' + props.marginTop + 'px;';
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Ball.html">Ball</a></li><li><a href="Box.html">Box</a></li><li><a href="FeatureDetector.html">FeatureDetector</a></li><li><a href="Item.html">Item</a></li><li><a href="StatsDisplay.html">StatsDisplay</a></li><li><a href="Vector.html">Vector</a></li><li><a href="World.html">World</a></li></ul><h3>Namespaces</h3><ul><li><a href="System.html">System</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sun Sep 08 2013 17:50:58 GMT-0400 (EDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

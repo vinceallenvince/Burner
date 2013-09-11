@@ -6,8 +6,8 @@ describe("An Item", function() {
     el = document.createElement('div');
     el.id = 'world';
     document.body.appendChild(el);
-    obj = new Burner.Item({
-      world: new Burner.World(el)
+    obj = new Item({
+      world: new World(el)
     });
   });
 
