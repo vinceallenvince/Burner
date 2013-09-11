@@ -1,10 +1,7 @@
 # FOLDERS #
 ###########
-build/
-docs/
-lib/
-tests/lib/
-dev/
+node_modules/
+reports/
 
 # FILES #
 #########
