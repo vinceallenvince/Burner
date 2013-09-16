@@ -132,6 +132,9 @@ Item.prototype.reset = function(opt_options) {
   this.wrapWorldEdgesSoft = !!options.wrapWorldEdgesSoft;
   this.avoidWorldEdges = !!options.avoidWorldEdges;
   this.avoidWorldEdgesStrength = typeof options.avoidWorldEdgesStrength === 'undefined' ? 50 : options.avoidWorldEdgesStrength;
+
+  // if controlCamera is true, world is not static.
+  this.world.isStatic = false;
 };
 
 /**

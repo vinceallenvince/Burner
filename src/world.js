@@ -61,6 +61,13 @@ function World(el, opt_options) {
   this.world = {};
 
   this.draw();
+
+  /**
+   * If world does not move, we only want to render it once, remove the inline styles and
+   * block and further rendering.
+   */
+  this.isStatic = typeof options.isStatic !== 'undefined' ? options.isStatic : true;
+  this.drawState = 0;
 }
 
 /**
@@ -70,9 +77,20 @@ World.prototype.step = function() {};
 
 /**
  * Updates the corresponding DOM element's style property.
+ * If world is static, we want to draw with passed properties first,
+ * then clear the style, then do nothing. If world is not static, we
+ * want to update it every frame.
  */
 World.prototype.draw = function() {
-  exports.System._draw(this);
+
+  if (this.drawState === 2 && this.isStatic) {
+    return;
+  } else if (!this.drawState || !this.isStatic) {
+    exports.System._draw(this);
+  } else if (this.drawState === 1) {
+    this.el.style.cssText = '';
+  }
+  this.drawState++;
 };
 
 /**
