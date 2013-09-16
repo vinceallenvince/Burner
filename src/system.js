@@ -75,6 +75,11 @@ System.mouse = {
 System._resizeTime = 0;
 
 /**
+ * Set to true log flags in a performance tracing tool.
+ */
+System.trace = false;
+
+/**
  * Initializes the system and starts the update loop.
  *
  * @function init
@@ -382,12 +387,21 @@ System._update = function() {
     }
   }
 
+  if (System.trace) {
+    console.time('update');
+  }
+
   // step
   for (i = records.length - 1; i >= 0; i -= 1) {
     record = records[i];
     if (record.step && !record.world.pauseStep) {
       record.step();
     }
+  }
+
+  if (System.trace) {
+    console.timeEnd('update');
+    console.time('render');
   }
 
   // draw
@@ -397,6 +411,11 @@ System._update = function() {
       record.draw();
     }
   }
+
+  if (System.trace) {
+    console.timeEnd('render');
+  }
+
 
   System.clock++;
   window.requestAnimFrame(System._update);
