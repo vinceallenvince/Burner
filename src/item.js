@@ -83,24 +83,24 @@ Item.prototype.reset = function(opt_options) {
     }
   }
 
-  this.width = options.width === undefined ? 10 : options.width;
-  this.height = options.height === undefined ? 10 : options.height;
+  this.width = typeof options.width === 'undefined' ? 10 : options.width;
+  this.height = typeof options.height === 'undefined' ? 10 : options.height;
   this.color = options.color || [0, 0, 0];
   this.colorMode = options.colorMode || 'rgb';
   this.visibility = options.visibility || 'visible';
-  this.opacity = options.opacity === undefined ? 1 : options.opacity;
-  this.zIndex = options.zIndex === undefined ? 1 : options.zIndex;
+  this.opacity = typeof options.opacity === 'undefined' ? 1 : options.opacity;
+  this.zIndex = typeof options.zIndex === 'undefined' ? 1 : options.zIndex;
   this.borderWidth = options.borderWidth || 0;
   this.borderStyle = options.borderStyle || 'none';
   this.borderColor = options.borderColor || 'transparent';
   this.borderRadius = options.borderRadius || 0;
-  this.boxShadowOffset = options.boxShadowOffset === undefined ? new exports.Vector() : options.boxShadowOffset;
+  this.boxShadowOffset = typeof options.boxShadowOffset === 'undefined' ? new exports.Vector() : options.boxShadowOffset;
   this.boxShadowBlur = options.boxShadowBlur || 0;
   this.boxShadowSpread = options.boxShadowSpread || 0;
-  this.boxShadowColor = options.boxShadowColor === undefined ? 'transparent' : options.boxShadowColor;
+  this.boxShadowColor = typeof options.boxShadowColor === 'undefined' ? 'transparent' : options.boxShadowColor;
 
-  this.bounciness = options.bounciness === undefined ? 0.8 : options.bounciness;
-  this.mass = options.mass === undefined ? 10 : options.mass;
+  this.bounciness = typeof options.bounciness === 'undefined' ? 0.8 : options.bounciness;
+  this.mass = typeof options.mass === 'undefined' ? 10 : options.mass;
   this.acceleration = typeof options.acceleration === 'function' ? options.acceleration.call(this) :
       options.acceleration || new exports.Vector();
   this.velocity = typeof options.velocity === 'function' ? options.velocity.call(this) :
@@ -111,7 +111,7 @@ Item.prototype.reset = function(opt_options) {
   this.initLocation.x = this.location.x;
   this.initLocation.y = this.location.y;
 
-  this.maxSpeed = options.maxSpeed === undefined ? 10 : options.maxSpeed;
+  this.maxSpeed = typeof options.maxSpeed === 'undefined' ? 10 : options.maxSpeed;
   this.minSpeed = options.minSpeed || 0;
   this.angle = options.angle || 0;
 
@@ -122,16 +122,16 @@ Item.prototype.reset = function(opt_options) {
   this.paddingLeft = options.paddingLeft || 0;
   this.marginTop = options.marginTop || 0;
 
-  this.lifespan = options.lifespan === undefined ? -1 : options.lifespan;
+  this.lifespan = typeof options.lifespan === 'undefined' ? -1 : options.lifespan;
   this.life = options.life || 0;
   this.isStatic = !!options.isStatic;
   this.controlCamera = !!options.controlCamera;
   this.worldBounds = options.worldBounds || [true, true, true, true];
-  this.checkWorldEdges = options.checkWorldEdges === undefined ? true : options.checkWorldEdges;
+  this.checkWorldEdges = typeof options.checkWorldEdges === 'undefined' ? true : options.checkWorldEdges;
   this.wrapWorldEdges = !!options.wrapWorldEdges;
   this.wrapWorldEdgesSoft = !!options.wrapWorldEdgesSoft;
   this.avoidWorldEdges = !!options.avoidWorldEdges;
-  this.avoidWorldEdgesStrength = options.avoidWorldEdgesStrength === undefined ? 50 : options.avoidWorldEdgesStrength;
+  this.avoidWorldEdgesStrength = typeof options.avoidWorldEdgesStrength === 'undefined' ? 50 : options.avoidWorldEdgesStrength;
 };
 
 /**

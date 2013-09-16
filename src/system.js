@@ -605,10 +605,10 @@ System.getAllItemsByName = function(name, opt_list) {
 System.getAllItemsByAttribute = function(attr, opt_val) {
 
   var i, max, arr = [], records = this._records.list,
-      val = opt_val !== undefined ? opt_val : null;
+      val = typeof opt_val !== 'undefined' ? opt_val : null;
 
   for (i = 0, max = records.length; i < max; i++) {
-    if (records[i][attr] !== undefined) {
+    if (typeof records[i][attr] !== 'undefined') {
       if (val !== null && records[i][attr] !== val) {
         continue;
       }
