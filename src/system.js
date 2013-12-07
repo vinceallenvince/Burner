@@ -568,6 +568,17 @@ System.destroyItem = function (obj) {
       break;
     }
   }
+
+  var cache = System._caches[obj.name];
+
+  if (cache) {
+    for (i = cache.list.length - 1; i >= 0; i--) {
+      if (cache.list[i].id === obj.id) {
+        cache.list.splice(i, 1);
+        break;
+      }
+    }
+  }
 };
 
 /**
