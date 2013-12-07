@@ -1,4 +1,4 @@
-/*! Burner v2.1.4 - 2013-09-16 07:09:49 
+/*! Burner v2.1.5 - 2013-12-07 06:12:15 
  *  Vince Allen 
  *  Brooklyn, NY 
  *  vince@vinceallen.com 
@@ -1436,6 +1436,17 @@ System.destroyItem = function (obj) {
       records[i].world._pool[records[i].world._pool.length] = records.splice(i, 1)[0]; // move record to pool array
       System._updateCacheLookup(obj, false);
       break;
+    }
+  }
+
+  var cache = System._caches[obj.name];
+
+  if (cache) {
+    for (i = cache.list.length - 1; i >= 0; i--) {
+      if (cache.list[i].id === obj.id) {
+        cache.list.splice(i, 1);
+        break;
+      }
     }
   }
 };
