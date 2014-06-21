@@ -5,6 +5,7 @@ doc
 out
 release
 src_bak
+specs
 
 #### FILES ####
 *.DS_Store
