@@ -1,3 +1,12 @@
+
+## TODO
+
+-
+
+
+
+
+
 #Burner: A rendering engine for DOM-based animation.
 
 Use Burner to setup a rendering system in your web browser using only DOM elements. The system supplies some convenient functions for controlling playback, handling resizing, and optimizing object management via object pooling.

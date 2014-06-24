@@ -5,16 +5,10 @@ var Vector = require('./Vector').Vector;
 /**
  * Creates a new Item.
  * @constructor
- * @param {Object} system A reference to the simulation's system.
+ * @param {string} opt_name The item's class name.
  */
-function Item(system) {
-
-  if (!system) {
-    throw new Error('Item requires a System.');
-  }
-
-  this.system = system;
-  this.world = document.body;
+function Item() {
+  this.name = this.name || 'Item';
   Item._idCount++;
 }
 
@@ -61,7 +55,13 @@ Item._stylePosition =
  * @param {Function} [opt_options.beforeStep = 0] This function will be called at the beginning of the item's step() function.
  * @param {string} [opt_options.name = 'Item'] The item's name. Typically this is the item's class name.
  */
-Item.prototype.init = function(opt_options) {
+Item.prototype.init = function(world, opt_options) {
+
+  if (!world || typeof world !== 'object') {
+    throw new Error('Item requires an instance of World.');
+  }
+
+  this.world = world;
 
   var i, options = opt_options || {};
 
@@ -79,8 +79,8 @@ Item.prototype.init = function(opt_options) {
   this.mass = typeof options.mass === 'undefined' ? 10 : options.mass;
   this.acceleration = options.acceleration || new Vector();
   this.velocity = options.velocity || new Vector();
-  this.location = options.location || new Vector(this.world.scrollWidth / 2,
-      this.world.scrollHeight / 2);
+  this.location = options.location || new Vector(this.world.width / 2,
+      this.world.height / 2);
   this.maxSpeed = typeof options.maxSpeed === 'undefined' ? 10 : options.maxSpeed;
   this.minSpeed = options.minSpeed || 0;
   this.bounciness = options.bounciness || 0.5;
@@ -95,7 +95,6 @@ Item.prototype.init = function(opt_options) {
   this.color[1] = parseInt(this.color[1], 10);
   this.color[2] = parseInt(this.color[2], 10);
 
-  this.name = options.name || 'Item';
   this.id = this.name + Item._idCount;
   if (!this.el) {
     this.el = document.createElement('div');
@@ -103,7 +102,7 @@ Item.prototype.init = function(opt_options) {
     this.el.className = 'item ' + this.name.toLowerCase();
     this.el.style.position = 'absolute';
     this.el.style.top = '-5000px';
-    this.world.appendChild(this.el);
+    this.world.add(this.el);
   }
 };
 
@@ -114,8 +113,8 @@ Item.prototype.init = function(opt_options) {
  */
 Item.prototype.step = function() {
   this.beforeStep.call(this);
-  this.applyForce(this.system.gravity);
-  this.applyForce(this.system.wind);
+  this.applyForce(this.world.gravity);
+  this.applyForce(this.world.wind);
   this.velocity.add(this.acceleration);
   this.velocity.limit(this.maxSpeed, this.minSpeed);
   this.location.add(this.velocity);
@@ -153,8 +152,8 @@ Item.prototype.applyForce = function(force) {
  */
 Item.prototype._checkWorldEdges = function() {
 
-  var worldRight = this.world.scrollWidth,
-      worldBottom = this.world.scrollHeight,
+  var worldRight = this.world.width,
+      worldBottom = this.world.height,
       location = this.location,
       velocity = this.velocity,
       width = this.width,
@@ -186,8 +185,8 @@ Item.prototype._checkWorldEdges = function() {
  */
 Item.prototype._wrapWorldEdges = function() {
 
-  var worldRight = this.world.scrollWidth,
-      worldBottom = this.world.scrollHeight,
+  var worldRight = this.world.width,
+      worldBottom = this.world.height,
       location = this.location,
       width = this.width,
       height = this.height;

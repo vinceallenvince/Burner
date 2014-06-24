@@ -3,6 +3,20 @@ var test = require('tape'),
     Vector = require('../src/Vector').Vector,
     Item, obj;
 
+function World() {
+  this.width = 5000;
+  this.height = 5000;
+  this.gravity = new Vector(0, 1);
+  this.wind = new Vector();
+  this.c = 0.1;
+}
+World.prototype.init = function() {};
+World.prototype.step = function() {};
+World.prototype.draw = function() {};
+World.prototype.add = function(item) {
+  document.body.appendChild(item);
+};
+
 test('load Item.', function(t) {
   Item = require('../src/Item').Item;
   t.ok(Item, 'object loaded');
@@ -16,19 +30,27 @@ test('check static properties', function(t) {
 });
 
 test('new Item() should create a new Item and add its view to the DOM.', function(t) {
-  obj = new Item(System);
-  t.equal(typeof obj.system, 'object', 'should have a system.');
-  t.equal(typeof obj.world, 'object', 'should have a world.');
+  obj = new Item();
   t.equal(Item._idCount, 1, 'should increment Item._idCount.');
-  t.throws(function () {
-    new Item();
-  }, 'should throw exception when not passed a system.');
   t.end();
 });
 
 test('init() should initialize with default properties.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
   obj = new Item(System);
-  obj.init();
+  t.throws(function () {
+    obj.init();
+  }, 'should throw exception when not passed an instance of World.');
+  t.end();
+});
+
+
+test('init() should initialize with default properties.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
+  obj = new Item(System);
+  obj.init(world);
   t.equal(obj.name, 'Item');
   t.equal(obj.width, 10, 'default width.');
   t.equal(obj.height, 10, 'default height.');
@@ -50,9 +72,9 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.checkWorldEdges, true, 'default checkWorldEdges.');
   t.equal(obj.wrapWorldEdges, false, 'default checkWorldEdges.');
   t.equal(typeof obj.beforeStep, 'function', 'default beforeStep');
-  t.equal(obj._force.x, 0, 'force cache.');
-  t.equal(obj._force.y, 0, 'force cache.');
-  t.equal(obj.id, 'Item2', 'should have an id.');
+  t.equal(obj._force.x, 0, 'force cache x.');
+  t.equal(obj._force.y, 0, 'force cache y.');
+  t.equal(obj.id, 'Item3', 'should have an id.');
   t.equal(typeof obj.el, 'object', 'should have a DOM element as a view.');
   t.equal(obj.el.style.position, 'absolute', 'should have absolute positioning.');
   t.equal(obj.el.style.top, '-5000px', 'should be positioned off screen.');
@@ -62,8 +84,10 @@ test('init() should initialize with default properties.', function(t) {
 
 
 test('init() should initialize with custom properties.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
   obj = new Item(System);
-  obj.init({
+  obj.init(world, {
     hello: 'hi',
     width: 50,
     height: 100,
@@ -106,8 +130,10 @@ test('init() should initialize with custom properties.', function(t) {
 });
 
 test('step() should calculate a new location.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
   obj = new Item(System);
-  obj.init({
+  obj.init(world, {
     location: new Vector(100, 100),
     checkWorldEdges: true
   });
@@ -119,22 +145,25 @@ test('step() should calculate a new location.', function(t) {
   t.equal(obj.location.x, 100, 'new location x.');
   t.equal(obj.location.y, 100.1, 'new location y.');
 
-  System.gravity.y = -1;
+  document.body.innerHTML = '';
+  var world = new World();
+  world.gravity.y = -1;
   obj = new Item(System);
-  obj.init({
+  obj.init(world, {
     location: new Vector(0, 0),
     checkWorldEdges: false,
     wrapWorldEdges: true
   });
   obj.step();
   t.assert(obj.location.y > 0, 'checkWorldEdges: false, wrapWorldEdges: true; new location y should wrap to bottom of the document.body.');
-  System.gravity.y = 1;
   t.end();
 });
 
 test('applyForce() should return a new acceleration.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
   obj = new Item(System);
-  obj.init();
+  obj.init(world);
   var force = new Vector(0, 100);
   obj.applyForce(force);
   t.equal(obj.acceleration.y, 10, '');
@@ -142,12 +171,14 @@ test('applyForce() should return a new acceleration.', function(t) {
 });
 
 test('checkWorldEdges() should calculate a new location.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
   obj = new Item(System);
-  obj.init({
-    location: new Vector(document.body.scrollWidth + 10, 0)
+  obj.init(world, {
+    location: new Vector(world.width + 10, 0)
   });
   obj._checkWorldEdges();
-  t.equal(obj.location.x, document.body.scrollWidth - obj.width / 2, 'checkWorldEdges should restrict obj x.location to world right boundary.');
+  t.equal(obj.location.x, world.width - obj.width / 2, 'checkWorldEdges should restrict obj x.location to world right boundary.');
 
   obj.location.x = -100;
   obj._checkWorldEdges();
@@ -157,32 +188,34 @@ test('checkWorldEdges() should calculate a new location.', function(t) {
   obj._checkWorldEdges();
   t.equal(obj.location.y, obj.height / 2, 'checkWorldEdges should restrict obj y.location to world top boundary.');
 
-  obj.location.y = document.body.scrollHeight + 100;
+  obj.location.y = world.height + 100;
   obj._checkWorldEdges();
-  t.assert(obj.location.y < document.body.scrollHeight, 'checkWorldEdges should restrict obj y.location to world bottom boundary.');
+  t.assert(obj.location.y < world.height, 'checkWorldEdges should restrict obj y.location to world bottom boundary.');
   // used less than here bc phantomjs body height is unpredictable
   t.end();
 });
 
 test('wrapWorldEdges() should calculate a new location.', function(t) {
+  document.body.innerHTML = '';
+  var world = new World();
   obj = new Item(System);
-  obj.init({
+  obj.init(world, {
     location: new Vector()
   });
-  obj.location.x = document.body.scrollWidth + 10;
+  obj.location.x = world.width + 10;
   obj._wrapWorldEdges();
   t.equal(obj.location.x, obj.width / 2, 'wrapWorldEdges should restrict obj x.location to world left boundary.');
 
   obj.location.x = -100;
   obj._wrapWorldEdges();
-  t.equal(obj.location.x, document.body.scrollWidth - obj.width / 2, 'checkWorldEdges should restrict obj x.location to world right boundary.');
+  t.equal(obj.location.x, world.width - obj.width / 2, 'checkWorldEdges should restrict obj x.location to world right boundary.');
 
   obj.location.y = -100;
   obj._wrapWorldEdges();
-  t.assert(obj.location.y < document.body.scrollHeight && obj.location.y > 0, 'checkWorldEdges should restrict obj y.location to world bottom boundary.');
+  t.assert(obj.location.y < world.height && obj.location.y > 0, 'checkWorldEdges should restrict obj y.location to world bottom boundary.');
   // used less than here bc phantomjs body height is unpredictable
   //
-  obj.location.y = document.body.scrollHeight + 100;
+  obj.location.y = world.height + 100;
   obj._wrapWorldEdges();
   t.equal(obj.location.y, obj.height / 2, 'checkWorldEdges should restrict obj y.location to world top boundary.');
 
