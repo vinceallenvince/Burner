@@ -19,6 +19,12 @@ function World(el, opt_options) {
 
   this.el = el;
   this.name = 'World';
+  /**
+   * Worlds do not have worlds. However, assigning an
+   * object literal makes for less conditions in the
+   * update loop.
+   */
+  this.world = {};
   Item.call(this);
 }
 Utils.extend(World, Item);
@@ -43,6 +49,7 @@ World.prototype.init = function(opt_options) {
   this.c = options.c || 0.1;
   this.pauseStep = !!options.pauseStep;
   this.pauseDraw = !!options.pauseDraw;
+  this.el.className = this.name.toLowerCase();
 };
 
 /**

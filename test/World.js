@@ -10,7 +10,6 @@ test('load World.', function(t) {
   t.end();
 });
 
-
 test('new Item() should create a new Item and add its view to the DOM.', function(t) {
   var view = document.body;
   var obj = new World(view);
@@ -39,6 +38,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.c, 0.1, 'Default c.');
   t.equal(obj.pauseStep, false, 'Default pauseStep.');
   t.equal(obj.pauseDraw, false, 'Default pauseDraw.');
+  t.equal(obj.el.className, 'world', 'Should have className based on name.');
   t.end();
 });
 

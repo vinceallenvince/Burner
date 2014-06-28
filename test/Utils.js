@@ -37,3 +37,33 @@ test('map() re-maps a number from one range to another.', function(t) {
   t.assert(num = 50, 'returned number is mapped to range.');
   t.end();
 });
+
+test('addEvent() adds an event listener to a DOM element.', function(t) {
+  var val;
+  var event = document.createEvent('Event');
+  event.initEvent('build', true, true);
+  Utils.addEvent(document, 'build', function() {val = 100;});
+  document.dispatchEvent(event);
+  t.equal(val, 100, 'addEventListener handler called when event fires.');
+
+
+  var eventHello = document.createEvent('Event');
+  eventHello.initEvent('hello', true, true);
+  var obj = {
+    el: document.createElement('div')
+  };
+  obj.el.addEventListener = null;
+  obj.el.attachEvent = function(eventType, handler) {
+    obj[eventType] = handler;
+    console.log(obj);
+  };
+  Utils.addEvent(obj.el, 'hello', function() {val = 200;});
+  obj.onhello();
+  t.equal(val, 200, 'attachEvent handler called when event fires.');
+
+  t.end();
+});
+
+
+
+

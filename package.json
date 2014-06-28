@@ -1,6 +1,6 @@
 {
   "name": "Burner",
-  "version": "3.1.5",
+  "version": "3.0.0",
   "description": "A DOM rendering engine.",
   "main": "src/main.js",
   "repository": "",
@@ -31,6 +31,6 @@
     "testling": "^1.6.1"
   },
   "scripts": {
-    "test": "browserify test/*.js | testling"
+    "test": "browserify -t coverify test/*.js | testling | coverify"
   }
 }

@@ -52,4 +52,22 @@ Utils.map = function(value, min1, max1, min2, max2) { // returns a new value rel
   return (unitratio * (max2 - min2)) + min2;
 };
 
+/**
+ * Adds an event listener to a DOM element.
+ *
+ * @function _addEvent
+ * @memberof System
+ * @private
+ * @param {Object} target The element to receive the event listener.
+ * @param {string} eventType The event type.
+ * @param {function} The function to run when the event is triggered.
+ */
+Utils.addEvent = function(target, eventType, handler) {
+  if (target.addEventListener) { // W3C
+    target.addEventListener(eventType, handler, false);
+  } else if (target.attachEvent) { // IE
+    target.attachEvent('on' + eventType, handler);
+  }
+};
+
 module.exports.Utils = Utils;
