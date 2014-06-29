@@ -1,6 +1,7 @@
 var test = require('tape'),
     System = require('../src/System').System,
     Vector = require('../src/Vector').Vector,
+    Utils = require('../src/Utils').Utils,
     Item, obj;
 
 function World() {
@@ -35,21 +36,20 @@ test('new Item() should create a new Item and add its view to the DOM.', functio
   t.end();
 });
 
-test('init() should initialize with default properties.', function(t) {
+test('init() should require an instance of World.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   t.throws(function () {
     obj.init();
   }, 'should throw exception when not passed an instance of World.');
   t.end();
 });
 
-
 test('init() should initialize with default properties.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world);
   t.equal(obj.name, 'Item');
   t.equal(obj.width, 10, 'default width.');
@@ -82,11 +82,10 @@ test('init() should initialize with default properties.', function(t) {
   t.end();
 });
 
-
 test('init() should initialize with custom properties.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world, {
     hello: 'hi',
     width: 50,
@@ -105,7 +104,6 @@ test('init() should initialize with custom properties.', function(t) {
     wrapWorldEdges: true,
     beforeStep: function() {return 100;}
   });
-  t.equal(obj.hello, 'hi', 'should accept any property.');
   t.equal(obj.width, 50, 'custom width.');
   t.equal(obj.height, 100, 'custom height.');
   t.equal(obj.scale, 10, 'custom scale.');
@@ -125,14 +123,69 @@ test('init() should initialize with custom properties.', function(t) {
   t.equal(obj.bounciness, 0.9, 'custom bounciness.');
   t.equal(obj.checkWorldEdges, false, 'custom checkWorldEdges.');
   t.equal(obj.wrapWorldEdges, true, 'custom wrapWorldEdges.');
-  t.equal(obj.beforeStep(), 100, 'custom beforeStep')
+  t.equal(obj.beforeStep(), 100, 'custom beforeStep');
+  t.end();
+});
+
+test('init() should initialize with inherited properties.', function(t) {
+  function Obj() {
+    this.name = 'Obj';
+    this.width = 100;
+    this.height = 100;
+    this.scale = 0.5;
+    this.angle = 35;
+    this.color = [105, 100, 100];
+    this.mass = 200;
+    this.acceleration = new Vector(5, 10);
+    this.velocity = new Vector(2, 8);
+    this.location = new Vector(30, 40);
+    this.maxSpeed = 20;
+    this.minSpeed = 2;
+    this.bounciness = 2;
+    this.checkWorldEdges = false;
+    this.wrapWorldEdges = true;
+    this.beforeStep = false;
+    Item.call(this);
+  }
+  Utils.extend(Obj, Item);
+  System.Classes = {
+    Obj: Obj
+  };
+  var obj;
+  System.setup(function() {
+    obj = this.add('Obj'); // add your new object to the system
+  });
+  t.equal(obj.width, 100, 'inherited width');
+  t.equal(obj.height, 100, 'inherited height');
+  t.equal(obj.scale, 0.5, 'inherited scale');
+  t.equal(obj.angle, 35, 'inherited angle');
+  t.equal(obj.color[0], 105, 'inherited color');
+  t.equal(obj.mass, 200, 'inherited mass');
+  t.equal(obj.acceleration.x, 5, 'inherited acceleration.x');
+  t.equal(obj.acceleration.y, 10, 'inherited acceleration.y');
+  t.equal(obj.velocity.x, 2, 'inherited velocity.x');
+  t.equal(obj.velocity.y, 8, 'inherited velocity.y');
+  t.equal(obj.location.x, 30, 'inherited location.x');
+  t.equal(obj.location.y, 40, 'inherited location.y');
+  t.equal(obj.maxSpeed, 20, 'inherited maxSpeed');
+  t.equal(obj.minSpeed, 2, 'inherited minSpeed');
+  t.equal(obj.bounciness, 2, 'inherited bounciness');
+  t.equal(obj.checkWorldEdges, false, 'inherited checkWorldEdges');
+  t.equal(obj.wrapWorldEdges, true, 'inherited wrapWorldEdges');
+  t.equal(obj.beforeStep, false, 'inherited beforeStep');
+
+  document.body.innerHTML = '';
+  System._records = [];
+  System._pool = [];
+  System.Classes = {};
+
   t.end();
 });
 
 test('step() should calculate a new location.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world, {
     location: new Vector(100, 100),
     checkWorldEdges: true
@@ -148,7 +201,7 @@ test('step() should calculate a new location.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
   world.gravity.y = -1;
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world, {
     location: new Vector(0, 0),
     checkWorldEdges: false,
@@ -162,7 +215,7 @@ test('step() should calculate a new location.', function(t) {
 test('applyForce() should return a new acceleration.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world);
   var force = new Vector(0, 100);
   obj.applyForce(force);
@@ -173,7 +226,7 @@ test('applyForce() should return a new acceleration.', function(t) {
 test('checkWorldEdges() should calculate a new location.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world, {
     location: new Vector(world.width + 10, 0)
   });
@@ -198,7 +251,7 @@ test('checkWorldEdges() should calculate a new location.', function(t) {
 test('wrapWorldEdges() should calculate a new location.', function(t) {
   document.body.innerHTML = '';
   var world = new World();
-  obj = new Item(System);
+  obj = new Item();
   obj.init(world, {
     location: new Vector()
   });

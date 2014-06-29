@@ -112,6 +112,18 @@ System.setup = function(opt_func, opt_worlds) {
   System.setupFunc.call(this);
 };
 
+ /**
+  * Call to execute any setup code before starting the animation loop.
+  * Note: Deprecated in v3. Use setup();
+  * @function setup
+  * @param  {Object} opt_func   A function to run before the function exits.
+  * @param  {Object|Array} opt_worlds A instance or array of instances of World.
+  * @memberof System
+  */
+System.init = function(opt_func, opt_worlds) {
+  System.setup(opt_func, opt_worlds);
+};
+
 /**
  * Adds world to System records and worlds cache.
  *
@@ -139,18 +151,34 @@ System.add = function(klass, opt_options, opt_world) {
       options = opt_options || {},
       world = opt_world || System._records[0];
 
+  options.name = klass;
+
   // recycle object if one is available
   if (System._pool.length) {
-    records[records.length] = System._pool.splice(0, 1)[0];
+    records[records.length] = System._cleanObj(System._pool.splice(0, 1)[0]);
   } else {
     if (System.Classes[klass]) {
-      records.push(new System.Classes[klass]({name: klass}));
+      records.push(new System.Classes[klass](options));
     } else {
       records.push(new Item());
     }
   }
   records[records.length - 1].init(world, options);
   return records[records.length - 1];
+};
+
+/**
+ * Removes all properties from the passed object.
+ * @param  {Object} obj An object.
+ * @return {Object}     The passed object.
+ */
+System._cleanObj = function(obj) {
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      delete obj[prop];
+    }
+  }
+  return obj;
 };
 
 /**
@@ -170,6 +198,17 @@ System.remove = function (obj) {
       break;
     }
   }
+};
+
+/**
+ * Removes an item from the system.
+ * Note: Deprecated in v3. Use remove().
+ * @function remove
+ * @memberof System
+ * @param {Object} obj The item to remove.
+ */
+System.destroy = function (obj) {
+  System.remove(obj);
 };
 
 /**

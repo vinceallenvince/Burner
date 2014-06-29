@@ -8,7 +8,6 @@ var Vector = require('./Vector').Vector;
  * @param {string} opt_name The item's class name.
  */
 function Item() {
-  this.name = this.name || 'Item';
   Item._idCount++;
 }
 
@@ -63,37 +62,57 @@ Item.prototype.init = function(world, opt_options) {
 
   this.world = world;
 
-  var i, options = opt_options || {};
+  var options = opt_options || {};
 
-  for (i in options) {
-    if (options.hasOwnProperty(i)) {
-      this[i] = options[i];
-    }
-  }
+  this.name = typeof this.name !== 'undefined' ? this.name :
+      options.name || 'Item';
 
-  this.width = typeof options.width === 'undefined' ? 10 : options.width;
-  this.height = typeof options.height === 'undefined' ? 10 : options.height;
-  this.scale = options.scale || 1;
-  this.angle = options.angle || 0;
-  this.color = options.color || [0, 0, 0];
-  this.mass = typeof options.mass === 'undefined' ? 10 : options.mass;
-  this.acceleration = options.acceleration || new Vector();
-  this.velocity = options.velocity || new Vector();
-  this.location = options.location || new Vector(this.world.width / 2,
-      this.world.height / 2);
-  this.maxSpeed = typeof options.maxSpeed === 'undefined' ? 10 : options.maxSpeed;
-  this.minSpeed = options.minSpeed || 0;
-  this.bounciness = options.bounciness || 0.5;
-  this.checkWorldEdges = typeof options.checkWorldEdges === 'undefined' ?
-      true : options.checkWorldEdges;
-  this.wrapWorldEdges = options.wrapWorldEdges || false;
-  this.beforeStep = options.beforeStep || function() {};
+  this.width = typeof this.width !== 'undefined' ? this.width :
+      typeof options.width === 'undefined' ? 10 : options.width;
 
-  this._force = new Vector();
+  this.height = typeof this.height !== 'undefined' ? this.height :
+      typeof options.height === 'undefined' ? 10 : options.height;
 
-  this.color[0] = parseInt(this.color[0], 10);
-  this.color[1] = parseInt(this.color[1], 10);
-  this.color[2] = parseInt(this.color[2], 10);
+  this.scale = typeof this.scale !== 'undefined' ? this.scale :
+      options.scale || 1;
+
+  this.angle = typeof this.angle !== 'undefined' ? this.angle :
+      options.angle || 0;
+
+  this.color = typeof this.color !== 'undefined' ? this.color :
+      options.color || [0, 0, 0];
+
+  this.mass = typeof this.mass !== 'undefined' ? this.mass :
+      typeof options.mass === 'undefined' ? 10 : options.mass;
+
+  this.acceleration = typeof this.acceleration !== 'undefined' ? this.acceleration :
+      options.acceleration || new Vector();
+
+  this.velocity = typeof this.velocity !== 'undefined' ? this.velocity :
+      options.velocity || new Vector();
+
+  this.location = typeof this.location !== 'undefined' ? this.location :
+      options.location || new Vector(this.world.width / 2, this.world.height / 2);
+
+  this.maxSpeed = typeof this.maxSpeed !== 'undefined' ? this.maxSpeed :
+      typeof options.maxSpeed === 'undefined' ? 10 : options.maxSpeed;
+
+  this.minSpeed = typeof this.minSpeed !== 'undefined' ? this.minSpeed :
+      options.minSpeed || 0;
+
+  this.bounciness = typeof this.bounciness !== 'undefined' ? this.bounciness :
+      options.bounciness || 0.5;
+
+  this.checkWorldEdges = typeof this.checkWorldEdges !== 'undefined' ? this.checkWorldEdges :
+      typeof options.checkWorldEdges === 'undefined' ? true : options.checkWorldEdges;
+
+  this.wrapWorldEdges = typeof this.wrapWorldEdges !== 'undefined' ? this.wrapWorldEdges :
+      options.wrapWorldEdges || false;
+
+  this.beforeStep = typeof this.beforeStep !== 'undefined' ? this.beforeStep :
+      options.beforeStep || function() {};
+
+  this._force = this._force || new Vector();
 
   this.id = this.name + Item._idCount;
   if (!this.el) {
@@ -156,8 +175,8 @@ Item.prototype._checkWorldEdges = function() {
       worldBottom = this.world.height,
       location = this.location,
       velocity = this.velocity,
-      width = this.width,
-      height = this.height,
+      width = this.width * this.scale,
+      height = this.height * this.scale,
       bounciness = this.bounciness;
 
   if (location.x + width / 2 > worldRight) {
@@ -188,8 +207,8 @@ Item.prototype._wrapWorldEdges = function() {
   var worldRight = this.world.width,
       worldBottom = this.world.height,
       location = this.location,
-      width = this.width,
-      height = this.height;
+      width = this.width * this.scale,
+      height = this.height * this.scale;
 
   if (location.x + width / 2 > worldRight) {
     location.x = width / 2;

@@ -29,6 +29,9 @@ test('check static properties.', function(t) {
 
 test('setup() should execute a callback.', function(t) {
   var val;
+  document.body.innerHTML = '';
+  System._records = [];
+  System._pool = [];
   System.setup(function() {val = this._records.length;});
   t.equal(val, 1, 'System._records should have at least 1 record when the function exits.');
   var worlds = [];
@@ -40,6 +43,16 @@ test('setup() should execute a callback.', function(t) {
   System.setup(function() {val = this._records.length;}, worlds);
   t.equal(val, 2, 'System._records should have at least 2 records when the function exits.');
   t.equal(typeof System.setupFunc, 'function', 'should save the setup callback in case we need to reset the system.');
+  t.end();
+});
+
+test('init() should call setup.', function(t) {
+  var val;
+  document.body.innerHTML = '';
+  System._records = [];
+  System._pool = [];
+  System.init(function() {val = this._records.length;});
+  t.equal(val, 1, 'System._records should have at least 1 record when the function exits.');
   t.end();
 });
 
@@ -75,6 +88,15 @@ test('add() should pull from pull from System._pool if pooled items exist.', fun
   t.end();
 });
 
+test('_cleanObj() should remove all properties from an object.', function(t) {
+  var obj = {
+    hi: 'hello'
+  };
+  System._cleanObj(obj);
+  t.equal(typeof obj.hi, 'undefined', 'should remove property.');
+  t.end();
+});
+
 test('remove() should hide an item and add it to _loop.', function(t) {
   document.body.innerHTML = '';
   System._records = [];
@@ -84,6 +106,20 @@ test('remove() should hide an item and add it to _loop.', function(t) {
   System.add();
   t.equal(document.querySelectorAll('.item').length, 1, 'should append a DOM element to the document.body');
   System.remove(System._records[System._records.length - 1]);
+  t.equal(System._records.length, 1, 'should remove instance from _records');
+  t.equal(System._pool.length, 1, 'shoud add instance to _pool');
+  t.end();
+});
+
+test('destroy() should call remove().', function(t) {
+  document.body.innerHTML = '';
+  System._records = [];
+  System._pool = [];
+  System.Classes = {};
+  System.setup();
+  System.add();
+  t.equal(document.querySelectorAll('.item').length, 1, 'should append a DOM element to the document.body');
+  System.destroy(System._records[System._records.length - 1]);
   t.equal(System._records.length, 1, 'should remove instance from _records');
   t.equal(System._pool.length, 1, 'shoud add instance to _pool');
   t.end();

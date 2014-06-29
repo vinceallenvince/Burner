@@ -19,28 +19,18 @@
        * @param {Object} [opt_options=] A map of initial properties.
        * @constructor
        */
-      function Obj() {
-        this.name = 'Objii';
+      function Obj(opt_options) {
         Burner.Item.call(this);
+        var options = opt_options || {};
+        this.width = options.width || 100;
+        this.height = options.height || 100;
       }
       Burner.Utils.extend(Obj, Burner.Item);
-
-      /**
-       * Initializes the object.
-       * @param  {Object} options A map of initial properties.
-       */
-      /*Obj.prototype.init = function(options) {
-        this.width = options.width === undefined ? 20 : options.width;
-        this.height = options.height === undefined ? 20 : options.height;
-        this.color = options.color || [100, 100, 100];
-        this.borderRadius = options.borderRadius || 0;
-      };*/
 
       // Uncomment to provide your own step function.
       /*Obj.prototype.step = function() {
         // your code to update this obj goes here
       };*/
-
 
       /**
        * Tell Burner where to find classes.
