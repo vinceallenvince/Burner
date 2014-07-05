@@ -64,6 +64,25 @@ test('addEvent() adds an event listener to a DOM element.', function(t) {
   t.end();
 });
 
+test('degreesToRadians() converts degrees to radians.', function(t) {
+  var num = parseFloat(Utils.degreesToRadians(45).toPrecision(2));
+  t.equal(num, 0.79, 'converts degrees to radians.');
+  t.end();
+});
 
+test('radiansToDegrees() converts radians to degrees.', function(t) {
+  var num = parseFloat(Utils.radiansToDegrees(0.79).toPrecision(2));
+  t.equal(num, 45, 'converts radians to degrees.');
+  t.end();
+});
 
+test('constrain() constrains a value within a range.', function(t) {
+  var num = Utils.constrain(50, 40, 100);
+  t.equal(num, 50, 'mid-range.');
+  var num = Utils.constrain(30, 40, 100);
+  t.equal(num, 40, 'low-range.');
+  var num = Utils.constrain(150, 40, 100);
+  t.equal(num, 100, 'high-range.');
+  t.end();
+});
 
