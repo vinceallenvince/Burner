@@ -74,7 +74,7 @@ module.exports = function(grunt) {
       publicJS: {
         expand: true,
         cwd: 'release/',
-        src: '*.js',
+        src: ['*.js', '*.js.map'],
         dest: 'public/scripts/',
         flatten: true,
         filter: 'isFile'
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
     exec: {
       test: 'npm test',
       testcoverage: 'browserify -t coverify test/*.js | testling | coverify',
-      browserify: 'browserify src/main.js --standalone Burner -o ' + devRelease
+      browserify: 'browserify main.js --standalone Burner -o ' + devRelease
     },
     watch: {
       files: ['src/*.js'],

@@ -266,10 +266,6 @@ System._stepForward = function() {
   }
 };
 
-System._resetSystem = function() {
-
-};
-
 /**
  * Saves the mouse/touch location relative to the browser window.
  *
