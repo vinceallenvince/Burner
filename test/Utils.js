@@ -67,12 +67,18 @@ test('addEvent() adds an event listener to a DOM element.', function(t) {
 test('degreesToRadians() converts degrees to radians.', function(t) {
   var num = parseFloat(Utils.degreesToRadians(45).toPrecision(2));
   t.equal(num, 0.79, 'converts degrees to radians.');
+  t.throws(function () {
+    Utils.degreesToRadians()
+  }, 'should throw exception when not passed radians.');
   t.end();
 });
 
 test('radiansToDegrees() converts radians to degrees.', function(t) {
   var num = parseFloat(Utils.radiansToDegrees(0.79).toPrecision(2));
   t.equal(num, 45, 'converts radians to degrees.');
+  t.throws(function () {
+    Utils.radiansToDegrees()
+  }, 'should throw exception when not passed degrees.');
   t.end();
 });
 

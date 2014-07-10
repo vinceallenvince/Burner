@@ -91,7 +91,7 @@ module.exports = function(grunt) {
     exec: {
       test: 'npm test',
       testcoverage: 'browserify -t coverify test/*.js | testling | coverify',
-      browserify: 'browserify main.js --standalone Burner -o ' + devRelease
+      browserify: 'browserify src/main.js --standalone Burner -o ' + devRelease
     },
     watch: {
       files: ['src/*.js'],

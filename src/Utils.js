@@ -16,6 +16,7 @@ Utils.extend = function(subClass, superClass) {
   F.prototype = superClass.prototype;
   subClass.prototype = new F;
   subClass.prototype.constructor = subClass;
+  subClass.prototype._superClass = superClass.prototype;
 };
 
 /**
@@ -83,9 +84,8 @@ Utils.degreesToRadians = function(degrees) {
     return 2 * Math.PI * (degrees/360);
   } else {
     if (typeof console !== 'undefined') {
-      console.log('Error: Utils.degreesToRadians is missing degrees param.');
+      throw new Error('Error: Utils.degreesToRadians is missing degrees param.');
     }
-    return false;
   }
 };
 
@@ -102,9 +102,8 @@ Utils.radiansToDegrees = function(radians) {
     return radians * (180/Math.PI);
   } else {
     if (typeof console !== 'undefined') {
-      console.log('Error: Utils.radiansToDegrees is missing radians param.');
+      throw new Error('Error: Utils.radiansToDegrees is missing radians param.');
     }
-    return false;
   }
 };
 
