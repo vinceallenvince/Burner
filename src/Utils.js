@@ -126,4 +126,26 @@ Utils.constrain = function(val, low, high) {
   return val;
 };
 
+/**
+ * Determines if one object is inside another.
+ *
+ * @function isInside
+ * @memberof Utils
+ * @param {Object} obj The object.
+ * @param {Object} container The containing object.
+ * @returns {boolean} Returns true if the object is inside the container.
+ */
+Utils.isInside = function(obj, container) {
+  if (!obj || !container) {
+    throw new Error('isInside() requires both an object and a container.');
+  }
+  if (obj.location.x + obj.width / 2 > container.location.x - container.width / 2 &&
+    obj.location.x - obj.width / 2 < container.location.x + container.width / 2 &&
+    obj.location.y + obj.height / 2 > container.location.y - container.height / 2 &&
+    obj.location.y - obj.height / 2 < container.location.y + container.height / 2) {
+    return true;
+  }
+  return false;
+};
+
 module.exports.Utils = Utils;

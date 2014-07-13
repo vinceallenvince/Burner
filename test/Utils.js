@@ -92,3 +92,39 @@ test('constrain() constrains a value within a range.', function(t) {
   t.end();
 });
 
+test('isInside() determines if one object is inside another.', function(t) {
+
+  var obj = {
+    width: 10,
+    height: 10,
+    location: {
+      x: 50,
+      y: 50
+    }
+  };
+
+  var container = {
+    width: 100,
+    height: 100,
+    location: {
+      x: 0,
+      y: 0
+    }
+  };
+
+  t.equal(Utils.isInside(obj, container), true, 'obj is inside container.');
+
+  obj.location.x = 1000;
+  t.equal(Utils.isInside(obj, container), false, 'obj is outside container.');
+
+  t.throws(function () {
+    Utils.isInside(obj)
+  }, 'should throw exception when not passed container.');
+
+  t.throws(function () {
+    Utils.isInside(null, container)
+  }, 'should throw exception when not passed obj.');
+
+  t.end();
+});
+
