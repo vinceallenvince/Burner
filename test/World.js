@@ -39,14 +39,14 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.pauseStep, false, 'Default pauseStep.');
   t.equal(obj.pauseDraw, false, 'Default pauseDraw.');
   t.equal(obj.el.className, 'world', 'Should have className based on name.');
+  t.ok(obj.location.x, 'Default location x.');
+  t.ok(obj.location.y, 'Default location y.');
   t.end();
 });
 
-test('init() should initialize with default properties.', function(t) {
+test('init() should initialize with custom properties.', function(t) {
   var view = document.createElement('div');
   view.style.position = 'absolute';
-  view.style.top = '0';
-  view.style.left = '0';
   view.style.width = '100px';
   view.style.height = '100px';
   document.body.appendChild(view);
@@ -57,23 +57,24 @@ test('init() should initialize with default properties.', function(t) {
     gravity: new Vector(10, 20),
     c: 10,
     pauseStep: true,
-    pauseDraw: true
+    pauseDraw: true,
+    location: new Vector(50, 50)
   });
-  t.equal(obj.width, 200, 'Default width.');
-  t.equal(obj.height, 200, 'Default height.');
-  t.equal(obj.gravity.x, 10, 'Default gravity x.');
-  t.equal(obj.gravity.y, 20, 'Default gravity y.');
-  t.equal(obj.c, 10, 'Default c.');
-  t.equal(obj.pauseStep, true, 'Default pauseStep.');
-  t.equal(obj.pauseDraw, true, 'Default pauseDraw.');
+  t.equal(obj.width, 200, 'Custom width.');
+  t.equal(obj.height, 200, 'Custom height.');
+  t.equal(obj.gravity.x, 10, 'Custom gravity x.');
+  t.equal(obj.gravity.y, 20, 'Custom gravity y.');
+  t.equal(obj.c, 10, 'Custom c.');
+  t.equal(obj.pauseStep, true, 'Custom pauseStep.');
+  t.equal(obj.pauseDraw, true, 'Custom pauseDraw.');
+  t.equal(obj.location.x, 50, 'Custom location x.');
+  t.equal(obj.location.y, 50, 'Custom location y.');
   t.end();
 });
 
 test('add() should add an item to the world view.', function(t) {
   var view = document.createElement('div');
   view.style.position = 'absolute';
-  view.style.top = '0';
-  view.style.left = '0';
   view.style.width = '100px';
   view.style.height = '100px';
   document.body.innerHTML = '';

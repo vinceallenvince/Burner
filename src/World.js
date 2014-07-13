@@ -47,6 +47,7 @@ World.prototype.init = function(opt_options) {
 
   this.width = options.width || this.el.scrollWidth;
   this.height = options.height || this.el.scrollHeight;
+  this.location = options.location || new Vector(document.body.scrollWidth / 2, document.body.scrollHeight / 2);
   this.gravity = options.gravity || new Vector(0, 1);
   this.c = options.c || 0.1;
   this.pauseStep = !!options.pauseStep;
