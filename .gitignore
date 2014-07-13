@@ -12,4 +12,5 @@ specs
 *.swp
 public/scripts/Burner.js
 public/scripts/Burner.min.js
+*.map
 public/css/Burner.min.css
