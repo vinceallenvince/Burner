@@ -107,12 +107,16 @@ test('isInside() determines if one object is inside another.', function(t) {
     width: 100,
     height: 100,
     location: {
-      x: 0,
-      y: 0
+      x: 50,
+      y: 50
     }
   };
 
   t.equal(Utils.isInside(obj, container), true, 'obj is inside container.');
+
+  obj.width = null;
+  obj.height = null;
+  t.equal(Utils.isInside(obj, container), true, 'obj with no width/height is inside container.');
 
   obj.location.x = 1000;
   t.equal(Utils.isInside(obj, container), false, 'obj is outside container.');
