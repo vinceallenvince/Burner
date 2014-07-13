@@ -41,6 +41,8 @@ Utils.extend(World, Item);
  */
 World.prototype.init = function(opt_options) {
 
+  this._superClass.init.call(this, this.world, opt_options);
+
   var options = opt_options || {};
 
   this.width = options.width || this.el.scrollWidth;
