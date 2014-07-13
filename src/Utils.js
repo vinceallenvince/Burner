@@ -139,6 +139,12 @@ Utils.isInside = function(obj, container) {
   if (!obj || !container) {
     throw new Error('isInside() requires both an object and a container.');
   }
+
+  obj.width = obj.width || 0;
+  obj.height = obj.height || 0;
+  container.width = container.width || 0;
+  container.height = container.height || 0;
+
   if (obj.location.x + obj.width / 2 > container.location.x - container.width / 2 &&
     obj.location.x - obj.width / 2 < container.location.x + container.width / 2 &&
     obj.location.y + obj.height / 2 > container.location.y - container.height / 2 &&
