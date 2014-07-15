@@ -210,16 +210,16 @@ Item.prototype._wrapWorldEdges = function() {
       width = this.width * this.scale,
       height = this.height * this.scale;
 
-  if (location.x + width / 2 > worldRight) {
-    location.x = width / 2;
-  } else if (location.x < width / 2) {
-    location.x = worldRight - width / 2;
+  if (location.x + width > worldRight) {
+    location.x = -width;
+  } else if (location.x < -width) {
+    location.x = worldRight + width;
   }
 
-  if (location.y + height / 2 > worldBottom) {
-    location.y = height / 2;
-  } else if (location.y < height / 2) {
-    location.y = worldBottom - height / 2;
+  if (location.y + height > worldBottom) {
+    location.y = -height;
+  } else if (location.y < -height) {
+    location.y = worldBottom + height;
   }
 };
 
