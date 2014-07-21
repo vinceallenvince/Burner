@@ -2,7 +2,7 @@ body {
   background-color: transparent;
 }
 
-.world {
+.world, .item {
   position: absolute;
   top: 0;
   left: 0;
@@ -11,8 +11,6 @@ body {
 }
 
 .item {
-  position: absolute;
-  top: 0; left: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;

@@ -11,13 +11,13 @@ test('load World.', function(t) {
 });
 
 test('new Item() should create a new Item and add its view to the DOM.', function(t) {
-  var view = document.body;
-  var obj = new World(view);
-  t.equal(typeof obj.el, 'object', 'should have a view.');
+  var obj = new World();
+  t.equal(obj.el, document.body, 'should by default use document.body as a view.');
   t.equal(obj.name, 'World', 'should have a name.');
-  t.throws(function () {
-    new World();
-  }, 'should throw exception when not passed a DOM element.');
+
+  var view  = document.createElement('div');
+  var obj = new World({el: view});
+  t.equal(obj.el, view, 'can pass a DOM element as a view.');
   t.end();
 });
 
@@ -29,10 +29,14 @@ test('init() should initialize with default properties.', function(t) {
   view.style.width = '100px';
   view.style.height = '100px';
   document.body.appendChild(view);
-  obj = new World(view);
+  obj = new World({el: view});
   obj.init();
+  t.assert(obj.color[0] === 0 && obj.color[1] === 0 && obj.color[2] === 0, 'Default color.');
   t.equal(obj.width, 100, 'Default width.');
   t.equal(obj.height, 100, 'Default height.');
+  t.equal(obj.borderWidth, 0, 'Default borderWidth.');
+  t.equal(obj.borderStyle, 'none', 'Default borderStyle.');
+  t.assert(obj.borderColor[0] === 0 && obj.borderColor[1] === 0 && obj.borderColor[2] === 0, 'Default borderColor.');
   t.equal(obj.gravity.x, 0, 'Default gravity x.');
   t.equal(obj.gravity.y, 1, 'Default gravity y.');
   t.equal(obj.c, 0.1, 'Default c.');
@@ -51,17 +55,25 @@ test('init() should initialize with custom properties.', function(t) {
   view.style.height = '100px';
   document.body.appendChild(view);
   obj = new World(view);
-  obj.init({
+  obj.init({}, {
     width: 200,
     height: 200,
+    color: [200, 0, 0],
+    borderWidth: 10,
+    borderStyle: 'dotted',
+    borderColor: [0, 0, 200],
     gravity: new Vector(10, 20),
     c: 10,
     pauseStep: true,
     pauseDraw: true,
     location: new Vector(50, 50)
   });
+  t.assert(obj.color[0] === 200 && obj.color[1] === 0 && obj.color[2] === 0, 'Custom color.');
   t.equal(obj.width, 200, 'Custom width.');
   t.equal(obj.height, 200, 'Custom height.');
+  t.equal(obj.borderWidth, 10, 'Default borderWidth.');
+  t.equal(obj.borderStyle, 'dotted', 'Default borderStyle.');
+  t.assert(obj.borderColor[0] === 0 && obj.borderColor[1] === 0 && obj.borderColor[2] === 200, 'Custom borderColor.');
   t.equal(obj.gravity.x, 10, 'Custom gravity x.');
   t.equal(obj.gravity.y, 20, 'Custom gravity y.');
   t.equal(obj.c, 10, 'Custom c.');

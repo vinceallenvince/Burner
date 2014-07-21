@@ -4,6 +4,11 @@ var test = require('tape'),
     Utils = require('../src/Utils').Utils,
     Item, obj;
 
+function beforeTest() {
+  System.setupFunc = function() {};
+  System._resetSystem();
+}
+
 function World() {
   this.width = 5000;
   this.height = 5000;
@@ -25,19 +30,21 @@ test('load Item.', function(t) {
 });
 
 test('check static properties', function(t) {
+  beforeTest();
   t.equal(Item._idCount, 0);
   t.equal(typeof Item._stylePosition, 'string', 'has a _stylePosition string for concatenating transforms.');
   t.end();
 });
 
 test('new Item() should create a new Item and add its view to the DOM.', function(t) {
+  beforeTest();
   obj = new Item();
   t.equal(Item._idCount, 1, 'should increment Item._idCount.');
   t.end();
 });
 
 test('init() should require an instance of World.', function(t) {
-  document.body.innerHTML = '';
+  beforeTest();
   var world = new World();
   obj = new Item();
   t.throws(function () {
@@ -47,7 +54,7 @@ test('init() should require an instance of World.', function(t) {
 });
 
 test('init() should initialize with default properties.', function(t) {
-  document.body.innerHTML = '';
+  beforeTest();
   var world = new World();
   obj = new Item();
   obj.init(world);
@@ -56,6 +63,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.height, 10, 'default height.');
   t.equal(obj.scale, 1, 'default scale.');
   t.equal(obj.angle, 0, 'default angle.');
+  t.equal(obj.colorMode, 'rgb', 'default colorMode.');
   t.equal(obj.color[0], 0, 'default color red.');
   t.equal(obj.color[1], 0, 'default color green.');
   t.equal(obj.color[2], 0, 'default color blue.');
@@ -69,9 +77,12 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.maxSpeed, 10, 'default maxSpeed.');
   t.equal(obj.minSpeed, 0, 'default minSpeed.');
   t.equal(obj.bounciness, 0.5, 'default bounciness.');
+  t.equal(obj.life, 0, 'default life.');
+  t.equal(obj.lifespan, -1, 'default lifespan.');
   t.equal(obj.checkWorldEdges, true, 'default checkWorldEdges.');
   t.equal(obj.wrapWorldEdges, false, 'default checkWorldEdges.');
   t.equal(typeof obj.beforeStep, 'function', 'default beforeStep');
+  t.equal(obj.controlCamera, false, 'default controlCamera.');
   t.equal(obj._force.x, 0, 'force cache x.');
   t.equal(obj._force.y, 0, 'force cache y.');
   t.equal(obj.id, 'Item3', 'should have an id.');
@@ -83,7 +94,7 @@ test('init() should initialize with default properties.', function(t) {
 });
 
 test('init() should initialize with custom properties.', function(t) {
-  document.body.innerHTML = '';
+  beforeTest();
   var world = new World();
   obj = new Item();
   obj.init(world, {
@@ -92,6 +103,7 @@ test('init() should initialize with custom properties.', function(t) {
     height: 100,
     scale: 10,
     angle: 45,
+    colorMode: 'hsl',
     color: [10, 20, 30],
     mass: 300,
     acceleration: new Vector(5, 10),
@@ -100,14 +112,18 @@ test('init() should initialize with custom properties.', function(t) {
     maxSpeed: 50,
     minSpeed: 8,
     bounciness: 0.9,
+    life: 0,
+    lifespan: 100,
     checkWorldEdges: false,
     wrapWorldEdges: true,
-    beforeStep: function() {return 100;}
+    beforeStep: function() {return 100;},
+    controlCamera: true
   });
   t.equal(obj.width, 50, 'custom width.');
   t.equal(obj.height, 100, 'custom height.');
   t.equal(obj.scale, 10, 'custom scale.');
   t.equal(obj.angle, 45, 'custom angle.');
+  t.equal(obj.colorMode, 'hsl', 'custom colorMode.');
   t.equal(obj.color[0], 10, 'custom color red.');
   t.equal(obj.color[1], 20, 'custom color green.');
   t.equal(obj.color[2], 30, 'custom color blue.');
@@ -121,19 +137,24 @@ test('init() should initialize with custom properties.', function(t) {
   t.equal(obj.maxSpeed, 50, 'custom maxSpeed.');
   t.equal(obj.minSpeed, 8, 'custom minSpeed.');
   t.equal(obj.bounciness, 0.9, 'custom bounciness.');
+  t.equal(obj.life, 0, 'custom life.');
+  t.equal(obj.lifespan, 100, 'custom lifespan.');
   t.equal(obj.checkWorldEdges, false, 'custom checkWorldEdges.');
   t.equal(obj.wrapWorldEdges, true, 'custom wrapWorldEdges.');
   t.equal(obj.beforeStep(), 100, 'custom beforeStep');
+  t.equal(obj.controlCamera, true, 'custom controlCamera.');
   t.end();
 });
 
 test('init() should initialize with inherited properties.', function(t) {
+  beforeTest();
   function Obj() {
     this.name = 'Obj';
     this.width = 100;
     this.height = 100;
     this.scale = 0.5;
     this.angle = 35;
+    this.colorMode = 'hsl';
     this.color = [105, 100, 100];
     this.mass = 200;
     this.acceleration = new Vector(5, 10);
@@ -142,9 +163,12 @@ test('init() should initialize with inherited properties.', function(t) {
     this.maxSpeed = 20;
     this.minSpeed = 2;
     this.bounciness = 2;
+    this.life = 0;
+    this.lifespan = 100;
     this.checkWorldEdges = false;
     this.wrapWorldEdges = true;
     this.beforeStep = false;
+    this.controlCamera = true;
     Item.call(this);
   }
   Utils.extend(Obj, Item);
@@ -153,12 +177,14 @@ test('init() should initialize with inherited properties.', function(t) {
   };
   var obj;
   System.setup(function() {
+    this.add('World');
     obj = this.add('Obj'); // add your new object to the system
   });
   t.equal(obj.width, 100, 'inherited width');
   t.equal(obj.height, 100, 'inherited height');
   t.equal(obj.scale, 0.5, 'inherited scale');
   t.equal(obj.angle, 35, 'inherited angle');
+  t.equal(obj.colorMode, 'hsl', 'inherited colorMode');
   t.equal(obj.color[0], 105, 'inherited color');
   t.equal(obj.mass, 200, 'inherited mass');
   t.equal(obj.acceleration.x, 5, 'inherited acceleration.x');
@@ -170,9 +196,12 @@ test('init() should initialize with inherited properties.', function(t) {
   t.equal(obj.maxSpeed, 20, 'inherited maxSpeed');
   t.equal(obj.minSpeed, 2, 'inherited minSpeed');
   t.equal(obj.bounciness, 2, 'inherited bounciness');
+  t.equal(obj.life, 0, 'inherited life.');
+  t.equal(obj.lifespan, 100, 'inherited lifespan.');
   t.equal(obj.checkWorldEdges, false, 'inherited checkWorldEdges');
   t.equal(obj.wrapWorldEdges, true, 'inherited wrapWorldEdges');
   t.equal(obj.beforeStep, false, 'inherited beforeStep');
+  t.equal(obj.controlCamera, true, 'inherited controlCamera.');
 
   document.body.innerHTML = '';
   System._records = [];
@@ -183,14 +212,17 @@ test('init() should initialize with inherited properties.', function(t) {
 });
 
 test('step() should calculate a new location.', function(t) {
-  document.body.innerHTML = '';
-  var world = new World();
-  obj = new Item();
-  obj.init(world, {
-    location: new Vector(100, 100),
-    checkWorldEdges: true
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    obj = this.add('Item', {
+      location: new Vector(100, 100)
+    });
   });
   obj.step();
+
   t.equal(obj.acceleration.x, 0, 'reset acceleration x.');
   t.equal(obj.acceleration.y, 0, 'reset acceleration y.');
   t.equal(obj.velocity.x, 0, 'new velocity x.');
@@ -198,17 +230,21 @@ test('step() should calculate a new location.', function(t) {
   t.equal(obj.location.x, 100, 'new location x.');
   t.equal(obj.location.y, 100.1, 'new location y.');
 
-  document.body.innerHTML = '';
-  var world = new World();
-  world.gravity.y = -1;
-  obj = new Item();
-  obj.init(world, {
-    location: new Vector(0, 0),
-    checkWorldEdges: false,
-    wrapWorldEdges: true
+  //
+  //
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    obj = this.add('Item', {
+      location: new Vector(0, 0),
+      checkWorldEdges: false,
+      wrapWorldEdges: true
+    });
   });
   obj.step();
   t.assert(obj.location.y > 0, 'checkWorldEdges: false, wrapWorldEdges: true; new location y should wrap to bottom of the document.body.');
+
   t.end();
 });
 
@@ -224,7 +260,9 @@ test('applyForce() should return a new acceleration.', function(t) {
 });
 
 test('checkWorldEdges() should calculate a new location.', function(t) {
-  document.body.innerHTML = '';
+
+  beforeTest();
+
   var world = new World();
   obj = new Item();
   obj.init(world, {
@@ -249,29 +287,47 @@ test('checkWorldEdges() should calculate a new location.', function(t) {
 });
 
 test('wrapWorldEdges() should calculate a new location.', function(t) {
-  document.body.innerHTML = '';
+
+  beforeTest();
+
   var world = new World();
   obj = new Item();
   obj.init(world, {
     location: new Vector()
   });
-  obj.location.x = world.width + 10;
+  obj.location.x = world.width + obj.width;
   obj._wrapWorldEdges();
-  t.equal(obj.location.x, obj.width / 2, 'wrapWorldEdges should restrict obj x.location to world left boundary.');
+  t.equal(obj.location.x, -obj.width / 2, 'wrapWorldEdges should move obj x.location to world left boundary.');
 
-  obj.location.x = -100;
+  obj.location.x = -obj.width;
   obj._wrapWorldEdges();
-  t.equal(obj.location.x, world.width - obj.width / 2, 'checkWorldEdges should restrict obj x.location to world right boundary.');
+  t.equal(obj.location.x, world.width + obj.width / 2, 'wrapWorldEdges should move obj x.location to world right boundary.');
 
-  obj.location.y = -100;
+  obj.location.y =  world.height + obj.height;
   obj._wrapWorldEdges();
-  t.assert(obj.location.y < world.height && obj.location.y > 0, 'checkWorldEdges should restrict obj y.location to world bottom boundary.');
-  // used less than here bc phantomjs body height is unpredictable
-  //
-  obj.location.y = world.height + 100;
+  t.equal(obj.location.y, -obj.height / 2, 'wrapWorldEdges should move obj y.location to world top boundary.');
+
+  obj.location.y = -obj.height;
   obj._wrapWorldEdges();
-  t.equal(obj.location.y, obj.height / 2, 'checkWorldEdges should restrict obj y.location to world top boundary.');
+  t.equal(obj.location.y, world.height + obj.height / 2, 'wrapWorldEdges should move obj y.location to world bottom boundary.');
 
   t.end();
 });
 
+test('checkCameraEdges() should calculate a new location for world.', function(t) {
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    obj = this.add('Item', {
+      controlCamera: true
+    });
+  });
+  obj.step();
+  obj.world.step();
+  t.equal(obj.world.location.x, 200, 'checkCameraEdges should move world x pos in opposite direction from item.');
+  t.equal(obj.world.location.y, 149.9, 'checkCameraEdges should move world y pos in opposite direction from item.');
+
+  t.end();
+});

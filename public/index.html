@@ -43,7 +43,21 @@
        * Create a new Burner system.
        */
       Burner.System.setup(function() {
-        this.add('Obj'); // add your new object to the system
+        this.add('World', {
+          color: [255, 255, 0],
+          borderColor: [0, 0, 0],
+          borderStyle: 'solid',
+          borderWidth: 2
+        });
+        this.add('Obj', {
+          mass: 100,
+          width: 20,
+          height: 50,
+          location: new Burner.Vector(150, 50)
+        });
+        this.add('Obj', {
+          controlCamera: true
+        }); // add your new object to the system
       });
       Burner.System.loop();
     </script>

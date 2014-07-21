@@ -71,27 +71,11 @@ System._statsDisplay = null;
   * Call to execute any setup code before starting the animation loop.
   * @function setup
   * @param  {Object} opt_func   A function to run before the function exits.
-  * @param  {Object|Array} opt_worlds A instance or array of instances of World.
   * @memberof System
   */
-System.setup = function(opt_func, opt_worlds) {
+System.setup = function(opt_func) {
 
-  var worlds = opt_worlds || new World(document.body),
-      func = opt_func || function() {}, i, l, max;
-
-  if (Object.prototype.toString.call(worlds) === '[object Array]') {
-    l = worlds.length;
-    for (i = 0, max = l; i < max; i++) {
-      System._addWorld(worlds[i]);
-    }
-  } else {
-    System._addWorld(worlds);
-  }
-
-  l = System._records.length;
-  for (i = 0, max = l; i < max; i++) {
-    System._records[i].init();
-  }
+  var func = opt_func || function() {}, i, l, max;
 
   document.body.onorientationchange = System.updateOrientation;
 
@@ -140,16 +124,17 @@ System._addWorld = function(world) {
  * Adds instances of class to _records and calls init on them.
  * @function add
  * @memberof System
- * @param {string} klass The name of the class to add.
+ * @param {string} [opt_klass = 'Item'] The name of the class to add.
  * @param {Object} [opt_options=] A map of initial properties.
  * @param {string=} [opt_world = System._records[0]] An instance of World to contain the item.
  * @returns {Object} An instance of the added item.
  */
-System.add = function(klass, opt_options, opt_world) {
+System.add = function(opt_klass, opt_options, opt_world) {
 
-  var records = this._records,
+  var klass = opt_klass || 'Item',
       options = opt_options || {},
-      world = opt_world || System._records[0];
+      world = opt_world || System._records[0],
+      records = this._records;
 
   options.name = klass;
 
@@ -157,7 +142,9 @@ System.add = function(klass, opt_options, opt_world) {
   if (System._pool.length) {
     records[records.length] = System._cleanObj(System._pool.splice(0, 1)[0]);
   } else {
-    if (System.Classes[klass]) {
+    if (klass.toLowerCase() === 'world') {
+      records.push(new World(options));
+    } else if (System.Classes[klass]) {
       records.push(new System.Classes[klass](options));
     } else {
       records.push(new Item());
@@ -223,6 +210,13 @@ System.loop = function() {
 
   for (i = len - 1; i >= 0; i -= 1) {
     if (records[i].step && !records[i].world.pauseStep) {
+
+      if (records[i].life < records[i].lifespan) {
+        records[i].life += 1;
+      } else if (records[i].lifespan !== -1) {
+        System.remove(records[i]);
+        continue;
+      }
       records[i].step();
     }
   }

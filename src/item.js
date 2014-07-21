@@ -41,6 +41,7 @@ Item._stylePosition =
  * @param {number} [opt_options.height = 10] Height.
  * @param {number} [opt_options.scale = 1] Scale.
  * @param {number} [opt_options.angle = 0] Angle.
+ * @param {Array} [opt_options.colorMode = 'rgb'] Color mode. Possible values are 'rgb' and 'hsl'.
  * @param {Array} [opt_options.color = 0, 0, 0] Color.
  * @param {number} [opt_options.mass = 10] mass.
  * @param {Function|Object} [opt_options.acceleration = new Vector()] acceleration.
@@ -49,6 +50,8 @@ Item._stylePosition =
  * @param {number} [opt_options.maxSpeed = 10] maxSpeed.
  * @param {number} [opt_options.minSpeed = 0] minSpeed.
  * @param {bounciness} [opt_options.bounciness = 0] bounciness.
+ * @param {number} [opt_options.life = 0] life.
+ * @param {number} [opt_options.lifespan = -1] lifespan.
  * @param {boolean} [opt_options.checkWorldEdges = true] Set to true to check for world boundary collisions.
  * @param {boolean} [opt_options.wrapWorldEdges = false] Set to true to check for world boundary collisions and position item at the opposing boundary.
  * @param {Function} [opt_options.beforeStep = 0] This function will be called at the beginning of the item's step() function.
@@ -79,6 +82,9 @@ Item.prototype.init = function(world, opt_options) {
   this.angle = typeof this.angle !== 'undefined' ? this.angle :
       options.angle || 0;
 
+  this.colorMode = typeof this.colorMode !== 'undefined' ? this.colorMode :
+      options.colorMode || 'rgb';
+
   this.color = typeof this.color !== 'undefined' ? this.color :
       options.color || [0, 0, 0];
 
@@ -103,14 +109,23 @@ Item.prototype.init = function(world, opt_options) {
   this.bounciness = typeof this.bounciness !== 'undefined' ? this.bounciness :
       options.bounciness || 0.5;
 
+  this.life = typeof this.life !== 'undefined' ? this.life :
+      options.life || 0;
+
+  this.lifespan = typeof this.lifespan !== 'undefined' ? this.lifespan :
+      options.lifespan || -1;
+
   this.checkWorldEdges = typeof this.checkWorldEdges !== 'undefined' ? this.checkWorldEdges :
       typeof options.checkWorldEdges === 'undefined' ? true : options.checkWorldEdges;
 
   this.wrapWorldEdges = typeof this.wrapWorldEdges !== 'undefined' ? this.wrapWorldEdges :
-      options.wrapWorldEdges || false;
+      !!options.wrapWorldEdges;
 
   this.beforeStep = typeof this.beforeStep !== 'undefined' ? this.beforeStep :
       options.beforeStep || function() {};
+
+  this.controlCamera = typeof this.controlCamera !== 'undefined' ? this.controlCamera :
+      !!options.controlCamera;
 
   this._force = this._force || new Vector();
 
@@ -131,6 +146,10 @@ Item.prototype.init = function(world, opt_options) {
  * @memberof Item
  */
 Item.prototype.step = function() {
+
+  var x = this.location.x,
+      y = this.location.y;
+
   this.beforeStep.call(this);
   this.applyForce(this.world.gravity);
   this.applyForce(this.world.wind);
@@ -141,6 +160,9 @@ Item.prototype.step = function() {
     this._checkWorldEdges();
   } else if (this.wrapWorldEdges) {
     this._wrapWorldEdges();
+  }
+  if (this.controlCamera) { // need the corrected velocity which is the difference bw old/new location
+    this._checkCameraEdges(x, y, this.location.x, this.location.y);
   }
   this.acceleration.mult(0);
 };
@@ -210,17 +232,25 @@ Item.prototype._wrapWorldEdges = function() {
       width = this.width * this.scale,
       height = this.height * this.scale;
 
-  if (location.x + width > worldRight) {
-    location.x = -width;
-  } else if (location.x < -width) {
-    location.x = worldRight + width;
+  if (location.x - width / 2 > worldRight) {
+    location.x = -width / 2;
+  } else if (location.x < -width / 2) {
+    location.x = worldRight + width / 2;
   }
 
-  if (location.y + height > worldBottom) {
-    location.y = -height;
-  } else if (location.y < -height) {
-    location.y = worldBottom + height;
+  if (location.y - height / 2 > worldBottom) {
+    location.y = -height / 2;
+  } else if (location.y < -height / 2) {
+    location.y = worldBottom + height / 2;
   }
+};
+
+/**
+ * Moves the world in the opposite direction of the Camera's controlObj.
+ */
+Item.prototype._checkCameraEdges = function(lastX, lastY, x, y) {
+  this.world._camera.x = lastX - x;
+  this.world._camera.y = lastY - y;
 };
 
 /**
@@ -236,6 +266,7 @@ Item.prototype.draw = function() {
     scale: this.scale || 1,
     width: this.width,
     height: this.height,
+    colorMode: this.colorMode,
     color0: this.color[0],
     color1: this.color[1],
     color2: this.color[2]
@@ -252,7 +283,7 @@ Item.prototype.draw = function() {
  * @returns {string} A string representing cssText.
  */
 Item.prototype.getCSSText = function(props) {
-  return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: rgb(' + props.color0 + ', ' + props.color1 + ', ' + props.color2 + ')';
+  return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: ' + props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') + ')';
 };
 
 module.exports.Item = Item;

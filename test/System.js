@@ -6,6 +6,11 @@ var test = require('tape'),
     StatsDisplay = require('../src/StatsDisplay').StatsDisplay,
     System, obj;
 
+function beforeTest() {
+  System.setupFunc = function() {};
+  System._resetSystem();
+}
+
 test('load System.', function(t) {
   System = require('../src/System').System;
   t.ok(System, 'object loaded');
@@ -13,6 +18,7 @@ test('load System.', function(t) {
 });
 
 test('check static properties.', function(t) {
+  beforeTest();
   t.equal(typeof System.Classes, 'object', 'has a Classes object.');
   t.equal(System.gravity.x, 0, 'has a gravity Vector; default x = 0.');
   t.equal(System.gravity.y, 1, 'has a gravity Vector; default y = 1.');
@@ -27,64 +33,70 @@ test('check static properties.', function(t) {
   t.end();
 });
 
-test('setup() should execute a callback.', function(t) {
-  var val;
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.setup(function() {val = this._records.length;});
-  t.equal(val, 1, 'System._records should have at least 1 record when the function exits.');
-  var worlds = [];
-  worlds.push(new World(document.body));
-  worlds.push(new World(document.body));
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.setup(function() {val = this._records.length;}, worlds);
-  t.equal(val, 2, 'System._records should have at least 2 records when the function exits.');
+test('setup() should execute a passed callback.', function(t) {
+
+  beforeTest();
+
+  var val = 0;
+
+  System.setup(function() {val = 100;});
+  t.equal(val, 100, 'System should call setup function.');
   t.equal(typeof System.setupFunc, 'function', 'should save the setup callback in case we need to reset the system.');
   t.end();
 });
 
+test('setup() should assign a noop as a callback if one is not supplied.', function(t) {
+
+  beforeTest();
+
+  var val = 0;
+
+  System.setup();
+  t.notOk(System.setupFunc(), 'System should call noop setup function.');
+  t.end();
+});
+
 test('init() should call setup.', function(t) {
-  var val;
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.init(function() {val = this._records.length;});
-  t.equal(val, 1, 'System._records should have at least 1 record when the function exits.');
+
+  beforeTest();
+
+  var val = 0;
+
+  System.init(function() {val = 100;});
+  t.equal(val, 100, 'System should call setup function via init().');
   t.end();
 });
 
 test('add() should add create a new item and add it to _records.', function(t) {
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.setup();
-  var itemA = System.add();
-  t.assert(typeof itemA === 'object' && itemA.name === 'Item', 'add() should return the new item.');
-  t.equal(System._records.length, 2, 'should add a new item to _records. item + world = 2 records.');
-  function Box() {}
-  Box.prototype.init = function() {};
-  System.Classes.Box = Box;
-  var box = System.add('Box');
-  t.equal(typeof box, 'object', 'should return a reference to the added instance.');
-  t.equal(System._records.length, 3, 'should add an instance of a custom class to _records. 2 items + world = 3 records.');
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    var itemA = this.add();
+    t.assert(typeof itemA === 'object' && itemA.name === 'Item', 'add() should return the new item.');
+    t.equal(System._records.length, 2, 'should add a new item to _records. item + world = 2 records.');
+  });
+
   t.end();
 });
 
 test('add() should pull from pull from System._pool if pooled items exist.', function(t) {
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  var itemA = System.add();
-  t.equal(System._records.length, 2, 'should add a new item to _records');
-  System.remove(itemA);
-  t.assert(System._records.length === 1 && System._pool.length === 1, 'remove() should remove item from _records and add to _pool.');
-  var itemB = System.add();
-  t.assert(System._records.length === 2 && System._pool.length === 0, 'add() should check to splice items off _pool.');
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+
+    var itemA = this.add();
+    System.remove(itemA);
+    t.assert(System._records.length === 1 && System._pool.length === 1, 'remove() should remove item from _records and add to _pool.');
+
+    var itemB = this.add();
+    t.assert(System._records.length === 2 && System._pool.length === 0, 'add() should check to splice items off _pool.');
+
+  });
+
   t.end();
 });
 
@@ -98,69 +110,101 @@ test('_cleanObj() should remove all properties from an object.', function(t) {
 });
 
 test('remove() should hide an item and add it to _loop.', function(t) {
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add();
+  });
+
   t.equal(document.querySelectorAll('.item').length, 1, 'should append a DOM element to the document.body');
+
   System.remove(System._records[System._records.length - 1]);
+  t.equal(document.querySelectorAll('.item')[0].style.visibility, 'hidden', 'DOM element visibility should be hidden.');
   t.equal(System._records.length, 1, 'should remove instance from _records');
   t.equal(System._pool.length, 1, 'shoud add instance to _pool');
   t.end();
 });
 
 test('destroy() should call remove().', function(t) {
-  document.body.innerHTML = '';
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
-  t.equal(document.querySelectorAll('.item').length, 1, 'should append a DOM element to the document.body');
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add();
+  });
+
   System.destroy(System._records[System._records.length - 1]);
+  t.equal(document.querySelectorAll('.item')[0].style.visibility, 'hidden', 'DOM element visibility should be hidden.');
   t.equal(System._records.length, 1, 'should remove instance from _records');
   t.equal(System._pool.length, 1, 'shoud add instance to _pool');
   t.end();
 });
 
 test('loop() should call step() and draw().', function(t) {
+
   window.requestAnimationFrame = function() {};
-  var world = new World(document.body);
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup(null, world);
-  System.add('Item', {
-    location: new Vector(100, 100)
-  }, world);
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100),
+      lifespan: 10
+    });
+  });
   System.loop();
   t.equal(System._records[System._records.length - 1].location.y, 100.1, 'step() should update location.');
   t.equal(System._records[System._records.length - 1].acceleration.y, 0, 'step() should reset acceleration.');
+  t.equal(System._records[System._records.length - 1].life, 1, 'step() should increment life.');
+
+  //
+  //
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100),
+      life: 10,
+      lifespan: 10
+    });
+  });
+  System.loop();
+  t.equal(System._records.length, 1, 'step() should remove object if life >= lifespan.');
+
   t.end();
 });
 
 test('_recordMouseLoc should record the mouse location on mousemove events.', function(t) {
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World', {
+      width: 100,
+      height: 100
+    });
+    this.add();
+  });
 
   var e = {
     pageX: 100,
-    pageY: 100
+    pageY: 150
   };
   System._recordMouseLoc(e);
-  t.assert(System.mouse.location.x === 100 && System.mouse.location.y === 100, 'records mouse location via pageX/Y.');
+  t.assert(System.mouse.location.x === 25 && System.mouse.location.y === 50, 'records mouse location via pageX/Y.');
 
   var e = {
-    clientX: 200,
-    clientY: 200
+    clientX: 100,
+    clientY: 150
   };
   System._recordMouseLoc(e);
-  t.assert(System.mouse.location.x === 200 && System.mouse.location.y === 200, 'records mouse location via clientX/Y.');
+  t.assert(System.mouse.location.x === 25 && System.mouse.location.y === 50, 'records mouse location via clientX/Y.');
 
 
   System.mouse.location.x = 90;
@@ -181,23 +225,29 @@ test('_recordMouseLoc should record the mouse location on mousemove events.', fu
 });
 
 test('firstWorld() returns the first world in the system.', function(t) {
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add();
+  });
+
   t.ok(System.firstWorld() instanceof World, 'return the first world.');
   t.end();
 });
 
 test('allWorlds() returns all worlds in the system.', function(t) {
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
+
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add();
+  });
+
   var div = document.createElement('div');
-  var world = new World(div);
+  var world = new World({el: div});
   System._addWorld(world);
   t.equal(System.allWorlds().length, 2, 'return all worlds.');
   t.ok(System.allWorlds()[0] instanceof World, 'first item is an instance of World.');
@@ -206,24 +256,26 @@ test('allWorlds() returns all worlds in the system.', function(t) {
 });
 
 test('getAllItemsByName() returns all items of the passed name.', function(t) {
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
-  System.add();
-  System.add();
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add();
+    this.add();
+    this.add();
+  });
   t.equal(System.getAllItemsByName('Item').length, 3, 'return all items.');
   t.equal(System.getAllItemsByName('NoName').length, 0, 'returns an empty array.');
   t.end();
 });
 
 test('updateOrientation() resets world width/height.', function(t) {
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add();
+  });
   var documentWidth = document.body.scrollWidth;
   var documentHeight = document.body.scrollHeight;
   System.updateOrientation();
@@ -234,14 +286,14 @@ test('updateOrientation() resets world width/height.', function(t) {
 });
 
 test('_stepForward() should advance the System one step.', function(t) {
-  var world = new World(document.body);
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup(null, world);
-  System.add('Item', {
-    location: new Vector(100, 100)
-  }, world);
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
   System._stepForward();
   t.equal(System._records[System._records.length - 1].location.y, 100.1, '_stepForward() should update location.');
   t.equal(System._records[System._records.length - 1].acceleration.y, 0, '_stepForward() should reset acceleration.');
@@ -250,59 +302,70 @@ test('_stepForward() should advance the System one step.', function(t) {
 
 test('_keyup() should catch keyup events.', function(t) {
 
-  var world = new World(document.body);
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup(null, world);
-  System.add('Item', {
-    location: new Vector(100, 100)
-  }, world);
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
   System._keyup({
     keyCode: 39
   });
   t.equal(System._records[System._records.length - 1].location.y, 100.1, 'keyCode 39 should call _stepForward.');
   t.equal(System._records[System._records.length - 1].acceleration.y, 0, 'keyCode 39 should call _stepForward.');
 
-  var world = new World(document.body);
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup(null, world);
-  System.add('Item', {
-    location: new Vector(100, 100)
-  }, world);
+  //
+  //
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
   System._keyup({
-    keyCode: 80
+    keyCode: 80 // pause/play
   });
   t.equal(System._records[0].pauseStep, true, 'keyCode 80 should set world.pauseStep = true.');
-
-  var world = new World(document.body);
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup(null, world);
-  System.add('Item', {
-    location: new Vector(100, 100)
-  }, world);
   System._keyup({
-    keyCode: 82
+    keyCode: 80 // pause/play
   });
-  t.equal(System._records.length, 1, 'should clear item.');
+  t.equal(System._records[0].pauseStep, false, 'keyCode 80 should set world.pauseStep = false.');
+
+  //
+  //
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
+  System.setupFunc = function() {};
+  System._keyup({
+    keyCode: 82 // reset
+  });
+  t.equal(System._records.length, 0, 'should remove all items.');
 
   document.body.innerHTML = '';
   StatsDisplay.init();
   StatsDisplay.hide();
   StatsDisplay.active = false;
 
-  var world = new World(document.body);
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup(null, world);
-  System.add('Item', {
-    location: new Vector(100, 100)
-  }, world);
+  //
+  //
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
   System._keyup({
     keyCode: 83
   });
@@ -331,20 +394,45 @@ test('_keyup() should catch keyup events.', function(t) {
 
 
 test('_resetSystem() should reset the system.', function(t) {
-  System._records = [];
-  System._pool = [];
-  System.Classes = {};
-  System.setup();
-  System.add();
-  t.equal(System._records.length, 2, 'should have a world and an item.');
-  System._resetSystem();
-  t.equal(System._records.length, 1, 'should clear all items.');
 
-  System.add();
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
+  System.setupFunc = function() {};
+  System._resetSystem();
+  t.equal(System._records.length, 0, 'should clear all items.');
+
+  //
+  //
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
+
   System.remove(System._records[System._records.length - 1]);
   t.equal(System._pool.length, 1, 'should have 1 item in the pool.');
   System._resetSystem();
   t.equal(System._pool.length, 0, 'should clear the pool.');
+
+  //
+  //
+  beforeTest();
+
+  System.setup(function() {
+    this.add('World');
+    this.add('Item', {
+      location: new Vector(100, 100)
+    });
+  });
 
   var world = System.firstWorld();
   world.pauseStep = true;

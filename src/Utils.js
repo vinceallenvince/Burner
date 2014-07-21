@@ -16,7 +16,7 @@ Utils.extend = function(subClass, superClass) {
   F.prototype = superClass.prototype;
   subClass.prototype = new F;
   subClass.prototype.constructor = subClass;
-  subClass.prototype._superClass = superClass.prototype;
+  subClass._superClass = superClass.prototype;
 };
 
 /**
