@@ -82,6 +82,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.checkWorldEdges, true, 'default checkWorldEdges.');
   t.equal(obj.wrapWorldEdges, false, 'default checkWorldEdges.');
   t.equal(typeof obj.beforeStep, 'function', 'default beforeStep');
+  t.equal(typeof obj.afterStep, 'function', 'default afterStep');
   t.equal(obj.controlCamera, false, 'default controlCamera.');
   t.equal(obj._force.x, 0, 'force cache x.');
   t.equal(obj._force.y, 0, 'force cache y.');
@@ -117,6 +118,7 @@ test('init() should initialize with custom properties.', function(t) {
     checkWorldEdges: false,
     wrapWorldEdges: true,
     beforeStep: function() {return 100;},
+    afterStep: function() {return 200;},
     controlCamera: true
   });
   t.equal(obj.width, 50, 'custom width.');
@@ -142,6 +144,7 @@ test('init() should initialize with custom properties.', function(t) {
   t.equal(obj.checkWorldEdges, false, 'custom checkWorldEdges.');
   t.equal(obj.wrapWorldEdges, true, 'custom wrapWorldEdges.');
   t.equal(obj.beforeStep(), 100, 'custom beforeStep');
+  t.equal(obj.afterStep(), 200, 'custom afterStep');
   t.equal(obj.controlCamera, true, 'custom controlCamera.');
   t.end();
 });
@@ -168,6 +171,7 @@ test('init() should initialize with inherited properties.', function(t) {
     this.checkWorldEdges = false;
     this.wrapWorldEdges = true;
     this.beforeStep = false;
+    this.afterStep = false;
     this.controlCamera = true;
     Item.call(this);
   }
@@ -201,6 +205,7 @@ test('init() should initialize with inherited properties.', function(t) {
   t.equal(obj.checkWorldEdges, false, 'inherited checkWorldEdges');
   t.equal(obj.wrapWorldEdges, true, 'inherited wrapWorldEdges');
   t.equal(obj.beforeStep, false, 'inherited beforeStep');
+  t.equal(obj.afterStep, false, 'inherited afterStep');
   t.equal(obj.controlCamera, true, 'inherited controlCamera.');
 
   document.body.innerHTML = '';
@@ -215,10 +220,14 @@ test('step() should calculate a new location.', function(t) {
 
   beforeTest();
 
+  var before, after;
+
   System.setup(function() {
     this.add('World');
     obj = this.add('Item', {
-      location: new Vector(100, 100)
+      location: new Vector(100, 100),
+      beforeStep: function() {before = 150;},
+      afterStep: function() {after = 300;}
     });
   });
   obj.step();
@@ -229,6 +238,8 @@ test('step() should calculate a new location.', function(t) {
   t.equal(obj.velocity.y, 0.1, 'new velocity y.');
   t.equal(obj.location.x, 100, 'new location x.');
   t.equal(obj.location.y, 100.1, 'new location y.');
+  t.equal(before, 150, 'beforeStep() executes.');
+  t.equal(after, 300, 'afterStep() executes.');
 
   //
   //

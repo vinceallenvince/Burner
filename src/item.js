@@ -54,7 +54,8 @@ Item._stylePosition =
  * @param {number} [opt_options.lifespan = -1] lifespan.
  * @param {boolean} [opt_options.checkWorldEdges = true] Set to true to check for world boundary collisions.
  * @param {boolean} [opt_options.wrapWorldEdges = false] Set to true to check for world boundary collisions and position item at the opposing boundary.
- * @param {Function} [opt_options.beforeStep = 0] This function will be called at the beginning of the item's step() function.
+ * @param {Function} [opt_options.beforeStep = function() {}] This function will be called at the beginning of the item's step() function.
+ * @param {Function} [opt_options.afterStep = function() {}] This function will be called at the end of the item's step() function.
  * @param {string} [opt_options.name = 'Item'] The item's name. Typically this is the item's class name.
  */
 Item.prototype.init = function(world, opt_options) {
@@ -124,6 +125,9 @@ Item.prototype.init = function(world, opt_options) {
   this.beforeStep = typeof this.beforeStep !== 'undefined' ? this.beforeStep :
       options.beforeStep || function() {};
 
+  this.afterStep = typeof this.afterStep !== 'undefined' ? this.afterStep :
+      options.afterStep || function() {};
+
   this.controlCamera = typeof this.controlCamera !== 'undefined' ? this.controlCamera :
       !!options.controlCamera;
 
@@ -165,6 +169,7 @@ Item.prototype.step = function() {
     this._checkCameraEdges(x, y, this.location.x, this.location.y);
   }
   this.acceleration.mult(0);
+  this.afterStep.call(this);
 };
 
 /**
