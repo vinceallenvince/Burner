@@ -132,11 +132,9 @@ System._addWorld = function(world) {
 System.add = function(opt_klass, opt_options, opt_world) {
 
   var klass = opt_klass || 'Item',
-      options = opt_options || {},
+      options = opt_options || null,
       world = opt_world || System._records[0],
       records = this._records;
-
-  options.name = klass;
 
   // recycle object if one is available
   if (System._pool.length) {
