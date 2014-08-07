@@ -134,22 +134,23 @@ System.add = function(opt_klass, opt_options, opt_world) {
   var klass = opt_klass || 'Item',
       options = opt_options || null,
       world = opt_world || System._records[0],
-      records = this._records;
+      records = this._records, obj;
 
   // recycle object if one is available
   if (System._pool.length) {
-    records[records.length] = System._cleanObj(System._pool.splice(0, 1)[0]);
+    obj = System._cleanObj(System._pool.splice(0, 1)[0]);
   } else {
     if (klass.toLowerCase() === 'world') {
-      records.push(new World(options));
+      obj = new World(options);
     } else if (System.Classes[klass]) {
-      records.push(new System.Classes[klass](options));
+      obj = new System.Classes[klass](options);
     } else {
-      records.push(new Item());
+      obj = new Item();
     }
   }
-  records[records.length - 1].init(world, options);
-  return records[records.length - 1];
+  obj.init(world, options);
+  records.push(obj);
+  return obj;
 };
 
 /**

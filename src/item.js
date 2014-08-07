@@ -89,6 +89,39 @@ Item.prototype.init = function(world, opt_options) {
   this.color = typeof this.color !== 'undefined' ? this.color :
       options.color || [0, 0, 0];
 
+  this.borderWidth = typeof this.borderWidth !== 'undefined' ? this.borderWidth :
+      options.borderWidth || 0;
+
+  this.borderStyle = typeof this.borderStyle !== 'undefined' ? this.borderStyle :
+      options.borderStyle || 'none';
+
+  this.borderColor = typeof this.borderColor !== 'undefined' ? this.borderColor :
+      options.borderColor || [255, 255, 255];
+
+  this.borderRadius = typeof this.borderRadius !== 'undefined' ? this.borderRadius :
+      options.borderRadius || 0;
+
+  this.boxShadowOffsetX = typeof this.boxShadowOffsetX !== 'undefined' ? this.boxShadowOffsetX :
+      options.boxShadowOffsetX || 0;
+
+  this.boxShadowOffsetY = typeof this.boxShadowOffsetY !== 'undefined' ? this.boxShadowOffsetY :
+      options.boxShadowOffsetY || 0;
+
+  this.boxShadowBlur = typeof this.boxShadowBlur !== 'undefined' ? this.boxShadowBlur :
+      options.boxShadowBlur || 0;
+
+  this.boxShadowSpread = typeof this.boxShadowSpread !== 'undefined' ? this.boxShadowSpread :
+      options.boxShadowSpread || 0;
+
+  this.boxShadowColor = typeof this.boxShadowColor !== 'undefined' ? this.boxShadowColor :
+      options.boxShadowColor || [255, 255, 255];
+
+  this.opacity = typeof this.opacity !== 'undefined' ? this.opacity :
+      options.opacity || 1;
+
+  this.zIndex = typeof this.zIndex !== 'undefined' ? this.zIndex :
+      options.zIndex || 0;
+
   this.mass = typeof this.mass !== 'undefined' ? this.mass :
       typeof options.mass === 'undefined' ? 10 : options.mass;
 
@@ -274,7 +307,9 @@ Item.prototype.draw = function() {
     colorMode: this.colorMode,
     color0: this.color[0],
     color1: this.color[1],
-    color2: this.color[2]
+    color2: this.color[2],
+    opacity: this.opacity,
+    zIndex: this.zIndex
   });
   this.el.style.cssText = cssText;
 };
@@ -288,7 +323,7 @@ Item.prototype.draw = function() {
  * @returns {string} A string representing cssText.
  */
 Item.prototype.getCSSText = function(props) {
-  return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: ' + props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') + ')';
+  return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: ' + props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') + '); opacity: ' + props.opacity + '; z-index: ' + props.zIndex + ';';
 };
 
 module.exports.Item = Item;

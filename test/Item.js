@@ -64,9 +64,17 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.scale, 1, 'default scale.');
   t.equal(obj.angle, 0, 'default angle.');
   t.equal(obj.colorMode, 'rgb', 'default colorMode.');
-  t.equal(obj.color[0], 0, 'default color red.');
-  t.equal(obj.color[1], 0, 'default color green.');
-  t.equal(obj.color[2], 0, 'default color blue.');
+  t.assert(obj.color[0] === 0 && obj.color[1] === 0 && obj.color[2] === 0, 'default color.');
+  t.equal(obj.borderWidth, 0, 'default borderWidth.');
+  t.equal(obj.borderStyle, 'none', 'default borderStyle.');
+  t.assert(obj.borderColor[0] === 255 && obj.borderColor[1] === 255 && obj.borderColor[2] === 255, 'default boderColor.');
+  t.equal(obj.borderRadius, 0, 'default borderRadius.');
+  t.equal(obj.boxShadowOffsetX, 0, 'default boxShadowOffsetX.');
+  t.equal(obj.boxShadowOffsetY, 0, 'default boxShadowOffsetY.');
+  t.equal(obj.boxShadowBlur, 0, 'default boxShadowBlur.');
+  t.equal(obj.boxShadowSpread, 0, 'default boxShadowSpread.');
+  t.equal(obj.opacity, 1, 'default opacity.');
+  t.equal(obj.zIndex, 0, 'default zIndex.');
   t.equal(obj.mass, 10, 'default mass.');
   t.equal(obj.acceleration.x, 0, 'default acceleration x');
   t.equal(obj.acceleration.y, 0, 'default acceleration y');
@@ -106,6 +114,16 @@ test('init() should initialize with custom properties.', function(t) {
     angle: 45,
     colorMode: 'hsl',
     color: [10, 20, 30],
+    borderWidth: 6,
+    borderStyle: 'double',
+    borderColor: [110, 120, 130],
+    borderRadius: 60,
+    boxShadowOffsetX: 4,
+    boxShadowOffsetY: 8,
+    boxShadowBlur: 5,
+    boxShadowSpread: 20,
+    opacity: 0.5,
+    zIndex: 10,
     mass: 300,
     acceleration: new Vector(5, 10),
     velocity: new Vector(5, 10),
@@ -126,9 +144,17 @@ test('init() should initialize with custom properties.', function(t) {
   t.equal(obj.scale, 10, 'custom scale.');
   t.equal(obj.angle, 45, 'custom angle.');
   t.equal(obj.colorMode, 'hsl', 'custom colorMode.');
-  t.equal(obj.color[0], 10, 'custom color red.');
-  t.equal(obj.color[1], 20, 'custom color green.');
-  t.equal(obj.color[2], 30, 'custom color blue.');
+  t.assert(obj.color[0] === 10 && obj.color[1] === 20 && obj.color[2] === 30, 'custom color.');
+  t.equal(obj.borderWidth, 6, 'custom borderWidth.');
+  t.equal(obj.borderStyle, 'double', 'custom borderStyle.');
+  t.assert(obj.borderColor[0] === 110 && obj.borderColor[1] === 120 && obj.borderColor[2] === 130, 'custom boderColor.');
+  t.equal(obj.borderRadius, 60, 'custom borderRadius.');
+  t.equal(obj.boxShadowOffsetX, 4, 'custom boxShadowOffsetX.');
+  t.equal(obj.boxShadowOffsetY, 8, 'custom boxShadowOffsetY.');
+  t.equal(obj.boxShadowBlur, 5, 'custom boxShadowBlur.');
+  t.equal(obj.boxShadowSpread, 20, 'custom boxShadowSpread.');
+  t.equal(obj.opacity, 0.5, 'custom opacity.');
+  t.equal(obj.zIndex, 10, 'custom zIndex.');
   t.equal(obj.mass, 300, 'custom mass.');
   t.equal(obj.acceleration.x, 5, 'custom acceleration x');
   t.equal(obj.acceleration.y, 10, 'custom acceleration y');
@@ -159,6 +185,16 @@ test('init() should initialize with inherited properties.', function(t) {
     this.angle = 35;
     this.colorMode = 'hsl';
     this.color = [105, 100, 100];
+    this.borderWidth = 12;
+    this.borderStyle = 'dotted';
+    this.borderColor = [200, 202, 220],
+    this.borderRadius = 80;
+    this.boxShadowOffsetX = 8;
+    this.boxShadowOffsetY = 12;
+    this.boxShadowBlur = 10;
+    this.boxShadowSpread = 25;
+    this.opacity = 0.25;
+    this.zIndex = 20;
     this.mass = 200;
     this.acceleration = new Vector(5, 10);
     this.velocity = new Vector(2, 8);
@@ -189,7 +225,17 @@ test('init() should initialize with inherited properties.', function(t) {
   t.equal(obj.scale, 0.5, 'inherited scale');
   t.equal(obj.angle, 35, 'inherited angle');
   t.equal(obj.colorMode, 'hsl', 'inherited colorMode');
-  t.equal(obj.color[0], 105, 'inherited color');
+  t.assert(obj.color[0] === 105 && obj.color[1] === 100 && obj.color[2] === 100, 'inherited color.');
+  t.equal(obj.borderWidth, 12, 'inherited borderWidth.');
+  t.equal(obj.borderStyle, 'dotted', 'inherited borderStyle.');
+  t.assert(obj.borderColor[0] === 200 && obj.borderColor[1] === 202 && obj.borderColor[2] === 220, 'inherited boderColor.');
+  t.equal(obj.borderRadius, 80, 'inherited borderRadius.');
+  t.equal(obj.boxShadowOffsetX, 8, 'inherited boxShadowOffsetX.');
+  t.equal(obj.boxShadowOffsetY, 12, 'inherited boxShadowOffsetY.');
+  t.equal(obj.boxShadowBlur, 10, 'inherited boxShadowBlur.');
+  t.equal(obj.boxShadowSpread, 25, 'inherited boxShadowSpread.');
+  t.equal(obj.opacity, 0.25, 'inherited opacity');
+  t.equal(obj.zIndex, 20, 'inherited zIndex');
   t.equal(obj.mass, 200, 'inherited mass');
   t.equal(obj.acceleration.x, 5, 'inherited acceleration.x');
   t.equal(obj.acceleration.y, 10, 'inherited acceleration.y');
