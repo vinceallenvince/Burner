@@ -154,4 +154,16 @@ Utils.isInside = function(obj, container) {
   return false;
 };
 
+/**
+ * Capitalizes the first character in a string.
+ *
+ * @function capitalizeFirstLetter
+ * @memberof Utils
+ * @param {string} string The string to capitalize.
+ * @returns {string} The string with the first character capitalized.
+ */
+Utils.capitalizeFirstLetter = function(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 module.exports.Utils = Utils;

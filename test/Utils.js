@@ -132,3 +132,9 @@ test('isInside() determines if one object is inside another.', function(t) {
   t.end();
 });
 
+test('capitalizeFirstLetter() capitalizes the first character in a string.', function(t) {
+  var hello = Utils.capitalizeFirstLetter('hello');
+  t.equal(hello, 'Hello', 'capitalizeFirstLetter.');
+  t.end();
+});
+
