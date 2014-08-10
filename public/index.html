@@ -8,15 +8,10 @@
   <meta name='apple-mobile-web-app-capable' content='yes' />
   <title>Burner Custom Classes</title>
   <link rel="stylesheet" href="css/Burner.min.css" type="text/css" charset="utf-8" />
-  <script src="scripts/Burner.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="scripts/Burner.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
-
-      /**
-       * Holds new classes for Burner.
-       */
-      var Hello = {};
 
       /**
        * Creates a new Obj.
@@ -25,41 +20,46 @@
        * @constructor
        */
       function Obj(opt_options) {
+        Burner.Item.call(this);
         var options = opt_options || {};
-        options.name = 'Obj';
-        Burner.Item.call(this, options);
+        this.width = options.width || 100;
+        this.height = options.height || 100;
       }
-      Burner.System.extend(Obj, Burner.Item);
-
-      /**
-       * Initializes the object.
-       * @param  {Object} options A map of initial properties.
-       */
-      Obj.prototype.init = function(options) {
-        this.width = options.width === undefined ? 20 : options.width;
-        this.height = options.height === undefined ? 20 : options.height;
-        this.color = options.color || [100, 100, 100];
-        this.borderRadius = options.borderRadius || 0;
-      };
+      Burner.Utils.extend(Obj, Burner.Item);
 
       // Uncomment to provide your own step function.
       /*Obj.prototype.step = function() {
         // your code to update this obj goes here
       };*/
 
-      Hello.Obj = Obj;
-
       /**
        * Tell Burner where to find classes.
        */
-      Burner.Classes = Hello;
+      Burner.System.Classes = {
+        Obj: Obj
+      };
 
       /**
        * Create a new Burner system.
        */
-      Burner.System.init(function() {
-        this.add('Obj'); // add your new object to the system
+      Burner.System.setup(function() {
+        this.add('World', {
+          color: [255, 255, 0],
+          borderColor: [0, 0, 0],
+          borderStyle: 'solid',
+          borderWidth: 2
+        });
+        this.add('Obj', {
+          mass: 100,
+          width: 20,
+          height: 50,
+          location: new Burner.Vector(150, 50)
+        });
+        this.add('Obj', {
+          controlCamera: true
+        }); // add your new object to the system
       });
+      Burner.System.loop();
     </script>
   </body>
 </html>

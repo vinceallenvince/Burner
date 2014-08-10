@@ -1,7 +1,15 @@
 #### FOLDERS ####
 node_modules
 reports
+doc
+out
+release
+specs
 
 #### FILES ####
 *.DS_Store
 *.swp
+public/scripts/Burner.js
+public/scripts/Burner.min.js
+*.map
+public/css/Burner.min.css

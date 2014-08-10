@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <title>Burner Custom Classes</title>
+  <link rel="stylesheet" href="css/Burner.min.css" type="text/css" charset="utf-8" />
+  <script src="scripts/Burner.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+
+      var width = document.body.scrollWidth;
+      var height = document.body.scrollHeight;
+      var rand = Burner.Utils.getRandomNumber;
+      var minScale = 5;
+      var maxScale = 50;
+      var minMass = 5;
+      var maxMass = 10;
+      var map = Burner.Utils.map;
+
+      /**
+       * Creates a new Obj.
+       *
+       * @param {Object} [opt_options=] A map of initial properties.
+       * @constructor
+       */
+      function Obj(opt_options) {
+        Burner.Item.call(this);
+        var options = opt_options || {};
+        this.width = options.width || 50;
+        this.height = options.height || 50;
+        this.mass = options.mass || 100;
+        this.color = options.color || [255, 100, 0];
+        this.checkWorldEdges = !!options.checkWorldEdges;
+        this.wrapWorldEdges = !!opt_options.wrapWorldEdges;
+      }
+      Burner.Utils.extend(Obj, Burner.Item);
+
+      /**
+       * Tell Burner where to find classes.
+       */
+      Burner.System.Classes = {
+        Obj: Obj
+      };
+
+      /**
+       * Create a new Burner system.
+       */
+      Burner.System.setup(function() {
+        var me = this;
+        var interval = setInterval(function () {
+          if (rand(0, 4) === 0) {
+            var scale = rand(minScale, maxScale);
+            me.add('Obj', {
+              location: new Burner.Vector(width / 2, height / 2),
+              width: scale,
+              height: scale,
+              mass: rand(minMass, maxMass),
+              color: [rand(0, 255), rand(0, 255), rand(0, 255)],
+              checkWorldEdges: false,
+              wrapWorldEdges: false,
+              beforeStep: function() {
+                if (this.location.y - this.height / 2 > this.world.height) {
+                  Burner.System.remove(this);
+                }
+              }
+            });
+          }
+        }, 30);
+      });
+
+
+      Burner.System.loop();
+
+    </script>
+  </body>
+</html>

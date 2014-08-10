@@ -1,12 +1,9 @@
 {
   "name": "Burner",
-  "version": "2.1.5",
-  "description": "A rendering engine.",
-  "main": "src/main.js",
-  "scripts": {
-    "test": "grunt test"
-  },
-  "repository": "",
+  "version": "3.0.2",
+  "description": "A DOM rendering engine.",
+  "main": "main.js",
+  "repository": "http://github.com/vinceallenvince/Burner",
   "author": {
     "name": "Vince Allen",
     "address": "Brooklyn, NY",
@@ -15,16 +12,25 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "browserify": "^4.1.10",
+    "coverify": "^1.0.7",
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-watch": "~0.5.1",
     "grunt-contrib-jasmine": "~0.5.1",
     "grunt-contrib-csslint": "~0.1.2",
     "grunt-contrib-cssmin": "~0.6.1",
     "grunt-plato": "~0.2.1",
-    "grunt-jsdoc": "~0.4.0"
+    "grunt-jsdoc": "~0.4.0",
+    "phantomjs": "^1.9.7-8",
+    "tap": "^0.4.11",
+    "tape": "^2.13.3",
+    "testling": "^1.6.1"
+  },
+  "scripts": {
+    "test": "browserify test/*.js | testling"
   }
 }
