@@ -7,6 +7,7 @@ release
 specs
 
 #### FILES ####
+*.log
 *.DS_Store
 *.swp
 public/scripts/Burner.js

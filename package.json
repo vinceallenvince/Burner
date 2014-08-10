@@ -1,5 +1,5 @@
 {
-  "name": "Burner",
+  "name": "burner",
   "version": "3.0.2",
   "description": "A DOM rendering engine.",
   "main": "main.js",
