@@ -28,12 +28,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg : grunt.file.readJSON('package.json'),
-    browserify_: {
-      client: {
-        src: ['src/**/*.js'],
-        dest: devRelease
-      }
-    },
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -90,8 +84,8 @@ module.exports = function(grunt) {
     },
     exec: {
       test: 'npm test',
-      testcoverage: 'browserify -t coverify test/*.js | testling | coverify',
-      browserify: 'browserify src/main.js --standalone Burner -o ' + devRelease
+      testcoverage: 'browserify test/*.js | testling',
+      browserify: 'browserify main.js --standalone Burner -o ' + devRelease
     },
     watch: {
       files: ['src/*.js'],
@@ -127,15 +121,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('default', ['cssmin', 'exec:browserify', 'copy:publicJS', 'copy:publicCSS']);
-  grunt.registerTask('release', ['csslint', 'jshint', 'cssmin', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
+  grunt.registerTask('release', ['csslint', 'jshint', 'cssmin', 'test', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
   grunt.registerTask('test', ['exec:test']);
   grunt.registerTask('testcoverage', ['exec:testcoverage']);
   grunt.registerTask('report', ['plato']);
   grunt.registerTask('doc', ['jsdoc']);
   grunt.registerTask('lint', ['csslint', 'jshint']);
-  //grunt.registerTask('brow', ['exec:browserify']);
-
-  // node node_modules/testling/node_modules/browser-launcher/example/detect.js
 
 };
 
