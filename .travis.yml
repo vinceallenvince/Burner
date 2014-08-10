@@ -12,8 +12,8 @@ deploy:
   api_key:
     secure: W5kwsHMWpoH36mqSn3XkAxTIzRke59vdIbP/AsHRShVTg4yr5Nbb/vpKq9PLvAlr8fjNAuOr09SXXvezvW1EZb0NMxY/LLIFfo7+L72zxKZtR65yLUwqRwI9fV77Yo1IrKtVytRohMdxcs2rWes23hey2Vt97Lzo8rJT+PU5isk=
   file:
-  - release/Burner.min.js
-  - release/Burner.min.css
+  - release/burner.min.js
+  - release/burner.min.css
   on:
     repo: vinceallenvince/Burner
     tags: true
