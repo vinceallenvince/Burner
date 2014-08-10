@@ -120,7 +120,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('default', ['cssmin', 'exec:browserify', 'copy:publicJS', 'copy:publicCSS']);
-  grunt.registerTask('release', ['csslint', 'jshint', 'cssmin', 'test', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
+  grunt.registerTask('release', ['csslint', 'jshint', 'cssmin', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
   grunt.registerTask('test', ['exec:test']);
   grunt.registerTask('testcoverage', ['exec:testcoverage']);
   grunt.registerTask('report', ['plato']);
