@@ -16,6 +16,8 @@ deploy:
   - release/Burner.min.css
   on:
     repo: vinceallenvince/Burner
+    tags: true
+    all_branches: true
 after_deploy:
 - echo 'done!'
 - ./deploy-gh-pages.sh
