@@ -7,6 +7,13 @@ var test = require('tape'),
 function beforeTest() {
   System.setupFunc = function() {};
   System._resetSystem();
+  document.body.innerHTML = '';
+  var world = document.createElement('div');
+  world.id = 'world';
+  world.style.position = 'absolute';
+  world.style.top = '0';
+  world.style.left = '0';
+  document.body.appendChild(world);
 }
 
 function World() {
@@ -217,7 +224,11 @@ test('init() should initialize with inherited properties.', function(t) {
   };
   var obj;
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     obj = this.add('Obj'); // add your new object to the system
   });
   t.equal(obj.width, 100, 'inherited width');
@@ -269,7 +280,11 @@ test('step() should calculate a new location.', function(t) {
   var before, after;
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     obj = this.add('Item', {
       location: new Vector(100, 100),
       beforeStep: function() {before = 150;},
@@ -292,7 +307,11 @@ test('step() should calculate a new location.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     obj = this.add('Item', {
       location: new Vector(0, 0),
       checkWorldEdges: false,
@@ -376,7 +395,11 @@ test('checkCameraEdges() should calculate a new location for world.', function(t
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     obj = this.add('Item', {
       controlCamera: true
     });
