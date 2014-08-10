@@ -44,7 +44,10 @@
        */
       Burner.System.setup(function() {
         this.add('World', {
-          color: [200, 200, 200]
+          color: [200, 200, 200],
+          borderWidth: 2,
+          borderColor: [0, 0, 0],
+          borderStyle: 'solid'
         });
         this.add('Obj', {
           mass: 100,
@@ -53,7 +56,13 @@
           location: new Burner.Vector(150, 50)
         });
         this.add('Obj', {
-          controlCamera: false
+          mass: 30,
+          width: 60,
+          height: 20,
+          location: new Burner.Vector(450, 50)
+        });
+        this.add('Obj', {
+          controlCamera: true
         }); // add your new object to the system
       });
       Burner.System.loop();

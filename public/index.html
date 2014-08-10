@@ -6,60 +6,14 @@
   <meta name="description" content="" />
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name='apple-mobile-web-app-capable' content='yes' />
-  <title>Burner Custom Classes</title>
-  <link rel="stylesheet" href="css/Burner.min.css" type="text/css" charset="utf-8" />
-  <script src="scripts/Burner.js" type="text/javascript" charset="utf-8"></script>
+  <title>Burner</title>
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-
-      /**
-       * Creates a new Obj.
-       *
-       * @param {Object} [opt_options=] A map of initial properties.
-       * @constructor
-       */
-      function Obj(opt_options) {
-        Burner.Item.call(this);
-        var options = opt_options || {};
-        this.width = options.width || 100;
-        this.height = options.height || 100;
-      }
-      Burner.Utils.extend(Obj, Burner.Item);
-
-      // Uncomment to provide your own step function.
-      /*Obj.prototype.step = function() {
-        // your code to update this obj goes here
-      };*/
-
-      /**
-       * Tell Burner where to find classes.
-       */
-      Burner.System.Classes = {
-        Obj: Obj
-      };
-
-      /**
-       * Create a new Burner system.
-       */
-      Burner.System.setup(function() {
-        this.add('World', {
-          color: [255, 255, 0],
-          borderColor: [0, 0, 0],
-          borderStyle: 'solid',
-          borderWidth: 2
-        });
-        this.add('Obj', {
-          mass: 100,
-          width: 20,
-          height: 50,
-          location: new Burner.Vector(150, 50)
-        });
-        this.add('Obj', {
-          controlCamera: true
-        }); // add your new object to the system
-      });
-      Burner.System.loop();
-    </script>
+    <h1>Burner examples</h1>
+    <ul>
+      <li><a href='simple.html'>Simple</a></li>
+      <li><a href='many.html'>Many</a></li>
+      <li><a href='camera.html'>Camera</a></li>
+    </ul>
   </body>
 </html>
