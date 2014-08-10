@@ -9,6 +9,13 @@ var test = require('tape'),
 function beforeTest() {
   System.setupFunc = function() {};
   System._resetSystem();
+  document.body.innerHTML = '';
+  var world = document.createElement('div');
+  world.id = 'world';
+  world.style.position = 'absolute';
+  world.style.top = '0';
+  world.style.left = '0';
+  document.body.appendChild(world);
 }
 
 test('load System.', function(t) {
@@ -72,7 +79,11 @@ test('add() should add create a new item and add it to _records.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     var itemA = this.add();
     t.assert(typeof itemA === 'object' && itemA.name === 'Item', 'add() should return the new item.');
     t.equal(System._records.length, 2, 'should add a new item to _records. item + world = 2 records.');
@@ -86,7 +97,11 @@ test('add() should pull from pull from System._pool if pooled items exist.', fun
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });;
 
     var itemA = this.add();
     System.remove(itemA);
@@ -114,7 +129,11 @@ test('remove() should hide an item and add it to _loop.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add();
   });
 
@@ -132,7 +151,11 @@ test('destroy() should call remove().', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add();
   });
 
@@ -150,7 +173,11 @@ test('loop() should call step() and draw().', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100),
       lifespan: 10
@@ -167,7 +194,11 @@ test('loop() should call step() and draw().', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100),
       life: 10,
@@ -229,7 +260,11 @@ test('firstWorld() returns the first world in the system.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add();
   });
 
@@ -242,7 +277,11 @@ test('allWorlds() returns all worlds in the system.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add();
   });
 
@@ -259,7 +298,11 @@ test('getAllItemsByName() returns all items of the passed name.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add();
     this.add();
     this.add();
@@ -273,7 +316,11 @@ test('updateOrientation() resets world width/height.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add();
   });
   var documentWidth = document.body.scrollWidth;
@@ -289,7 +336,11 @@ test('_stepForward() should advance the System one step.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -305,7 +356,11 @@ test('_keyup() should catch keyup events.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -321,7 +376,11 @@ test('_keyup() should catch keyup events.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -340,7 +399,11 @@ test('_keyup() should catch keyup events.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -361,7 +424,11 @@ test('_keyup() should catch keyup events.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -398,7 +465,11 @@ test('_resetSystem() should reset the system.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -412,7 +483,11 @@ test('_resetSystem() should reset the system.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
@@ -428,7 +503,11 @@ test('_resetSystem() should reset the system.', function(t) {
   beforeTest();
 
   System.setup(function() {
-    this.add('World');
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
     this.add('Item', {
       location: new Vector(100, 100)
     });
