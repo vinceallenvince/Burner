@@ -42,7 +42,18 @@ Item._stylePosition =
  * @param {number} [opt_options.scale = 1] Scale.
  * @param {number} [opt_options.angle = 0] Angle.
  * @param {Array} [opt_options.colorMode = 'rgb'] Color mode. Possible values are 'rgb' and 'hsl'.
- * @param {Array} [opt_options.color = 0, 0, 0] Color.
+ * @param {Array} [opt_options.color = 200, 200, 200] Color.
+ * @param {Array} [opt_options.borderWidth = 0] borderWidth.
+ * @param {Array} [opt_options.borderStyle = 'none'] borderStyle.
+ * @param {Array} [opt_options.borderColor = 255, 255, 255] borderColor.
+ * @param {Array} [opt_options.borderRadius = 0] borderRadius.
+ * @param {Array} [opt_options.boxShadowOffsetX = 0] boxShadowOffsetX.
+ * @param {Array} [opt_options.boxShadowOffsetY = 0] boxShadowOffsetY.
+ * @param {Array} [opt_options.boxShadowBlur = 0] boxShadowBlur.
+ * @param {Array} [opt_options.boxShadowSpread = 0] boxShadowSpread.
+ * @param {Array} [opt_options.boxShadowColor = 255, 255, 255] boxShadowColor.
+ * @param {Array} [opt_options.opacity = 1] opacity.
+ * @param {Array} [opt_options.zIndex = 0] zIndex.
  * @param {number} [opt_options.mass = 10] mass.
  * @param {Function|Object} [opt_options.acceleration = new Vector()] acceleration.
  * @param {Function|Object} [opt_options.velocity = new Vector()] velocity.
@@ -87,7 +98,7 @@ Item.prototype.init = function(world, opt_options) {
       options.colorMode || 'rgb';
 
   this.color = typeof this.color !== 'undefined' ? this.color :
-      options.color || [0, 0, 0];
+      options.color || [200, 200, 200];
 
   this.borderWidth = typeof this.borderWidth !== 'undefined' ? this.borderWidth :
       options.borderWidth || 0;

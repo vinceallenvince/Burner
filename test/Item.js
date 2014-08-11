@@ -71,7 +71,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.scale, 1, 'default scale.');
   t.equal(obj.angle, 0, 'default angle.');
   t.equal(obj.colorMode, 'rgb', 'default colorMode.');
-  t.assert(obj.color[0] === 0 && obj.color[1] === 0 && obj.color[2] === 0, 'default color.');
+  t.assert(obj.color[0] === 200 && obj.color[1] === 200 && obj.color[2] === 200, 'default color.');
   t.equal(obj.borderWidth, 0, 'default borderWidth.');
   t.equal(obj.borderStyle, 'none', 'default borderStyle.');
   t.assert(obj.borderColor[0] === 255 && obj.borderColor[1] === 255 && obj.borderColor[2] === 255, 'default boderColor.');

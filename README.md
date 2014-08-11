@@ -2,17 +2,57 @@
 
 #Burner: A rendering engine for DOM-based animation.
 
-Use Burner to setup a rendering system in your web browser using only DOM elements. The system supplies some convenient functions for controlling playback and optimizing object management via object pooling.
+Use Burner to setup a DOM-based rendering system in a web browser. Burner supplies some convenient functions for controlling playback, controlling the camera, detecting world boundaries, and optimizing object management via object pooling.
 
-Burner includes a basic Item class. You will typically supply a set of classes like <a href='http://github.com/foldi/FloraJS'>FloraJS</a> that inherits from the Item class.
+##Install
 
-Start by creating a new Burner system. Next, save instances of these classes to the system and let Burner handle updating the DOM.
+To include Burner as a component in your project, use the node module.
 
-Get the [lastest release](https://github.com/vinceallenvince/Burner/releases).
+```
+npm install burner --save
+```
+
+You can also use the [standalone version](https://github.com/vinceallenvince/Burner/releases/latest) and reference both the css and js files from your document.
+
+```
+<html>
+  <head>
+    <link href="css/burner.min.css" type="text/css" charset="utf-8" rel="stylesheet" />
+    <script src="scripts/burner.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  ...
+```
+
+##Usage
+
+Burner contains the essential classes for creating a rendering engine... [System](https://github.com/vinceallenvince/Burner/blob/master/src/System.js), [World](https://github.com/vinceallenvince/Burner/blob/master/src/World.js) and [Item](https://github.com/vinceallenvince/Burner/blob/master/src/Item.js). You can use these built-in classes to create [simple systems](http://vinceallenvince.github.io/Burner).
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/burner.min.css" type="text/css" charset="utf-8" />
+  <script src="scripts/burner.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      Burner.System.setup(function() {
+        this.add('World');
+        this.add('Obj');
+      });
+      Burner.System.loop();
+    </script>
+  </body>
+</html>
+```
 
 ## Using your own classes
 
-Here's an example of how to use your own classes with Burner. The class must meet some minimum requirements:
+To create something more complex, you need supply a library of classes like <a href='http://github.com/foldi/FloraJS'>FloraJS</a> that inherit from the Item class.
+
+Start by creating a new Burner system. Next, save instances of these classes to the system and let Burner handle updating the DOM.
+
+A class must meet some minimum requirements:
 
 * It must extend the Burner.Item class via Burner.Utils.extend. (ie. Burner.Utils.extend(Obj, Burner.Item))
 * It must call Burner.Item in its constructor. (ie. Burner.Item.call(this))
@@ -24,12 +64,7 @@ You must add an entry for your class in Burner's 'Classes' map. Call setup() and
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name='apple-mobile-web-app-capable' content='yes' />
-  <title>Burner Custom Classes</title>
+  <title>Burner | Custom classes</title>
   <link rel="stylesheet" href="css/Burner.min.css" type="text/css" charset="utf-8" />
   <script src="scripts/Burner.min.js" type="text/javascript" charset="utf-8"></script>
   </head>
@@ -50,7 +85,7 @@ You must add an entry for your class in Burner's 'Classes' map. Call setup() and
 
       // Uncomment to provide your own step function.
       /*Obj.prototype.step = function() {
-        // your code to update this obj goes here
+        // your code to update this obj every frame goes here
       };*/
 
       /**
@@ -67,7 +102,9 @@ You must add an entry for your class in Burner's 'Classes' map. Call setup() and
         this.add('World', {
           color: [200, 200, 200]
         });
-        this.add('Obj');
+        this.add('Obj', {
+          color: [0, 0, 0]
+        });
       });
       Burner.System.loop();
     </script>
@@ -76,9 +113,9 @@ You must add an entry for your class in Burner's 'Classes' map. Call setup() and
 
 ```
 
-You can override the default step() function to update your object's properties.
+Running the code, you should see a black box fall to the ground. The [Item](https://github.com/vinceallenvince/Burner/blob/master/src/Item.js) class has a default step() function that runs a gravity simulation.
 
-Running the code, you should see a black box fall to the ground. If you inspect the HTML, you'll notice the box has a class called 'obj'. You can use the 'name' property to add a custom className to the instance's view. You can use this class to further manipulate this object via css.
+You can override the default step() function to control your object's behavior any way you want.
 
 Building this project
 ------

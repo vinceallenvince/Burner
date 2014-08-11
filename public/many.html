@@ -2,11 +2,11 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
+  <meta name="keywords" content="animation, DOM, renderer" />
+  <meta name="description" content="A DOM-based rendering engine." />
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name='apple-mobile-web-app-capable' content='yes' />
-  <title>Burner Custom Classes</title>
+  <title>Burner | Custom classes</title>
   <link rel="stylesheet" href="css/burner.min.css" type="text/css" charset="utf-8" />
   <script src="scripts/burner.js" type="text/javascript" charset="utf-8"></script>
   </head>
@@ -47,14 +47,15 @@
        */
       Burner.System.setup(function() {
         var world = this.add('World', {
-          color: [200, 200, 200]
+          color: [100, 100, 150]
         });
         for (var i = 0; i < 120; i++) {
           this.add('Obj', {
             location: new Burner.Vector(rand(0, world.width), rand(0, world.height)),
             mass: rand(10, 100),
             width: rand(10, 50),
-            height: rand(10, 50)
+            height: rand(10, 50),
+            color: [rand(200, 255), rand(95, 150), rand(0, 50)]
           });
         }
       });
