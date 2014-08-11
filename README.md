@@ -48,9 +48,7 @@ Burner contains the essential classes for creating a rendering engine... [System
 
 ## Using your own classes
 
-To create something more complex, you need supply a library of classes like <a href='http://github.com/foldi/FloraJS'>FloraJS</a> that inherit from the Item class.
-
-Start by creating a new Burner system. Next, save instances of these classes to the system and let Burner handle updating the DOM.
+To create something more complex, you need supply a library of classes like <a href='http://github.com/foldi/FloraJS'>FloraJS</a> that inherit from the [Item](https://github.com/vinceallenvince/Burner/blob/master/src/Item.js) class.
 
 A class must meet some minimum requirements:
 
@@ -132,12 +130,16 @@ Next, run grunt.
 grunt
 ```
 
-To run the tests, install the following packages and run 'npm test'.
+To run the tests, run 'npm test'.
 
 ```
-npm install -g browserify
-npm install -g testling
 npm test
+```
+
+To check test coverage run 'grunt coverage'.
+
+```
+grunt coverage
 ```
 
 A pre-commit hook is defined in /pre-commit that runs jshint. To use the hook, run the following:

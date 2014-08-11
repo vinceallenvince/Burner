@@ -84,7 +84,7 @@ module.exports = function(grunt) {
     },
     exec: {
       test: 'npm test',
-      testcoverage: 'browserify test/*.js | testling',
+      coverage: 'browserify -t coverify test/*.js | testling | coverify',
       browserify: 'browserify main.js --standalone Burner -o ' + devRelease
     },
     watch: {
@@ -122,7 +122,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['cssmin', 'exec:browserify', 'copy:publicJS', 'copy:publicCSS']);
   grunt.registerTask('release', ['csslint', 'jshint', 'cssmin', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
   grunt.registerTask('test', ['exec:test']);
-  grunt.registerTask('testcoverage', ['exec:testcoverage']);
+  grunt.registerTask('coverage', ['exec:coverage']);
   grunt.registerTask('report', ['plato']);
   grunt.registerTask('doc', ['jsdoc']);
   grunt.registerTask('lint', ['csslint', 'jshint']);
