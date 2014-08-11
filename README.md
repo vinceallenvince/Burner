@@ -1,3 +1,5 @@
+![Build status](https://travis-ci.org/vinceallenvince/Burner.svg?branch=master)
+
 #Burner: A rendering engine for DOM-based animation.
 
 Use Burner to setup a rendering system in your web browser using only DOM elements. The system supplies some convenient functions for controlling playback and optimizing object management via object pooling.
@@ -6,14 +8,16 @@ Burner includes a basic Item class. You will typically supply a set of classes l
 
 Start by creating a new Burner system. Next, save instances of these classes to the system and let Burner handle updating the DOM.
 
+Get the [lastest release](https://github.com/vinceallenvince/Burner/releases).
+
 ## Using your own classes
 
-Here's an example of how to use your own classes with Burner. Below we've added a new Obj class to a singleton called 'Hello'. There are some minimum requirements:
+Here's an example of how to use your own classes with Burner. The class must meet some minimum requirements:
 
-* It must extend the Burner.Item class via Burner.System.extend. (ie. Burner.System.extend(Obj, Burner.Item))
+* It must extend the Burner.Item class via Burner.Utils.extend. (ie. Burner.Utils.extend(Obj, Burner.Item))
 * It must call Burner.Item in its constructor. (ie. Burner.Item.call(this))
 
-You can also override the default step() function to update your object's properties. Set Burner's 'Classes' property to the singleton. Call setup() and pass a function that adds an instance of your class. Finally, call loop().
+You must add an entry for your class in Burner's 'Classes' map. Call setup() and pass a function that adds an instance of your class. Finally, call loop().
 
 ```html
 
@@ -33,11 +37,6 @@ You can also override the default step() function to update your object's proper
     <script type="text/javascript" charset="utf-8">
 
       /**
-       * Holds new classes for Burner.
-       */
-      var Hello = {};
-
-      /**
        * Creates a new Obj.
        *
        * @param {Object} [opt_options=] A map of initial properties.
@@ -45,9 +44,7 @@ You can also override the default step() function to update your object's proper
        */
       function Obj(opt_options) {
         Burner.Item.call(this);
-        var options = opt_options || {};
-        this.width = options.width || 100;
-        this.height = options.height || 100;
+        this.name = 'obj';
       }
       Burner.Utils.extend(Obj, Burner.Item);
 
@@ -56,18 +53,21 @@ You can also override the default step() function to update your object's proper
         // your code to update this obj goes here
       };*/
 
-      Hello.Obj = Obj;
-
       /**
        * Tell Burner where to find classes.
        */
-      Burner.Classes = Hello;
+      Burner.System.Classes = {
+        Obj: Obj
+      };
 
       /**
        * Create a new Burner system.
        */
       Burner.System.setup(function() {
-        this.add('Obj'); // add your new object to the system
+        this.add('World', {
+          color: [200, 200, 200]
+        });
+        this.add('Obj');
       });
       Burner.System.loop();
     </script>
@@ -76,7 +76,9 @@ You can also override the default step() function to update your object's proper
 
 ```
 
-Running the code, you should see a black box fall to the ground. If you inspect the HTML, you'll notice the box has a class called 'obj'. You can use this class to further manipulate this object via css.
+You can override the default step() function to update your object's properties.
+
+Running the code, you should see a black box fall to the ground. If you inspect the HTML, you'll notice the box has a class called 'obj'. You can use the 'name' property to add a custom className to the instance's view. You can use this class to further manipulate this object via css.
 
 Building this project
 ------
@@ -98,7 +100,6 @@ To run the tests, install the following packages and run 'npm test'.
 ```
 npm install -g browserify
 npm install -g testling
-npm install -g coverify
 npm test
 ```
 

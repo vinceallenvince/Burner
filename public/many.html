@@ -13,6 +13,8 @@
   <body>
     <script type="text/javascript" charset="utf-8">
 
+      var rand = Burner.Utils.getRandomNumber;
+
       /**
        * Creates a new Obj.
        *
@@ -24,6 +26,7 @@
         var options = opt_options || {};
         this.width = options.width || 100;
         this.height = options.height || 100;
+        this.name = 'obj';
       }
       Burner.Utils.extend(Obj, Burner.Item);
 
@@ -43,18 +46,17 @@
        * Create a new Burner system.
        */
       Burner.System.setup(function() {
-        this.add('World', {
+        var world = this.add('World', {
           color: [200, 200, 200]
         });
-        this.add('Obj', {
-          mass: 100,
-          width: 20,
-          height: 50,
-          location: new Burner.Vector(150, 50)
-        });
-        this.add('Obj', {
-          controlCamera: false
-        }); // add your new object to the system
+        for (var i = 0; i < 120; i++) {
+          this.add('Obj', {
+            location: new Burner.Vector(rand(0, world.width), rand(0, world.height)),
+            mass: rand(10, 100),
+            width: rand(10, 50),
+            height: rand(10, 50)
+          });
+        }
       });
       Burner.System.loop();
     </script>
