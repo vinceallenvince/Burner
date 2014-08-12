@@ -1,7 +1,7 @@
 var test = require('tape'),
     Item = require('../src/Item').Item,
     Utils = require('../src/Utils').Utils,
-    Vector = require('../src/Vector').Vector,
+    Vector = require('vector2d-lib'),
     World = require('../src/World').World,
     StatsDisplay = require('../src/StatsDisplay').StatsDisplay,
     System, obj;

@@ -1,6 +1,6 @@
 var test = require('tape'),
     System = require('../src/System').System,
-    Vector = require('../src/Vector').Vector,
+    Vector = require('vector2d-lib'),
     Utils = require('../src/Utils').Utils,
     Item, obj;
 

@@ -3,7 +3,7 @@
 
 var Item = require('./Item').Item,
     World = require('./World').World,
-    Vector = require('./Vector').Vector,
+    Vector = require('vector2d-lib'),
     Utils = require('./Utils').Utils,
     StatsDisplay = require('./StatsDisplay').StatsDisplay;
 

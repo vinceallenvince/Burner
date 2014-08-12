@@ -1,6 +1,6 @@
 /*global document */
 
-var Vector = require('./Vector').Vector;
+var Vector = require('vector2d-lib');
 
 /**
  * Creates a new Item.

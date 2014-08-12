@@ -5,6 +5,8 @@ doc
 out
 release
 specs
+src_bak
+test_bak
 
 #### FILES ####
 *.log

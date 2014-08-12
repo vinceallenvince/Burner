@@ -1,4 +1,4 @@
-var Vector = require('./Vector').Vector,
+var Vector = require('vector2d-lib'),
     Item = require('./Item').Item,
     Utils = require('./Utils').Utils;
 
