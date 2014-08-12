@@ -28,12 +28,14 @@
     "tap": "^0.4.11",
     "tape": "^2.13.3",
     "testling": "^1.6.1",
-    "grunt-exec": "~0.4.6"
+    "grunt-exec": "~0.4.6",
+    "grunt-contrib-clean": "~0.6.0"
   },
   "scripts": {
     "test": "browserify test/*.js | testling"
   },
   "dependencies": {
-    "vector2d-lib": "0.0.7"
+    "vector2d-lib": "^0.0.7",
+    "drawing-utils-lib": "^0.1.3"
   }
 }

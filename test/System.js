@@ -1,6 +1,6 @@
 var test = require('tape'),
     Item = require('../src/Item').Item,
-    Utils = require('../src/Utils').Utils,
+    Utils = require('drawing-utils-lib'),
     Vector = require('vector2d-lib'),
     World = require('../src/World').World,
     StatsDisplay = require('../src/StatsDisplay').StatsDisplay,

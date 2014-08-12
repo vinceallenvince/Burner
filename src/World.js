@@ -1,6 +1,6 @@
 var Vector = require('vector2d-lib'),
     Item = require('./Item').Item,
-    Utils = require('./Utils').Utils;
+    Utils = require('drawing-utils-lib');
 
 /**
  * Creates a new World.

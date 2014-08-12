@@ -1,7 +1,7 @@
 var test = require('tape'),
     Item = require('../src/Item').Item,
     Vector = require('vector2d-lib'),
-    Utils = require('../src/Utils').Utils,
+    Utils = require('drawing-utils-lib'),
     World, obj;
 
 test('load World.', function(t) {

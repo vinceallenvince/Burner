@@ -4,7 +4,7 @@
 var Item = require('./Item').Item,
     World = require('./World').World,
     Vector = require('vector2d-lib'),
-    Utils = require('./Utils').Utils,
+    Utils = require('drawing-utils-lib'),
     StatsDisplay = require('./StatsDisplay').StatsDisplay;
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||

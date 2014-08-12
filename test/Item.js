@@ -1,7 +1,7 @@
 var test = require('tape'),
     System = require('../src/System').System,
     Vector = require('vector2d-lib'),
-    Utils = require('../src/Utils').Utils,
+    Utils = require('drawing-utils-lib'),
     Item, obj;
 
 function beforeTest() {

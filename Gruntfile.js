@@ -28,6 +28,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg : grunt.file.readJSON('package.json'),
+    clean: ['release/', 'public/scripts/'],
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -116,11 +117,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-csslint');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-plato');
   grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('default', ['cssmin', 'exec:browserify', 'copy:publicJS', 'copy:publicCSS']);
-  grunt.registerTask('release', ['csslint', 'jshint', 'cssmin', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
+  grunt.registerTask('release', ['clean', 'csslint', 'jshint', 'cssmin', 'exec:browserify', 'uglify', 'copy:publicJS', 'copy:publicCSS', 'jsdoc', 'plato']);
   grunt.registerTask('test', ['exec:test']);
   grunt.registerTask('coverage', ['exec:coverage']);
   grunt.registerTask('report', ['plato']);
