@@ -7,17 +7,6 @@ before_install:
 - npm install -g grunt-cli
 after_success: grunt release
 before_deploy: echo 'ready?'
-deploy:
-  provider: releases
-  api_key:
-    secure: W5kwsHMWpoH36mqSn3XkAxTIzRke59vdIbP/AsHRShVTg4yr5Nbb/vpKq9PLvAlr8fjNAuOr09SXXvezvW1EZb0NMxY/LLIFfo7+L72zxKZtR65yLUwqRwI9fV77Yo1IrKtVytRohMdxcs2rWes23hey2Vt97Lzo8rJT+PU5isk=
-  file:
-  - release/burner.min.js
-  - release/burner.min.css
-  on:
-    repo: vinceallenvince/Burner
-    tags: true
-    all_branches: true
 after_deploy:
 - echo 'done!'
 - ./deploy-gh-pages.sh
@@ -25,3 +14,22 @@ env:
   global:
   - GH_REF: github.com/vinceallenvince/Burner.git
   - secure: EZY89AVPmycOQ1G/9y+vE6JBtr5bI9TFVpg5EiJvCnBX3FGTdFSoffMHZSjrwkSnSd1bPqO+NmWpgDbGaGuzaTyuddU6bEZPEH6CuKsS7cvMaTQ7kFlc3cMo8Q9qdHy6fzJ9HSCHZszPNScs4/XP9Yt6IKupzIiroUSDNHZzzpA=
+deploy:
+  - provider: npm
+    email: vince@vinceallen.com
+    api_key:
+      secure: GNKk6b/Or+SZVBzARIOdOHFKEaygdQOhAYVHM1iXAazmIchjGryRuBtKTa2VvaOEQdetqM1+QmJ/OpeBL7Pc9nD+seheTKvxlCXjSm/LB/q2MaKjBmDzX6Z+Abya/1v5SfGfirVe9LK7LF/jtYMIppl9vurB4yStIilLLZGb9oc=
+    on:
+      tags: true
+      all_branches: true
+      repo: vinceallenvince/Burner
+  - provider: releases
+    api_key:
+      secure: W5kwsHMWpoH36mqSn3XkAxTIzRke59vdIbP/AsHRShVTg4yr5Nbb/vpKq9PLvAlr8fjNAuOr09SXXvezvW1EZb0NMxY/LLIFfo7+L72zxKZtR65yLUwqRwI9fV77Yo1IrKtVytRohMdxcs2rWes23hey2Vt97Lzo8rJT+PU5isk=
+    file:
+    - release/burner.min.js
+    - release/burner.min.css
+    on:
+      repo: vinceallenvince/Burner
+      tags: true
+      all_branches: true
