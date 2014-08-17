@@ -132,14 +132,19 @@ System._addWorld = function(world) {
 System.add = function(opt_klass, opt_options, opt_world) {
 
   var klass = opt_klass || 'Item',
-      options = opt_options || null,
+      options = opt_options || {},
       world = opt_world || System.firstWorld(),
       records = this._records, obj;
 
-  // recycle object if one is available
-  if (System._pool.length) {
-    obj = System._cleanObj(System._pool.splice(0, 1)[0]);
-  } else {
+  // recycle object if one is available; obj must be an instance of the same class
+  for (var i = 0, max = System._pool.length; i < max; i++) {
+    if (System._pool[i].name === klass) {
+      obj = System._cleanObj(System._pool.splice(i, 1)[0]);
+      break;
+    }
+  }
+
+  if (!obj) {
     if (klass.toLowerCase() === 'world') {
       obj = new World(options);
     } else if (System.Classes[klass]) {
@@ -148,6 +153,8 @@ System.add = function(opt_klass, opt_options, opt_world) {
       obj = new Item();
     }
   }
+
+  options.name = klass;
   obj.init(world, options);
   records.push(obj);
   return obj;
@@ -336,6 +343,37 @@ System.getAllItemsByName = function(name, opt_list) {
   for (i = 0, max = list.length; i < max; i++) {
     if (list[i].name === name) {
       arr[arr.length] = list[i];
+    }
+  }
+  return arr;
+};
+
+/**
+ * Returns an array of items with an attribute that matches the
+ * passed 'attr'. If 'opt_val' is passed, 'attr' must equal 'val'.
+ *
+ * @function getAllItemsByAttribute
+ * @memberof System
+ * @param {string} attr The property to match.
+ * @param {*} [opt_val=] The 'attr' parameter must equal this param.
+ * @param {string} name The item's name property must equal this param.
+ * @returns {Array} An array of items.
+ */
+System.getAllItemsByAttribute = function(attr, opt_val, opt_name) { // TODO: add test
+
+  var i, max, arr = [], records = this._records,
+      val = typeof opt_val !== 'undefined' ? opt_val : null,
+      name = opt_name || false;
+
+  for (i = 0, max = records.length; i < max; i++) {
+    if (typeof records[i][attr] !== 'undefined') {
+      if (val !== null && records[i][attr] !== val) {
+        continue;
+      }
+      if (name && records[i].name !== name) {
+        continue;
+      }
+      arr[arr.length] = records[i];
     }
   }
   return arr;

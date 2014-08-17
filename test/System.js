@@ -295,6 +295,70 @@ test('allWorlds() returns all worlds in the system.', function(t) {
 });
 
 test('getAllItemsByName() returns all items of the passed name.', function(t) {
+
+  beforeTest();
+
+  function Fruit(opt_options) {
+    Item.call(this);
+    this.name = 'Fruit';
+  }
+  Utils.extend(Fruit, Item);
+
+  Fruit.prototype.init = function(world, opt_options) {
+    Fruit._superClass.init.call(this, world, opt_options);
+    var options = opt_options;
+    this.type = options.type || false;
+  };
+
+  //
+
+  function Computer(opt_options) {
+    Item.call(this);
+    this.name = 'Computer';
+  }
+  Utils.extend(Computer, Item);
+
+  Computer.prototype.init = function(world, opt_options) {
+    Computer._superClass.init.call(this, world, opt_options);
+    var options = opt_options;
+    this.type = options.type || false;
+  };
+
+  System.Classes = {
+    Fruit: Fruit,
+    Computer: Computer
+  };
+
+  System.setup(function() {
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
+    this.add('Fruit');
+    this.add('Fruit', {
+      type: 'Apple'
+    });
+    this.add('Fruit', {
+      type: 'Orange'
+    });
+    this.add('Computer');
+    this.add('Computer', {
+      type: 'Apple'
+    });
+    this.add('Computer', {
+      type: 'Commodore'
+    });
+  });
+  t.equal(System.getAllItemsByAttribute('type').length, 6, 'returns items w \'type\' property.');
+  t.equal(System.getAllItemsByAttribute('type', 'Orange').length, 1, 'returns items type = \'Orange\'');
+  t.equal(System.getAllItemsByAttribute('type', 'Orange', 'Fruit').length, 1, 'returns items Fruit.type = \'Orange\'');
+  t.equal(System.getAllItemsByAttribute('type', 'Apple').length, 2, 'returns item type = \'Apple\'');
+  t.equal(System.getAllItemsByAttribute('type', 'Apple', 'Computer').length, 1, 'returns item Computer.type = \'Apple\'');
+  t.end();
+});
+
+test('getAllItemsByName() returns all items of the passed name.', function(t) {
   beforeTest();
 
   System.setup(function() {

@@ -89,7 +89,7 @@ Item.prototype.init = function(world, opt_options) {
       typeof options.height === 'undefined' ? 10 : options.height;
 
   this.scale = typeof this.scale !== 'undefined' ? this.scale :
-      options.scale || 1;
+      typeof options.scale === 'undefined' ? 1 : options.scale;
 
   this.angle = typeof this.angle !== 'undefined' ? this.angle :
       options.angle || 0;
@@ -128,7 +128,7 @@ Item.prototype.init = function(world, opt_options) {
       options.boxShadowColor || [255, 255, 255];
 
   this.opacity = typeof this.opacity !== 'undefined' ? this.opacity :
-      options.opacity || 1;
+      typeof options.opacity === 'undefined' ? 1 : options.opacity;
 
   this.zIndex = typeof this.zIndex !== 'undefined' ? this.zIndex :
       options.zIndex || 0;
@@ -152,13 +152,13 @@ Item.prototype.init = function(world, opt_options) {
       options.minSpeed || 0;
 
   this.bounciness = typeof this.bounciness !== 'undefined' ? this.bounciness :
-      options.bounciness || 0.5;
+      typeof options.bounciness === 'undefined' ? 0.5 : options.bounciness;
 
   this.life = typeof this.life !== 'undefined' ? this.life :
       options.life || 0;
 
   this.lifespan = typeof this.lifespan !== 'undefined' ? this.lifespan :
-      options.lifespan || -1;
+      typeof options.lifespan === 'undefined' ? -1 : options.lifespan;
 
   this.checkWorldEdges = typeof this.checkWorldEdges !== 'undefined' ? this.checkWorldEdges :
       typeof options.checkWorldEdges === 'undefined' ? true : options.checkWorldEdges;
