@@ -133,7 +133,7 @@ System.add = function(opt_klass, opt_options, opt_world) {
 
   var klass = opt_klass || 'Item',
       options = opt_options || null,
-      world = opt_world || System._records[0],
+      world = opt_world || System.firstWorld(),
       records = this._records, obj;
 
   // recycle object if one is available
