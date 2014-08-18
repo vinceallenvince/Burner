@@ -215,7 +215,8 @@ System.loop = function() {
       len = System._records.length;
 
   for (i = len - 1; i >= 0; i -= 1) {
-    if (records[i].step && !records[i].world.pauseStep) {
+
+    if (records[i] && records[i].step && !records[i].world.pauseStep) {
 
       if (records[i].life < records[i].lifespan) {
         records[i].life += 1;

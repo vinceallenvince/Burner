@@ -133,6 +133,9 @@ Item.prototype.init = function(world, opt_options) {
   this.zIndex = typeof this.zIndex !== 'undefined' ? this.zIndex :
       options.zIndex || 0;
 
+  this.visibility = typeof this.visibility !== 'undefined' ? this.visibility :
+      options.visibility || 'visible';
+
   this.mass = typeof this.mass !== 'undefined' ? this.mass :
       typeof options.mass === 'undefined' ? 10 : options.mass;
 
@@ -320,7 +323,8 @@ Item.prototype.draw = function() {
     color1: this.color[1],
     color2: this.color[2],
     opacity: this.opacity,
-    zIndex: this.zIndex
+    zIndex: this.zIndex,
+    visibility: this.visibility
   });
   this.el.style.cssText = cssText;
 };
@@ -334,7 +338,7 @@ Item.prototype.draw = function() {
  * @returns {string} A string representing cssText.
  */
 Item.prototype.getCSSText = function(props) {
-  return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: ' + props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') + '); opacity: ' + props.opacity + '; z-index: ' + props.zIndex + ';';
+  return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: ' + props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') + '); opacity: ' + props.opacity + '; z-index: ' + props.zIndex + '; visibility: ' + props.visibility + ';';
 };
 
 module.exports.Item = Item;

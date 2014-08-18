@@ -82,6 +82,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.boxShadowSpread, 0, 'default boxShadowSpread.');
   t.equal(obj.opacity, 1, 'default opacity.');
   t.equal(obj.zIndex, 0, 'default zIndex.');
+  t.equal(obj.visibility, 'visible', 'default visibility.');
   t.equal(obj.mass, 10, 'default mass.');
   t.equal(obj.acceleration.x, 0, 'default acceleration x');
   t.equal(obj.acceleration.y, 0, 'default acceleration y');
@@ -131,6 +132,7 @@ test('init() should initialize with custom properties.', function(t) {
     boxShadowSpread: 20,
     opacity: 0.5,
     zIndex: 10,
+    visibility: 'hidden',
     mass: 300,
     acceleration: new Vector(5, 10),
     velocity: new Vector(5, 10),
@@ -162,6 +164,7 @@ test('init() should initialize with custom properties.', function(t) {
   t.equal(obj.boxShadowSpread, 20, 'custom boxShadowSpread.');
   t.equal(obj.opacity, 0.5, 'custom opacity.');
   t.equal(obj.zIndex, 10, 'custom zIndex.');
+  t.equal(obj.visibility, 'hidden', 'custom visibility.');
   t.equal(obj.mass, 300, 'custom mass.');
   t.equal(obj.acceleration.x, 5, 'custom acceleration x');
   t.equal(obj.acceleration.y, 10, 'custom acceleration y');
@@ -202,6 +205,7 @@ test('init() should initialize with inherited properties.', function(t) {
     this.boxShadowSpread = 25;
     this.opacity = 0.25;
     this.zIndex = 20;
+    this.visibility = 'hidden';
     this.mass = 200;
     this.acceleration = new Vector(5, 10);
     this.velocity = new Vector(2, 8);
@@ -247,6 +251,7 @@ test('init() should initialize with inherited properties.', function(t) {
   t.equal(obj.boxShadowSpread, 25, 'inherited boxShadowSpread.');
   t.equal(obj.opacity, 0.25, 'inherited opacity');
   t.equal(obj.zIndex, 20, 'inherited zIndex');
+  t.equal(obj.visibility, 'hidden', 'inherited visibility.');
   t.equal(obj.mass, 200, 'inherited mass');
   t.equal(obj.acceleration.x, 5, 'inherited acceleration.x');
   t.equal(obj.acceleration.y, 10, 'inherited acceleration.y');
