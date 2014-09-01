@@ -1,6 +1,6 @@
 {
   "name": "burner",
-  "version": "3.0.14",
+  "version": "3.0.15",
   "description": "A DOM-based rendering engine.",
   "main": "main.js",
   "repository": "http://github.com/vinceallenvince/Burner",
