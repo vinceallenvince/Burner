@@ -1,5 +1,5 @@
 var test = require('tape'),
-    Item = require('../src/Item'),
+    Item = require('../src/item'),
     Vector = require('vector2d-lib'),
     Utils = require('drawing-utils-lib'),
     World, obj;
