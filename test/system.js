@@ -1,8 +1,8 @@
 var test = require('tape'),
-    Item = require('../src/Item'),
+    Item = require('../src/item'),
     Utils = require('drawing-utils-lib'),
     Vector = require('vector2d-lib'),
-    World = require('../src/World'),
+    World = require('../src/world'),
     FPSDisplay = require('fpsdisplay'),
     System, obj;
 
@@ -19,7 +19,7 @@ function beforeTest() {
 }
 
 test('load System.', function(t) {
-  System = require('../src/System');
+  System = require('../src/system');
   t.ok(System, 'object loaded');
   t.end();
 });

@@ -1,8 +1,8 @@
 /*global window, document */
 /*jshint supernew:true */
 
-var Item = require('./Item'),
-    World = require('./World'),
+var Item = require('./item'),
+    World = require('./world'),
     Vector = require('vector2d-lib'),
     Utils = require('drawing-utils-lib'),
     FPSDisplay = require('fpsdisplay');

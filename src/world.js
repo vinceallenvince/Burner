@@ -1,5 +1,5 @@
 var Vector = require('vector2d-lib'),
-    Item = require('./Item'),
+    Item = require('./item'),
     Utils = require('drawing-utils-lib');
 
 /**

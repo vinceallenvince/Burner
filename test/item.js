@@ -1,5 +1,5 @@
 var test = require('tape'),
-    System = require('../src/System'),
+    System = require('../src/system'),
     Vector = require('vector2d-lib'),
     Utils = require('drawing-utils-lib'),
     Item, obj;
@@ -31,7 +31,7 @@ World.prototype.add = function(item) {
 };
 
 test('load Item.', function(t) {
-  Item = require('../src/Item');
+  Item = require('../src/item');
   t.ok(Item, 'object loaded');
   t.end();
 });
