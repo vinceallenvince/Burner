@@ -5,7 +5,7 @@ var test = require('tape'),
     World, obj;
 
 test('load World.', function(t) {
-  World = require('../src/world');
+  World = require('../src/World');
   t.ok(World, 'object loaded');
   t.end();
 });

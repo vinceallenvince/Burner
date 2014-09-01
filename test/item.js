@@ -31,7 +31,7 @@ World.prototype.add = function(item) {
 };
 
 test('load Item.', function(t) {
-  Item = require('../src/item');
+  Item = require('../src/Item');
   t.ok(Item, 'object loaded');
   t.end();
 });

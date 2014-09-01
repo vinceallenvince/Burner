@@ -19,7 +19,7 @@ function beforeTest() {
 }
 
 test('load System.', function(t) {
-  System = require('../src/system');
+  System = require('../src/System');
   t.ok(System, 'object loaded');
   t.end();
 });
