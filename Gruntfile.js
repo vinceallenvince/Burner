@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 
   footerContent = '\n}(exports));';
 
-  devRelease = 'release/' + latest + '.js';
+  devRelease = releaseDir + latest + '.js';
 
   grunt.initConfig({
     pkg : grunt.file.readJSON('package.json'),
@@ -75,7 +75,7 @@ module.exports = function(grunt) {
     exec: {
       test: 'npm test',
       coverage: 'browserify -t coverify test/*.js | testling | coverify',
-      browserify: 'browserify main.js --standalone ' + standaloneNamespace + ' -o ' + devRelease
+      browserify: 'browserify src/main.js --standalone ' + standaloneNamespace + ' -o ' + devRelease
     },
     plato: {
       options: {},

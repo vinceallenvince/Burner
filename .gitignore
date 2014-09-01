@@ -12,5 +12,5 @@ test_bak
 *.log
 *.DS_Store
 *.swp
-public/scripts/Burner.js
+public/scripts/burner.js
 *.map

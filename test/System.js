@@ -1,9 +1,9 @@
 var test = require('tape'),
-    Item = require('../src/Item').Item,
+    Item = require('../src/item'),
     Utils = require('drawing-utils-lib'),
     Vector = require('vector2d-lib'),
-    World = require('../src/World').World,
-    StatsDisplay = require('../src/StatsDisplay').StatsDisplay,
+    World = require('../src/world'),
+    FPSDisplay = require('fpsdisplay'),
     System, obj;
 
 function beforeTest() {
@@ -19,7 +19,7 @@ function beforeTest() {
 }
 
 test('load System.', function(t) {
-  System = require('../src/System').System;
+  System = require('../src/system');
   t.ok(System, 'object loaded');
   t.end();
 });
@@ -187,6 +187,7 @@ test('loop() should call step() and draw().', function(t) {
   t.equal(System._records[System._records.length - 1].location.y, 100.1, 'step() should update location.');
   t.equal(System._records[System._records.length - 1].acceleration.y, 0, 'step() should reset acceleration.');
   t.equal(System._records[System._records.length - 1].life, 1, 'step() should increment life.');
+  t.equal(System.clock, 1, 'loop() should increment clock.');
 
   //
   //
@@ -477,9 +478,9 @@ test('_keyup() should catch keyup events.', function(t) {
   t.equal(System._records.length, 0, 'should remove all items.');
 
   world.innerHTML = '';
-  StatsDisplay.init();
-  StatsDisplay.hide();
-  StatsDisplay.active = false;
+  FPSDisplay.init();
+  FPSDisplay.hide();
+  FPSDisplay.active = false;
 
   //
   // TODO: fix
@@ -500,19 +501,19 @@ test('_keyup() should catch keyup events.', function(t) {
   System._keyup({
     keyCode: 83
   });
-  t.ok(StatsDisplay.active, 'should activate.');
+  t.ok(FPSDisplay.active, 'should activate.');
 
   world.innerHTML = '';
-  StatsDisplay.active = false;
-  StatsDisplay.fps = false;
+  FPSDisplay.active = false;
+  FPSDisplay.fps = false;
   System._keyup({
     keyCode: 83
   });
-  t.ok(StatsDisplay.active, 'should call init() when StatsDisplay.fps = false.');
+  t.ok(FPSDisplay.active, 'should call init() when FPSDisplay.fps = false.');
 
   world.innerHTML = '';
-  StatsDisplay.init();
-  StatsDisplay.fps = 1;
+  FPSDisplay.init();
+  FPSDisplay.fps = 1;
   System._keyup({
     keyCode: 83
   });

@@ -1,11 +1,11 @@
-/*global window, document, setTimeout, Burner, Modernizr */
+/*global window, document */
 /*jshint supernew:true */
 
-var Item = require('./Item').Item,
-    World = require('./World').World,
+var Item = require('./item'),
+    World = require('./world'),
     Vector = require('vector2d-lib'),
     Utils = require('drawing-utils-lib'),
-    StatsDisplay = require('./StatsDisplay').StatsDisplay;
+    FPSDisplay = require('fpsdisplay');
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -61,11 +61,11 @@ System.mouse = {
 };
 
 /**
- * An instance of StatsDisplay.
- * @type {Object}
+ * Increments with each call to System.loop.
+ * @type {number}
  * @private
  */
-System._statsDisplay = null;
+System.clock = 0;
 
  /**
   * Call to execute any setup code before starting the animation loop.
@@ -231,8 +231,9 @@ System.loop = function() {
   for (i = len - 1; i >= 0; i -= 1) {
     records[i].draw();
   }
-  if (StatsDisplay.active) {
-    StatsDisplay.update(len);
+  System.clock++;
+  if (FPSDisplay.active) {
+    FPSDisplay.update(len);
   }
   if (typeof window.requestAnimationFrame !== 'undefined') {
     window.requestAnimationFrame(System.loop);
@@ -449,6 +450,7 @@ System._resetSystem = function() {
 
   System._records = [];
   System._pool = [];
+  System.clock = 0;
   System.setup(System.setupFunc);
 };
 
@@ -460,17 +462,17 @@ System._resetSystem = function() {
  * @private
  */
 System._toggleStats = function() {
-  if (!StatsDisplay.fps) {
-    StatsDisplay.init();
+  if (!FPSDisplay.fps) {
+    FPSDisplay.init();
   } else {
-    StatsDisplay.active = !StatsDisplay.active;
+    FPSDisplay.active = !FPSDisplay.active;
   }
 
-  if (!StatsDisplay.active) {
-    StatsDisplay.hide();
+  if (!FPSDisplay.active) {
+    FPSDisplay.hide();
   } else {
-    StatsDisplay.show();
+    FPSDisplay.show();
   }
 };
 
-module.exports.System = System;
+module.exports = System;

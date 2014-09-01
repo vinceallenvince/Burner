@@ -33,7 +33,8 @@
     "test": "browserify test/*.js | testling"
   },
   "dependencies": {
-    "vector2d-lib": "^0.0.7",
-    "drawing-utils-lib": "^0.1.3"
+    "drawing-utils-lib": "^0.1.3",
+    "fpsdisplay": "^0.1.0",
+    "vector2d-lib": "^0.0.7"
   }
 }

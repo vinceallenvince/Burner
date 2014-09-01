@@ -1,5 +1,5 @@
 var Vector = require('vector2d-lib'),
-    Item = require('./Item').Item,
+    Item = require('./item'),
     Utils = require('drawing-utils-lib');
 
 /**
@@ -111,4 +111,4 @@ World.prototype.getCSSText = function(props) {
   return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: rgb(' + props.color0 + ', ' + props.color1 + ', ' + props.color2 + '); border: ' + props.borderWidth + 'px ' + props.borderStyle + ' rgb(' + props.borderColor1 + ', ' + props.borderColor2 + ', ' + props.borderColor3 + ')';
 };
 
-module.exports.World = World;
+module.exports = World;

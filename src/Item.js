@@ -36,7 +36,7 @@ Item._stylePosition =
  * @memberof Item
  *
  * @param {Object} [opt_options=] A map of initial properties.
- * @param {number} [opt_options.name = 10] The item's name.
+ * @param {number} [opt_options.name = 'Item'] The item's name.
  * @param {number} [opt_options.width = 10] Width.
  * @param {number} [opt_options.height = 10] Height.
  * @param {number} [opt_options.scale = 1] Scale.
@@ -67,7 +67,7 @@ Item._stylePosition =
  * @param {boolean} [opt_options.wrapWorldEdges = false] Set to true to check for world boundary collisions and position item at the opposing boundary.
  * @param {Function} [opt_options.beforeStep = function() {}] This function will be called at the beginning of the item's step() function.
  * @param {Function} [opt_options.afterStep = function() {}] This function will be called at the end of the item's step() function.
- * @param {string} [opt_options.name = 'Item'] The item's name. Typically this is the item's class name.
+ * @param {string} [opt_options.controlCamera = false] Set to true to set world's position relaive to this item.
  */
 Item.prototype.init = function(world, opt_options) {
 
@@ -341,4 +341,4 @@ Item.prototype.getCSSText = function(props) {
   return Item._stylePosition.replace(/<x>/g, props.x).replace(/<y>/g, props.y).replace(/<angle>/g, props.angle).replace(/<scale>/g, props.scale) + 'width: ' + props.width + 'px; height: ' + props.height + 'px; background-color: ' + props.colorMode + '(' + props.color0 + ', ' + props.color1 + (props.colorMode === 'hsl' ? '%' : '') + ', ' + props.color2 + (props.colorMode === 'hsl' ? '%' : '') + '); opacity: ' + props.opacity + '; z-index: ' + props.zIndex + '; visibility: ' + props.visibility + ';';
 };
 
-module.exports.Item = Item;
+module.exports = Item;
