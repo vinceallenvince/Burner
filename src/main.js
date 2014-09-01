@@ -1,7 +1,7 @@
 module.exports = {
-  Item: require('./item'),
-  System: require('./system'),
+  Item: require('./Item'),
+  System: require('./System'),
   Utils: require('drawing-utils-lib'),
   Vector: require('vector2d-lib'),
-  World: require('./world')
+  World: require('./World')
 };

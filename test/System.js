@@ -1,8 +1,8 @@
 var test = require('tape'),
-    Item = require('../src/item'),
+    Item = require('../src/Item'),
     Utils = require('drawing-utils-lib'),
     Vector = require('vector2d-lib'),
-    World = require('../src/world'),
+    World = require('../src/World'),
     FPSDisplay = require('fpsdisplay'),
     System, obj;
 
