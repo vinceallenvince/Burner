@@ -478,13 +478,6 @@ test('_keyup() should catch keyup events.', function(t) {
   });
   t.equal(System._records.length, 0, 'should remove all items.');
 
-  world.innerHTML = '';
-  FPSDisplay.init();
-  FPSDisplay.hide();
-  FPSDisplay.active = false;
-
-  //
-  // TODO: fix
   beforeTest();
 
   var world;
