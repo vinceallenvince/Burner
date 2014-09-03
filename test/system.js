@@ -9,6 +9,7 @@ var test = require('tape'),
 function beforeTest() {
   System.setupFunc = function() {};
   System._resetSystem();
+  System.frameFunction = null;
   document.body.innerHTML = '';
   var world = document.createElement('div');
   world.id = 'world';
@@ -517,8 +518,6 @@ test('_keyup() should catch keyup events.', function(t) {
   t.end();
 });
 
-
-
 test('_resetSystem() should reset the system.', function(t) {
 
   beforeTest();
@@ -579,6 +578,27 @@ test('_resetSystem() should reset the system.', function(t) {
   t.equal(world.pauseStep, false, 'should reset world.pauseStep.');
   t.equal(world.pauseDraw, false, 'should reset world.pauseDraw.');
 
+  t.end();
+});
+
+test('loop() should execute a passed function.', function(t) {
+
+  beforeTest();
+
+  var val = 0;
+  function frameFunction() {
+    val++;
+  }
+
+  System.setup(function() {
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
+  });
+  System.loop(frameFunction);
+  t.equal(val, 1, 'loop() should call frameFunction.');
   t.end();
 });
 

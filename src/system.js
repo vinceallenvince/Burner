@@ -67,6 +67,14 @@ System.mouse = {
  */
 System.clock = 0;
 
+/**
+ * System.loop() calls this function. Use to execute
+ * a function in the animation loop outside of any items.
+ * @type {Function}
+ * @private
+ */
+System.frameFunction = null;
+
  /**
   * Call to execute any setup code before starting the animation loop.
   * @function setup
@@ -206,13 +214,19 @@ System.destroy = function (obj) {
 
 /**
  * Iterates over records.
+ * @param {Function} [opt_function=function(){}] A function.
  * @function loop
  * @memberof System
  */
-System.loop = function() {
+System.loop = function(opt_function) {
 
   var i, records = System._records,
-      len = System._records.length;
+      len = System._records.length,
+      frameFunction = opt_function || function() {};
+
+  if (!System.frameFunction) {
+    System.frameFunction = frameFunction;
+  }
 
   for (i = len - 1; i >= 0; i -= 1) {
 
@@ -235,6 +249,7 @@ System.loop = function() {
   if (FPSDisplay.active) {
     FPSDisplay.update(len);
   }
+  System.frameFunction.call(this);
   if (typeof window.requestAnimationFrame !== 'undefined') {
     window.requestAnimationFrame(System.loop);
   }
