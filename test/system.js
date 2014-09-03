@@ -427,7 +427,7 @@ test('_keyup() should catch keyup events.', function(t) {
     });
   });
   System._keyup({
-    keyCode: 39
+    keyCode: 39 // step forward
   });
   t.equal(System._records[System._records.length - 1].location.y, 100.1, 'keyCode 39 should call _stepForward.');
   t.equal(System._records[System._records.length - 1].acceleration.y, 0, 'keyCode 39 should call _stepForward.');
@@ -484,7 +484,7 @@ test('_keyup() should catch keyup events.', function(t) {
 
   //
   // TODO: fix
-  /*beforeTest();
+  beforeTest();
 
   var world;
 
@@ -499,27 +499,20 @@ test('_keyup() should catch keyup events.', function(t) {
     });
   });
   System._keyup({
-    keyCode: 83
+    keyCode: 83 // fpsDisplay
   });
   t.ok(FPSDisplay.active, 'should activate.');
 
-  world.innerHTML = '';
-  FPSDisplay.active = false;
-  FPSDisplay.fps = false;
-  System._keyup({
-    keyCode: 83
-  });
-  t.ok(FPSDisplay.active, 'should call init() when FPSDisplay.fps = false.');
+  // test that we're sending FPSDisplay a length value
+  // 2 records, world and item added above
+  System.loop();
+  t.equal(FPSDisplay.totalItems, 2, 'should display records length.');
 
-  world.innerHTML = '';
-  FPSDisplay.init();
   FPSDisplay.fps = 1;
   System._keyup({
     keyCode: 83
   });
-  var view = document.querySelectorAll('.statsDisplay')[0];
-  t.equal(view.style.display, 'none', 'should hide the view.');
-  */
+  t.notOk(FPSDisplay.active, 'should deactivate.');
 
   t.end();
 });

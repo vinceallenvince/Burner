@@ -80,6 +80,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.boxShadowOffsetY, 0, 'default boxShadowOffsetY.');
   t.equal(obj.boxShadowBlur, 0, 'default boxShadowBlur.');
   t.equal(obj.boxShadowSpread, 0, 'default boxShadowSpread.');
+  t.assert(obj.boxShadowColor[0] === 255 && obj.boxShadowColor[1] === 255 && obj.boxShadowColor[2] === 255, 'default boxShadowColor.');
   t.equal(obj.opacity, 1, 'default opacity.');
   t.equal(obj.zIndex, 0, 'default zIndex.');
   t.equal(obj.visibility, 'visible', 'default visibility.');
@@ -130,6 +131,7 @@ test('init() should initialize with custom properties.', function(t) {
     boxShadowOffsetY: 8,
     boxShadowBlur: 5,
     boxShadowSpread: 20,
+    boxShadowColor: [100, 100, 100],
     opacity: 0.5,
     zIndex: 10,
     visibility: 'hidden',
@@ -162,6 +164,7 @@ test('init() should initialize with custom properties.', function(t) {
   t.equal(obj.boxShadowOffsetY, 8, 'custom boxShadowOffsetY.');
   t.equal(obj.boxShadowBlur, 5, 'custom boxShadowBlur.');
   t.equal(obj.boxShadowSpread, 20, 'custom boxShadowSpread.');
+  t.assert(obj.boxShadowColor[0] === 100 && obj.boxShadowColor[1] === 100 && obj.boxShadowColor[2] === 100, 'custom boxShadowColor.');
   t.equal(obj.opacity, 0.5, 'custom opacity.');
   t.equal(obj.zIndex, 10, 'custom zIndex.');
   t.equal(obj.visibility, 'hidden', 'custom visibility.');
@@ -203,6 +206,7 @@ test('init() should initialize with inherited properties.', function(t) {
     this.boxShadowOffsetY = 12;
     this.boxShadowBlur = 10;
     this.boxShadowSpread = 25;
+    this.boxShadowColor = [30, 30, 30];
     this.opacity = 0.25;
     this.zIndex = 20;
     this.visibility = 'hidden';
@@ -249,6 +253,7 @@ test('init() should initialize with inherited properties.', function(t) {
   t.equal(obj.boxShadowOffsetY, 12, 'inherited boxShadowOffsetY.');
   t.equal(obj.boxShadowBlur, 10, 'inherited boxShadowBlur.');
   t.equal(obj.boxShadowSpread, 25, 'inherited boxShadowSpread.');
+  t.assert(obj.boxShadowColor[0] === 30 && obj.boxShadowColor[1] === 30 && obj.boxShadowColor[2] === 30, 'inherited boxShadowColor.');
   t.equal(obj.opacity, 0.25, 'inherited opacity');
   t.equal(obj.zIndex, 20, 'inherited zIndex');
   t.equal(obj.visibility, 'hidden', 'inherited visibility.');

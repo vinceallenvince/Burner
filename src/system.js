@@ -422,7 +422,7 @@ System._keyup = function(e) {
       System._resetSystem();
       break;
     case 83: // s; reset
-      System._toggleStats();
+      System._toggleFPS();
       break;
   }
 };
@@ -457,11 +457,11 @@ System._resetSystem = function() {
 /**
  * Toggles stats display.
  *
- * @function _toggleStats
+ * @function _toggleFPS
  * @memberof System
  * @private
  */
-System._toggleStats = function() {
+System._toggleFPS = function() {
   if (!FPSDisplay.fps) {
     FPSDisplay.init();
   } else {
