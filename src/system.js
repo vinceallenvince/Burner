@@ -194,7 +194,9 @@ System.remove = function (obj) {
 
   for (i = 0, max = records.length; i < max; i++) {
     if (records[i].id === obj.id) {
-      records[i].el.style.visibility = 'hidden'; // hide item
+      if (records[i].el) {
+        records[i].el.style.visibility = 'hidden'; // hide item
+      }
       System._pool[System._pool.length] = records.splice(i, 1)[0]; // move record to pool array
       break;
     }

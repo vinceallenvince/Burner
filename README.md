@@ -115,6 +115,10 @@ Running the code, you should see a black box fall to the ground. The [Item](http
 
 You can override the default step() function to control your object's behavior any way you want.
 
+##Docs
+
+To learn more, please review [the docs](http://vinceallenvince.github.io/burner/doc/).
+
 Building this project
 ------
 
@@ -154,3 +158,4 @@ A post-commit hook is defined in /post-commit that runs the Plato complexity ana
 ln -s ../../post-commit .git/hooks/post-commit
 ```
 
+View the [code complexity](http://vinceallenvince.github.io/burner/reports/) report.

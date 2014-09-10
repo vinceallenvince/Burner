@@ -97,6 +97,16 @@ test('add() should pull from pull from System._pool if pooled items exist.', fun
 
   beforeTest();
 
+  function Obj() {
+    this.name = 'Obj';
+  }
+  Obj.prototype.init = function() {};
+
+  System.Classes = {
+    Item: Item,
+    Obj: Obj
+  }
+
   System.setup(function() {
     var world = this.add('World', {
       el: document.getElementById('world'),
@@ -104,12 +114,16 @@ test('add() should pull from pull from System._pool if pooled items exist.', fun
       height: 300
     });;
 
-    var itemA = this.add();
-    System.remove(itemA);
-    t.assert(System._records.length === 1 && System._pool.length === 1, 'remove() should remove item from _records and add to _pool.');
-
+    var itemA = this.add('Obj');
     var itemB = this.add();
-    t.assert(System._records.length === 2 && System._pool.length === 0, 'add() should check to splice items off _pool.');
+    var itemC = this.add();
+    System.remove(itemA);
+    System.remove(itemB);
+    System.remove(itemC);
+    t.assert(System._records.length === 1 && System._pool.length === 3, 'remove() should remove item from _records and add to _pool.');
+
+    var itemD = this.add();
+    t.assert(System._records.length === 2 && System._pool.length === 2, 'add() should check to splice items off _pool.');
 
   });
 

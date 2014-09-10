@@ -29,7 +29,7 @@ Utils.extend(World, Item);
 /**
  * Resets all properties.
  * @function init
- * @memberof Item
+ * @memberof World
  *
  * @param {Object} [opt_options=] A map of initial properties.
  * @param {number} [opt_options.width = this.el.scrollWidth] Width.
