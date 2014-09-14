@@ -50,7 +50,7 @@ World.prototype.init = function(world, opt_options) {
   this.borderStyle = options.borderStyle || 'none';
   this.borderColor = options.borderColor || [0, 0, 0];
   this.gravity = options.gravity || new Vector(0, 1);
-  this.c = options.c || 0.1;
+  this.c = typeof options.c !== 'undefined' ? options.c : 0.1;
   this.pauseStep = !!options.pauseStep;
   this.pauseDraw = !!options.pauseDraw;
   this.el.className = this.name.toLowerCase();

@@ -134,7 +134,7 @@ System._addWorld = function(world) {
  * @memberof System
  * @param {string} [opt_klass = 'Item'] The name of the class to add.
  * @param {Object} [opt_options=] A map of initial properties.
- * @param {string=} [opt_world = System._records[0]] An instance of World to contain the item.
+ * @param {Object} [opt_world = System._records[0]] An instance of World to contain the item.
  * @returns {Object} An instance of the added item.
  */
 System.add = function(opt_klass, opt_options, opt_world) {
@@ -283,6 +283,7 @@ System._stepForward = function() {
       }
     }
   }
+  System.clock++;
 };
 
 /**

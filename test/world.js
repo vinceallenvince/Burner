@@ -10,7 +10,7 @@ test('load World.', function(t) {
   t.end();
 });
 
-test('new Item() should create a new Item and add its view to the DOM.', function(t) {
+test('new World() creates a new World.', function(t) {
   var obj = new World();
   t.equal(obj.el, document.body, 'should by default use document.body as a view.');
   t.equal(obj.name, 'World', 'should have a name.');
@@ -63,7 +63,7 @@ test('init() should initialize with custom properties.', function(t) {
     borderStyle: 'dotted',
     borderColor: [0, 0, 200],
     gravity: new Vector(10, 20),
-    c: 10,
+    c: 0,
     pauseStep: true,
     pauseDraw: true,
     location: new Vector(50, 50)
@@ -76,7 +76,7 @@ test('init() should initialize with custom properties.', function(t) {
   t.assert(obj.borderColor[0] === 0 && obj.borderColor[1] === 0 && obj.borderColor[2] === 200, 'Custom borderColor.');
   t.equal(obj.gravity.x, 10, 'Custom gravity x.');
   t.equal(obj.gravity.y, 20, 'Custom gravity y.');
-  t.equal(obj.c, 10, 'Custom c.');
+  t.equal(obj.c, 0, 'Custom c.');
   t.equal(obj.pauseStep, true, 'Custom pauseStep.');
   t.equal(obj.pauseDraw, true, 'Custom pauseDraw.');
   t.equal(obj.location.x, 50, 'Custom location x.');

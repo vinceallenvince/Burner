@@ -103,7 +103,7 @@ test('init() should initialize with default properties.', function(t) {
   t.equal(obj.controlCamera, false, 'default controlCamera.');
   t.equal(obj._force.x, 0, 'force cache x.');
   t.equal(obj._force.y, 0, 'force cache y.');
-  t.equal(obj.id, 'Item3', 'should have an id.');
+  t.ok(obj.id, 'should have an id.');
   t.equal(typeof obj.el, 'object', 'should have a DOM element as a view.');
   t.equal(obj.el.style.position, 'absolute', 'should have absolute positioning.');
   t.equal(obj.el.style.top, '-5000px', 'should be positioned off screen.');
