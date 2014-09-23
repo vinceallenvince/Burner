@@ -2,59 +2,52 @@
 /*jshint supernew:true */
 
 var Item = require('./item'),
-    World = require('./world'),
+    FPSDisplay = require('fpsdisplay'),
     Vector = require('vector2d-lib'),
     Utils = require('drawing-utils-lib'),
-    FPSDisplay = require('fpsdisplay');
+    World = require('./world');
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
-/** @namespace */
-var System = {
-  name: 'System'
-};
-
 /**
- * Holds additional classes that can be defined at runtime.
- * @memberof System
+ * Creates a new System.
+ * @constructor
  */
-System.Classes = {
-  'Item': Item
-};
+function System() {
 
 /**
  * Holds a vector describing the system gravity.
  * @memberof System
  */
-System.gravity = new Vector(0, 1);
+this.gravity = new Vector(0, 1);
 
 /**
  * Holds a vector describing the system wind.
  * @memberof System
  */
-System.wind = new Vector();
+this.wind = new Vector();
 
 /**
  * Stores references to all items in the system.
  * @memberof System
  * @private
  */
-System._records = [];
+this._records = [];
 
 /**
  * Stores references to all items removed from the system.
  * @memberof System
  * @private
  */
-System._pool = [];
+this._pool = [];
 
 /**
  * Holds the current and last mouse/touch positions relative
  * to the browser window. Also, holds the current mouse velocity.
  * @public
  */
-System.mouse = {
+this.mouse = {
   location: new Vector(),
   lastLocation: new Vector(),
   velocity: new Vector()
@@ -65,7 +58,7 @@ System.mouse = {
  * @type {number}
  * @private
  */
-System.clock = 0;
+this.clock = 0;
 
 /**
  * System.loop() calls this function. Use to execute
@@ -73,7 +66,19 @@ System.clock = 0;
  * @type {Function}
  * @private
  */
-System.frameFunction = null;
+this.frameFunction = null;
+
+}
+
+/**
+ * Holds additional classes that can be defined at runtime.
+ * @memberof System
+ */
+System.Classes = {
+  'Item': Item
+};
+
+
 
  /**
   * Call to execute any setup code before starting the animation loop.
@@ -81,7 +86,7 @@ System.frameFunction = null;
   * @param  {Object} opt_func   A function to run before the function exits.
   * @memberof System
   */
-System.setup = function(opt_func) {
+System.prototype.setup = function(opt_func) {
 
   var func = opt_func || function() {}, i, l, max;
 
@@ -112,8 +117,8 @@ System.setup = function(opt_func) {
   * @param  {Object|Array} opt_worlds A instance or array of instances of World.
   * @memberof System
   */
-System.init = function(opt_func, opt_worlds) {
-  System.setup(opt_func, opt_worlds);
+System.prototype.init = function(opt_func, opt_worlds) {
+  this.setup(opt_func, opt_worlds);
 };
 
 /**
@@ -124,7 +129,7 @@ System.init = function(opt_func, opt_worlds) {
  * @private
  * @param {Object} world An instance of World.
  */
-System._addWorld = function(world) {
+System.prototype._addWorld = function(world) {
   System._records.push(world);
 };
 
@@ -137,17 +142,17 @@ System._addWorld = function(world) {
  * @param {Object} [opt_world = System._records[0]] An instance of World to contain the item.
  * @returns {Object} An instance of the added item.
  */
-System.add = function(opt_klass, opt_options, opt_world) {
+System.prototype.add = function(opt_klass, opt_options, opt_world) {
 
   var klass = opt_klass || 'Item',
       options = opt_options || {},
-      world = opt_world || System.firstWorld(),
+      world = opt_world || this.firstWorld(),
       records = this._records, obj;
 
   // recycle object if one is available; obj must be an instance of the same class
-  for (var i = 0, max = System._pool.length; i < max; i++) {
-    if (System._pool[i].name === klass) {
-      obj = System._cleanObj(System._pool.splice(i, 1)[0]);
+  for (var i = 0, max = this._pool.length; i < max; i++) {
+    if (this._pool[i].name === klass) {
+      obj = this._cleanObj(this._pool.splice(i, 1)[0]);
       break;
     }
   }
@@ -173,7 +178,7 @@ System.add = function(opt_klass, opt_options, opt_world) {
  * @param  {Object} obj An object.
  * @return {Object}     The passed object.
  */
-System._cleanObj = function(obj) {
+System.prototype._cleanObj = function(obj) {
   for (var prop in obj) {
     if (obj.hasOwnProperty(prop)) {
       delete obj[prop];
@@ -188,16 +193,16 @@ System._cleanObj = function(obj) {
  * @memberof System
  * @param {Object} obj The item to remove.
  */
-System.remove = function (obj) {
+System.prototype.remove = function (obj) {
 
-  var i, max, records = System._records;
+  var i, max, records = this._records;
 
   for (i = 0, max = records.length; i < max; i++) {
     if (records[i].id === obj.id) {
       if (records[i].el) {
         records[i].el.style.visibility = 'hidden'; // hide item
       }
-      System._pool[System._pool.length] = records.splice(i, 1)[0]; // move record to pool array
+      this._pool[this._pool.length] = records.splice(i, 1)[0]; // move record to pool array
       break;
     }
   }
@@ -210,8 +215,8 @@ System.remove = function (obj) {
  * @memberof System
  * @param {Object} obj The item to remove.
  */
-System.destroy = function (obj) {
-  System.remove(obj);
+System.prototype.destroy = function (obj) {
+  this.remove(obj);
 };
 
 /**
@@ -220,7 +225,7 @@ System.destroy = function (obj) {
  * @function loop
  * @memberof System
  */
-System.loop = function(opt_function) {
+System.prototype.loop = function(opt_function) {
 
   var i, records = System._records,
       len = System._records.length,
@@ -264,7 +269,7 @@ System.loop = function(opt_function) {
  * @memberof System
  * @private
  */
-System._stepForward = function() {
+System.prototype._stepForward = function() {
 
   var i, j, max, records = System._records,
       world, worlds = System.allWorlds();
@@ -293,7 +298,7 @@ System._stepForward = function() {
  * @memberof System
  * @private
  */
-System._recordMouseLoc = function(e) {
+System.prototype._recordMouseLoc = function(e) {
 
   var touch, world = System.firstWorld();
 
@@ -331,7 +336,7 @@ System._recordMouseLoc = function(e) {
  * @memberof System
  * @returns {null|Object} An instance of World.
  */
-System.firstWorld = function() {
+System.prototype.firstWorld = function() {
   return this._records.length ? this._records[0] : null;
 };
 
@@ -342,8 +347,8 @@ System.firstWorld = function() {
  * @memberof System
  * @return {Array.<World>} An array of worlds.
  */
-System.allWorlds = function() {
-  return System.getAllItemsByName('World');
+System.prototype.allWorlds = function() {
+  return this.getAllItemsByName('World');
 };
 
 /**
@@ -355,7 +360,7 @@ System.allWorlds = function() {
  * @param {Array} [opt_list = this._records] An optional list of items.
  * @returns {Array} An array of items.
  */
-System.getAllItemsByName = function(name, opt_list) {
+System.prototype.getAllItemsByName = function(name, opt_list) {
 
   var i, max, arr = [],
       list = opt_list || this._records;
@@ -379,7 +384,7 @@ System.getAllItemsByName = function(name, opt_list) {
  * @param {string} name The item's name property must equal this param.
  * @returns {Array} An array of items.
  */
-System.getAllItemsByAttribute = function(attr, opt_val, opt_name) { // TODO: add test
+System.prototype.getAllItemsByAttribute = function(attr, opt_val, opt_name) { // TODO: add test
 
   var i, max, arr = [], records = this._records,
       val = typeof opt_val !== 'undefined' ? opt_val : null,
@@ -405,7 +410,7 @@ System.getAllItemsByAttribute = function(attr, opt_val, opt_name) { // TODO: add
  * @function updateOrientation
  * @memberof System
  */
-System.updateOrientation = function() {
+System.prototype.updateOrientation = function() {
   var worlds = System.allWorlds(),
   i, max, l = worlds.length;
   for (i = 0; i < l; i++) {
@@ -422,7 +427,7 @@ System.updateOrientation = function() {
  * @private
  * @param {Object} e An event.
  */
-System._keyup = function(e) {
+System.prototype._keyup = function(e) {
 
   var i, max, world, worlds = System.allWorlds();
 
@@ -452,9 +457,9 @@ System._keyup = function(e) {
  * @memberof System
  * @private
  */
-System._resetSystem = function() {
+System.prototype._resetSystem = function() {
 
-  var i, max, world, worlds = System.allWorlds();
+  var i, max, world, worlds = this.allWorlds();
 
   for (i = 0, max = worlds.length; i < max; i++) {
     world = worlds[i];
@@ -466,10 +471,10 @@ System._resetSystem = function() {
     }
   }
 
-  System._records = [];
-  System._pool = [];
-  System.clock = 0;
-  System.setup(System.setupFunc);
+  this._records = [];
+  this._pool = [];
+  this.clock = 0;
+  this.setup(System.setupFunc);
 };
 
 /**
@@ -479,7 +484,7 @@ System._resetSystem = function() {
  * @memberof System
  * @private
  */
-System._toggleFPS = function() {
+System.prototype._toggleFPS = function() {
   if (!FPSDisplay.fps) {
     FPSDisplay.init();
   } else {

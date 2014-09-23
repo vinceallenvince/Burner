@@ -7,9 +7,14 @@ var test = require('tape'),
     System, obj;
 
 function beforeTest() {
-  System.setupFunc = function() {};
-  System._resetSystem();
-  System.frameFunction = null;
+
+  System = require('../src/system');
+  obj = new System();
+
+  obj.setupFunc = function() {};
+  obj._resetSystem();
+  obj.frameFunction = null;
+
   document.body.innerHTML = '';
   var world = document.createElement('div');
   world.id = 'world';
@@ -28,16 +33,16 @@ test('load System.', function(t) {
 test('check static properties.', function(t) {
   beforeTest();
   t.equal(typeof System.Classes, 'object', 'has a Classes object.');
-  t.equal(System.gravity.x, 0, 'has a gravity Vector; default x = 0.');
-  t.equal(System.gravity.y, 1, 'has a gravity Vector; default y = 1.');
-  t.equal(System.wind.x, 0, 'has a wind Vector; default x = 0.');
-  t.equal(System.wind.y, 0, 'has a wind Vector; default y = 0.');
-  t.assert(typeof System._records === 'object' && System._records.length === 0, 'has an empty _records array.');
-  t.assert(typeof System._pool === 'object' && System._pool.length === 0, 'has an empty _pool array.');
-  t.assert(typeof System.mouse === 'object', 'has an object to store mouse information.');
-  t.ok(System.mouse.location instanceof Vector, 'has a mouse location Vector.');
-  t.ok(System.mouse.lastLocation instanceof Vector, 'has a mouse lastLocation Vector.');
-  t.ok(System.mouse.velocity instanceof Vector, 'has a mouse velocity Vector.');
+  t.equal(obj.gravity.x, 0, 'has a gravity Vector; default x = 0.');
+  t.equal(obj.gravity.y, 1, 'has a gravity Vector; default y = 1.');
+  t.equal(obj.wind.x, 0, 'has a wind Vector; default x = 0.');
+  t.equal(obj.wind.y, 0, 'has a wind Vector; default y = 0.');
+  t.assert(typeof obj._records === 'object' && obj._records.length === 0, 'has an empty _records array.');
+  t.assert(typeof obj._pool === 'object' && obj._pool.length === 0, 'has an empty _pool array.');
+  t.assert(typeof obj.mouse === 'object', 'has an object to store mouse information.');
+  t.ok(obj.mouse.location instanceof Vector, 'has a mouse location Vector.');
+  t.ok(obj.mouse.lastLocation instanceof Vector, 'has a mouse lastLocation Vector.');
+  t.ok(obj.mouse.velocity instanceof Vector, 'has a mouse velocity Vector.');
   t.end();
 });
 
@@ -47,9 +52,9 @@ test('setup() should execute a passed callback.', function(t) {
 
   var val = 0;
 
-  System.setup(function() {val = 100;});
+  obj.setup(function() {val = 100;});
   t.equal(val, 100, 'System should call setup function.');
-  t.equal(typeof System.setupFunc, 'function', 'should save the setup callback in case we need to reset the system.');
+  t.equal(typeof obj.setupFunc, 'function', 'should save the setup callback in case we need to reset the system.');
   t.end();
 });
 
@@ -59,8 +64,8 @@ test('setup() should assign a noop as a callback if one is not supplied.', funct
 
   var val = 0;
 
-  System.setup();
-  t.notOk(System.setupFunc(), 'System should call noop setup function.');
+  obj.setup();
+  t.notOk(obj.setupFunc(), 'System should call noop setup function.');
   t.end();
 });
 
@@ -70,7 +75,7 @@ test('init() should call setup.', function(t) {
 
   var val = 0;
 
-  System.init(function() {val = 100;});
+  obj.init(function() {val = 100;});
   t.equal(val, 100, 'System should call setup function via init().');
   t.end();
 });
@@ -79,7 +84,7 @@ test('add() should add create a new item and add it to _records.', function(t) {
 
   beforeTest();
 
-  System.setup(function() {
+  obj.setup(function() {
     var world = this.add('World', {
       el: document.getElementById('world'),
       width: 400,
@@ -87,7 +92,7 @@ test('add() should add create a new item and add it to _records.', function(t) {
     });
     var itemA = this.add();
     t.assert(typeof itemA === 'object' && itemA.name === 'Item', 'add() should return the new item.');
-    t.equal(System._records.length, 2, 'should add a new item to _records. item + world = 2 records.');
+    t.equal(obj._records.length, 2, 'should add a new item to _records. item + world = 2 records.');
   });
 
   t.end();
@@ -107,7 +112,7 @@ test('add() should pull from pull from System._pool if pooled items exist.', fun
     Obj: Obj
   }
 
-  System.setup(function() {
+  obj.setup(function() {
     var world = this.add('World', {
       el: document.getElementById('world'),
       width: 400,
@@ -117,20 +122,21 @@ test('add() should pull from pull from System._pool if pooled items exist.', fun
     var itemA = this.add('Obj');
     var itemB = this.add();
     var itemC = this.add();
-    System.remove(itemA);
-    System.remove(itemB);
-    System.remove(itemC);
-    t.assert(System._records.length === 1 && System._pool.length === 3, 'remove() should remove item from _records and add to _pool.');
+    obj.remove(itemA);
+    obj.remove(itemB);
+    obj.remove(itemC);
+    console.log(obj._records.length);
+    t.assert(obj._records.length === 1 && obj._pool.length === 3, 'remove() should remove item from _records and add to _pool.');
 
     var itemD = this.add();
-    t.assert(System._records.length === 2 && System._pool.length === 2, 'add() should check to splice items off _pool.');
+    t.assert(obj._records.length === 2 && obj._pool.length === 2, 'add() should check to splice items off _pool.');
 
   });
 
   t.end();
 });
 
-test('_cleanObj() should remove all properties from an object.', function(t) {
+/*test('_cleanObj() should remove all properties from an object.', function(t) {
   var obj = {
     hi: 'hello'
   };
@@ -607,5 +613,5 @@ test('loop() should execute a passed function.', function(t) {
   System.loop(frameFunction);
   t.equal(val, 1, 'loop() should call frameFunction.');
   t.end();
-});
+});*/
 
