@@ -608,4 +608,3 @@ test('loop() should execute a passed function.', function(t) {
   t.equal(val, 1, 'loop() should call frameFunction.');
   t.end();
 });
-

@@ -40,6 +40,8 @@ test('check static properties', function(t) {
   beforeTest();
   t.equal(Item._idCount, 0);
   t.equal(typeof Item._stylePosition, 'string', 'has a _stylePosition string for concatenating transforms.');
+  t.ok(typeof Item.baseElement === 'string', 'has a itemBaseElement property.');
+  t.ok(typeof Item.baseElementAttributes === 'object', 'has a itemBaseElementAttributes property.');
   t.end();
 });
 
@@ -420,5 +422,29 @@ test('checkCameraEdges() should calculate a new location for world.', function(t
   //t.equal(obj.world.location.x, 200, 'checkCameraEdges should move world x pos in opposite direction from item.');
   //t.equal(obj.world.location.y, 149.9, 'checkCameraEdges should move world y pos in opposite direction from item.');
 
+  t.end();
+});
+
+
+test('Updating itemBaseElement should append that element to the DOM.', function(t) {
+
+  beforeTest();
+
+  Item.baseElement = 'input';
+  Item.baseElementAttributes = {
+    type: 'radio'
+  };
+
+  System.setup(function() {
+    var world = this.add('World', {
+      el: document.getElementById('world'),
+      width: 400,
+      height: 300
+    });
+    this.add('Item');
+  });
+
+  var radio = document.querySelectorAll('input[type=radio]')[0];
+  t.ok(radio, 'item should be a radio input.');
   t.end();
 });

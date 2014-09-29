@@ -31,6 +31,22 @@ Item._stylePosition =
     '-ms-transform: translate3d(<x>px, <y>px, 0) rotate(<angle>deg) scale(<scale>, <scale>);';
 
 /**
+ * The base DOM element to use as the Item view.
+ * @type {string}
+ * @memberof Item
+ * @private
+ */
+Item.baseElement = 'div';
+
+/**
+ * The base DOM element attributes.
+ * @type {Object}
+ * @memberof Item
+ * @private
+ */
+Item.baseElementAttributes = {};
+
+/**
  * Resets all properties.
  * @function init
  * @memberof Item
@@ -182,7 +198,12 @@ Item.prototype.init = function(world, opt_options) {
 
   this.id = this.name + Item._idCount;
   if (!this.el) {
-    this.el = document.createElement('div');
+    this.el = document.createElement(Item.baseElement);
+    for (var i in Item.baseElementAttributes) {
+      if (Item.baseElementAttributes.hasOwnProperty(i)) {
+        this.el[i] = Item.baseElementAttributes[i];
+      }
+    }
     this.el.id = this.id;
     this.el.className = 'item ' + this.name.toLowerCase();
     this.el.style.position = 'absolute';
