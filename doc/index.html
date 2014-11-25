@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Index</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Index</h1>
+    
+    
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><p><img src="https://travis-ci.org/vinceallenvince/Burner.svg?branch=master" alt="Build status"></p>
+<h1>Burner: A rendering engine for DOM-based animation.</h1>
+<p>Use Burner to setup a DOM-based rendering system in a web browser. Burner supplies some convenient functions for controlling playback, controlling the camera, detecting world boundaries, and optimizing object management via object pooling.</p>
+<h2>Install</h2>
+<p>To include Burner as a component in your project, use the node module.</p>
+<pre><code>npm install burner --save</code></pre>
+<p>You can also use the <a href="https://github.com/vinceallenvince/Burner/releases/latest">standalone version</a> and reference both the css and js files from your document.</p>
+<pre><code>&lt;html&gt;
+  &lt;head&gt;
+    &lt;link href=&quot;css/burner.min.css&quot; type=&quot;text/css&quot; charset=&quot;utf-8&quot; rel=&quot;stylesheet&quot; /&gt;
+    &lt;script src=&quot;scripts/burner.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  ...</code></pre>
+<h2>Usage</h2>
+<p>Burner contains the essential classes for creating a rendering engine... <a href="https://github.com/vinceallenvince/Burner/blob/master/src/System.js">System</a>, <a href="https://github.com/vinceallenvince/Burner/blob/master/src/World.js">World</a> and <a href="https://github.com/vinceallenvince/Burner/blob/master/src/Item.js">Item</a>. You can use these built-in classes to create <a href="http://vinceallenvince.github.io/Burner">simple systems</a>.</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;css/burner.min.css&quot; type=&quot;text/css&quot; charset=&quot;utf-8&quot; /&gt;
+  &lt;script src=&quot;scripts/burner.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;
+      Burner.System.setup(function() {
+        this.add('World');
+        this.add('Obj');
+      });
+      Burner.System.loop();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>Using your own classes</h2>
+<p>To create something more complex, you need supply a library of classes like <a href='http://github.com/foldi/FloraJS'>FloraJS</a> that inherit from the <a href="https://github.com/vinceallenvince/Burner/blob/master/src/Item.js">Item</a> class.</p>
+<p>A class must meet some minimum requirements:</p>
+<ul>
+<li>It must extend the Burner.Item class via Burner.Utils.extend. (ie. Burner.Utils.extend(Obj, Burner.Item))</li>
+<li>It must call Burner.Item in its constructor. (ie. Burner.Item.call(this))</li>
+</ul>
+<p>You must add an entry for your class in Burner's 'Classes' map. Call setup() and pass a function that adds an instance of your class. Finally, call loop().</p>
+<pre><code class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Burner | Custom classes&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;css/Burner.min.css&quot; type=&quot;text/css&quot; charset=&quot;utf-8&quot; /&gt;
+  &lt;script src=&quot;scripts/Burner.min.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;
+
+      /**
+       * Creates a new Obj.
+       *
+       * @param {Object} [opt_options=] A map of initial properties.
+       * @constructor
+       */
+      function Obj(opt_options) {
+        Burner.Item.call(this);
+        this.name = 'obj';
+      }
+      Burner.Utils.extend(Obj, Burner.Item);
+
+      // Uncomment to provide your own step function.
+      /*Obj.prototype.step = function() {
+        // your code to update this obj every frame goes here
+      };*/
+
+      /**
+       * Tell Burner where to find classes.
+       */
+      Burner.System.Classes = {
+        Obj: Obj
+      };
+
+      /**
+       * Create a new Burner system.
+       */
+      Burner.System.setup(function() {
+        this.add('World', {
+          color: [200, 200, 200]
+        });
+        this.add('Obj', {
+          color: [0, 0, 0]
+        });
+      });
+      Burner.System.loop();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Running the code, you should see a black box fall to the ground. The <a href="https://github.com/vinceallenvince/Burner/blob/master/src/Item.js">Item</a> class has a default step() function that runs a gravity simulation.</p>
+<p>You can override the default step() function to control your object's behavior any way you want.</p>
+<h2>Docs</h2>
+<p>To learn more, please review <a href="http://vinceallenvince.github.io/burner/doc/">the docs</a>.</p>
+<h2>Building this project</h2>
+<p>This project uses <a href="http://gruntjs.com">Grunt</a>. To build the project first install the node modules.</p>
+<pre><code>npm install</code></pre>
+<p>Next, run grunt.</p>
+<pre><code>grunt</code></pre>
+<p>To run the tests, run 'npm test'.</p>
+<pre><code>npm test</code></pre>
+<p>To check test coverage run 'grunt coverage'.</p>
+<pre><code>grunt coverage</code></pre>
+<p>A pre-commit hook is defined in /pre-commit that runs jshint. To use the hook, run the following:</p>
+<pre><code>ln -s ../../pre-commit .git/hooks/pre-commit</code></pre>
+<p>A post-commit hook is defined in /post-commit that runs the Plato complexity analysis tools. To use the hook, run the following:</p>
+<pre><code>ln -s ../../post-commit .git/hooks/post-commit</code></pre>
+<p>View the <a href="http://vinceallenvince.github.io/burner/reports/">code complexity</a> report.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Item.html">Item</a></li><li><a href="World.html">World</a></li></ul><h3>Namespaces</h3><ul><li><a href="System.html">System</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Nov 25 2014 02:02:50 GMT-0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
