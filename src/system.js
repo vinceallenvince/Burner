@@ -7,8 +7,10 @@ var Item = require('./item'),
     Utils = require('drawing-utils-lib'),
     FPSDisplay = require('fpsdisplay');
 
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+if (typeof window !== 'undefined') {
+  window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+}
 
 /** @namespace */
 var System = {
